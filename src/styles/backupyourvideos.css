@@ -1,0 +1,290 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
+
+:root {
+  --montserrat: "Montserrat", sans-serif;
+  --Lato: "Lato", sans-serif;
+  --Open-sans: "Open Sans", sans-serif;
+  --Poppins: "Poppins", sans-serif;
+}
+
+
+/* * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.yourvideos_main_wrapper_ksdab {
+  background-color: #e2f3ff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.yourvideos_main_container_ksdab {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  max-width: 1279px;
+  margin-bottom: 200px;
+}
+
+
+.ksdab-video-container {
+  position: relative;
+  width: calc(33.33% - 20px);
+  margin: 10px; 
+  box-sizing: border-box;
+  
+}
+
+
+
+.ksdab-video {
+  width: 100%; 
+  height: 260px; 
+  box-sizing: border-box;
+  margin-bottom: 10px; 
+  
+}
+
+
+.custom-controls {
+  font-size: 24px;
+  color: white;
+  background-color: black;
+  border-radius: 50%;
+  padding: 5px 9px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+} */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* .yourvideos_main_wrapper_ksdab {
+  background-color: #e2f3ff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.yourvideos_main_container_ksdab {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  max-width: 1279px;
+  margin-bottom: 200px;
+}
+
+.ksdab-video-container {
+  position: relative;
+  width: calc(33.33% - 20px);
+  margin: 10px;
+  box-sizing: border-box;
+}
+
+.ksdab-video {
+  width: 100%;
+  height: 260px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.custom-controls {
+  font-size: 24px;
+  color: white;
+  background-color: black;
+  border-radius: 50%;
+  padding: 5px 9px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+
+.videolinker-container {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; 
+}
+
+
+.custom-video-container {
+  position: relative;
+  width: 375px;
+  margin: 83px 10px 10px 25px;
+  box-sizing: border-box;
+}
+
+.custom-video {
+  width: 100%;
+  height: 260px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  border-radius: 62px;
+}
+
+.custom-controls {
+  font-size: 24px;
+  color: white;
+  background-color: black;
+  border-radius: 50%;
+  padding: 5px 9px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+} */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.yourvideos_main_wrapper_ksdab {
+  background-color: #e2f3ff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.yourvideos_main_container_ksdab {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  max-width: 1279px;
+  margin-bottom: 200px;
+}
+
+.ksdab-video-container {
+  position: relative;
+  width: calc(33.33% - 20px);
+  margin: 10px;
+  box-sizing: border-box;
+}
+
+.ksdab-video {
+  width: 100%;
+  height: 260px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.custom-controls {
+  font-size: 24px;
+  color: white;
+  background-color: black;
+  border-radius: 50%;
+  padding: 5px 9px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.videolinker-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.custom-video-container {
+  position: relative;
+  display: flex;
+  width: 1400px;
+  height: 850px;
+  box-sizing: border-box;
+  background-color: white;
+  border-radius: 8px;
+}
+
+.custom-video {
+  width: 63%; 
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: 62px;
+}
+
+.vertical-line {
+  width: 2px;
+  height: 100%;
+  background-color: #ddd;
+}
+
+.videolinker-controls {
+  font-size: 36px;
+  color: white;
+  background-color: black;
+  border-radius: 50%;
+  padding: 12px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 1;  
+}
+
+
+
+
+
+
