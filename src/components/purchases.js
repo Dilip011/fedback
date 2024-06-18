@@ -243,8 +243,8 @@ const Purchases = () => {
 
 
   return (
-    <div className='backyourvideos_main_wrapper_ksdab'>
-      <div className="backyourvideos_main_container_ksdab">
+    <div className='purchaseyourvideos_main_wrapper_ksdab'>
+      <div className="purchaseyourvideos_main_container_ksdab">
         {fetchedSingleMedia && fetchedSingleMedia.map((media) => (
           <div key={media.name} className="purchaseksdab-media-container">
             {media.name.endsWith('.mp4') ? (
