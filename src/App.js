@@ -56,14 +56,14 @@ function App() {
                 <Route path="/tagline" element={<Tagline />} />
                 <Route path="/trending" element={<Trending />} />
                 <Route path="/purchases" element={<Purchases />} />
-
+                <Route path="/cart" element={<Cart />} />
 
               </Route>
 
               <Route path="/createvideo" element={<CreateVideo />} />
               <Route path="/searchbar/:username" element={<SearchProfile />} />
               <Route path="/payment/:randomId" element={<Payment />} />
-              <Route path="/cart" element={<Cart />} />
+              
               <Route path="/" element={<Signup />} />
               <Route path="/login" element={<Login />} />
 

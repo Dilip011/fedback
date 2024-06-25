@@ -300,25 +300,77 @@ const SearchProfile = () => {
     Navigate(`/payment/${result}`);
   };
 
+  // const addToCart = async () => {
+  //   try {
+  //     const cartCollectionRef = collection(db, 'cart');
+  //     if (userfunc && userfunc.length > 0) {
+  //       await addDoc(cartCollectionRef, {
+  //         folder_name: selectedMediaId,
+  //         user_id: id[7]
+  //       });
+  //     } else {
+  //       await addDoc(cartCollectionRef, {
+  //         media_name: selectedMediaId,
+  //         user_id: id[7]
+  //       });
+  //     }
+  //     console.log('Item added to cart successfully');
+  //   } catch (error) {
+  //     console.error('Error adding item to cart: ', error);
+  //   }
+  // };
+
+
   const addToCart = async () => {
     try {
       const cartCollectionRef = collection(db, 'cart');
-      if (userfunc && userfunc.length > 0) {
-        await addDoc(cartCollectionRef, {
-          folder_name: selectedMediaId,
-          user_id: id[7]
-        });
-      } else {
-        await addDoc(cartCollectionRef, {
-          media_name: selectedMediaId,
-          user_id: id[7]
-        });
+  
+      const rootFolder = 'images';
+      const storageRootRef = ref(storage, rootFolder);
+      const folderItems = await listAll(storageRootRef);
+  
+      let matchFound = false;
+  
+      // Check subfolders for a match
+      for (const folder of folderItems.prefixes) {
+        const subFolderRef = ref(storage, folder.fullPath);
+        const subFolderItems = await listAll(subFolderRef);
+  
+        if (subFolderItems.items.some(item => item.name === selectedMediaId)) {
+          const folderName = folder.name;
+          await addDoc(cartCollectionRef, {
+            folder_name: folderName,
+            user_id: id[7]
+          });
+          matchFound = true;
+          break;
+        }
       }
-      console.log('Item added to cart successfully');
+  
+      // If no match in subfolders, check single contents
+      if (!matchFound) {
+        for (const item of folderItems.items) {
+          if (item.name === selectedMediaId) {
+            await addDoc(cartCollectionRef, {
+              media_name: selectedMediaId,
+              user_id: id[7]
+            });
+            matchFound = true;
+            break;
+          }
+        }
+      }
+  
+      if (matchFound) {
+        console.log('Item added to cart successfully');
+      } else {
+        console.log('No matching item found to add to cart');
+      }
     } catch (error) {
       console.error('Error adding item to cart: ', error);
     }
   };
+  
 
   
 

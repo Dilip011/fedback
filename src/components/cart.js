@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import "../styles/purchases.css";
+import "../styles/cart.css";
 import { useUserContext } from './Usercontext';
 import { collection, getDocs } from 'firebase/firestore';
 import { db, storage } from './firebaseconfig';
@@ -70,27 +70,76 @@ const Cart = () => {
     }
   };
 
+  // const fetchSubFolder = async () => {
+  //   try {
+  //     const rootFolder = 'images';
+  //     const storageRootRef = ref(storage, rootFolder);
+  //     const folderItems = await listAll(storageRootRef);
+  
+  //     for (const folderName of usermultiple) {
+  //       for (const folder of folderItems.prefixes) {
+  //         const subFolderRef = ref(storage, folder.fullPath);
+  //         const subFolderItems = await listAll(subFolderRef);
+  
+  //         if (subFolderItems.items.some(item => item.name.includes(folderName))) {
+  //           console.log('Matched folder:', folder.name);
+  //           break;
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching subfolder items:', error);
+  //   }
+  // };
+
+
+
+
+
   const fetchSubFolder = async () => {
     try {
       const rootFolder = 'images';
       const storageRootRef = ref(storage, rootFolder);
       const folderItems = await listAll(storageRootRef);
   
+      
+   
       for (const folderName of usermultiple) {
-        for (const folder of folderItems.prefixes) {
-          const subFolderRef = ref(storage, folder.fullPath);
+        const matchingFolder = folderItems.prefixes.find(folder => folder.name === folderName);
+  
+        if (matchingFolder) {
+  
+          const subFolderRef = ref(storage, matchingFolder.fullPath);
           const subFolderItems = await listAll(subFolderRef);
   
-          if (subFolderItems.items.some(item => item.name.includes(folderName))) {
-            console.log('Matched folder:', folder.name);
-            break;
+          const firstImage = subFolderItems.items.find(item =>
+            item.name.endsWith('.png') ||
+            item.name.endsWith('.jpg') ||
+            item.name.endsWith('.jpeg') ||
+            item.name.endsWith('.mp4')
+          );
+  
+          if (firstImage) {
+            const downloadUrl = await getDownloadURL(firstImage);
+            setFetchedMultipleMedia(prevMedia => [
+              ...prevMedia,
+              { name: firstImage.name, downloadUrl }
+            ]);
+  
+            break; 
+          } else {
+            // console.log("No matching image found in the subfolder.");
           }
+        } else {
+          // console.log("No matching folder found for:", folderName);
         }
       }
     } catch (error) {
       console.error('Error fetching subfolder items:', error);
     }
   };
+  
+  
   
   
   
@@ -223,14 +272,11 @@ const Cart = () => {
     if (usersingle.length > 0) {
       fetchIndividualImages();
     }
-  }, [usersingle]);
-
-  useEffect(() => {
     if (usermultiple.length > 0) {
       fetchSubFolder();
 
     }
-  }, [usermultiple]);
+  }, [usersingle,usermultiple]);
 
   useEffect(() => {
     if (selectedMediaId) {
@@ -242,14 +288,14 @@ const Cart = () => {
 
 
   return (
-    <div className='purchaseyourvideos_main_wrapper_ksdab'>
-      <div className="purchaseyourvideos_main_container_ksdab">
+    <div className='cart_main_wrapper_ksdab'>
+      <div className="cart_main_container_ksdab">
         {fetchedSingleMedia && fetchedSingleMedia.map((media) => (
-          <div key={media.name} className="purchaseksdab-media-container">
+          <div key={media.name} className="cartksdab-media-container">
             {media.name.endsWith('.mp4') ? (
               <video
                 id={`media-${media.name}`}
-                className="purchaseksdab-media"
+                className="cartksdab-media"
                 controls={false}
                 onClick={() => {
                   setSelectedMediaId(media.name);
@@ -260,7 +306,7 @@ const Cart = () => {
             ) : (
               <img
                 id={`media-${media.name}`}
-                className="purchaseksdab-media"
+                className="cartksdab-media"
                 src={media.downloadUrl}
                 alt="Error Displaying image"
                 onClick={() => {
@@ -270,7 +316,7 @@ const Cart = () => {
             )}
 
             {media.name.endsWith('.mp4') && (
-              <div className="purchasecustom-controls">
+              <div className="cartcustom-controls">
                 <i
                   className="fa-solid fa-play"
                   style={{ color: '#ffffff' }}
@@ -294,12 +340,12 @@ const Cart = () => {
 
 
         {fetchedMultipleMedia && fetchedMultipleMedia.map((media, index) => (
-          <div key={index} className="ksdab-media-container">
+          <div key={index} className="cartksdab-media-container">
             <div>
               {media.type === 'video' ? (
                 <video
                   id={`media-${index}`}
-                  className="purchaseksdab-media"
+                  className="cartksdab-media"
                   controls={false}
                   onClick={() => {
                     setSelectedMediaId(media.name);
@@ -310,7 +356,7 @@ const Cart = () => {
               ) : (
                 <img
                   id={`media-${index}`}
-                  className="purchaseksdab-media"
+                  className="cartksdab-media"
                   src={media.downloadUrl}
                   alt="Error Displaying image"
                   onClick={() => {
@@ -320,7 +366,7 @@ const Cart = () => {
               )}
 
               {media.type === 'video' && (
-                <div className="purchasecustom-controls">
+                <div className="cartcustom-controls">
                   <i
                     className="fa-solid fa-play"
                     style={{ color: '#ffffff' }}
@@ -347,13 +393,13 @@ const Cart = () => {
                                      ************************ */}
 
       {selectedMediaId && (
-        <div className="purchasemedialinker-container scrollable">
-          <div className="purchasecustom-media-container">
-            <div className="purchasemedia-content">
+        <div className="cartmedialinker-container scrollable">
+          <div className="cartcustom-media-container">
+            <div className="cartmedia-content">
               {selectedMediaId.endsWith('.mp4') ? (
                 <video
                   id={`media-${selectedMediaId}`}
-                  className="purchasecustom-media"
+                  className="cartcustom-media"
                   controls={false}
                   ref={mediaRef}
                 >
@@ -362,7 +408,7 @@ const Cart = () => {
               ) : (
                 <img
                   id={`media-${selectedMediaId}`}
-                  className="purchasecustom-media_images"
+                  className="cartcustom-media_images"
                   src={fetchedSingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl || userfunc[selectedGroupIndex]?.downloadUrl}
                   alt={userfunc}
                 />
@@ -370,7 +416,7 @@ const Cart = () => {
               {selectedMediaId.endsWith(".mp4") && (
                 <div
                   id={`controls-${selectedMediaId}`}
-                  className="purchasemedialinker-controls"
+                  className="cartmedialinker-controls"
                   onClick={handleTogglePlayPause}
                 >
 
@@ -379,7 +425,7 @@ const Cart = () => {
                 </div>
               )}
               {userfunc && userfunc.length > 0 && (
-                <div className="purchasechevrons">
+                <div className="cartchevrons">
                   <i
                     className="fa-solid fa-chevron-left"
                     style={{
@@ -404,13 +450,13 @@ const Cart = () => {
               )}
             </div>
 
-            <div className="purchasevertical-line"></div>
+            <div className="cartvertical-line"></div>
 
-            <div className="purchaseblank_area_div">
-              <div className="purchaseksdab_fixed">
-                <img className='purchaseksdab_image_comment' src={image} alt="" />
-                <div className="purchaseksdab_name_comment">{user[0]}</div>
-                <div className="purchaseksdab_content_comment">{comments}</div>
+            <div className="cartblank_area_div">
+              <div className="cartksdab_fixed">
+                <img className='cartksdab_image_comment' src={image} alt="" />
+                <div className="cartksdab_name_comment">{user[0]}</div>
+                <div className="cartksdab_content_comment">{comments}</div>
               </div>
               <i
                 className="fa-solid fa-times"

@@ -295,7 +295,7 @@ const Purchases = () => {
 
 
         {fetchedMultipleMedia && fetchedMultipleMedia.map((media, index) => (
-          <div key={index} className="ksdab-media-container">
+          <div key={index} className="purchaseksdab-media-container">
             <div>
               {media.type === 'video' ? (
                 <video

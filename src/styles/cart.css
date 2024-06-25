@@ -19,7 +19,7 @@
 }
 
 
-.cartyourvideos_main_wrapper_ksdab {
+.cart_main_wrapper_ksdab {
   background-color: #e2f3ff;
   min-height: 100vh;
   display: flex;
@@ -27,14 +27,14 @@
   align-items: center;
 }
 
-.cartyourvideos_main_container_ksdab {
+.cart_main_container_ksdab {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  /* justify-content: flex-start; */
   max-width: 1279px;
   margin-bottom: 200px;
   margin-top: 196px;
-  margin-left: 200px;
+  /* margin-left: 200px; */
 }
 
 .cartksdab-media-container {
@@ -46,11 +46,11 @@
 }
 
 .cartksdab-media {
-  width: 100%;
+  /* width: 100%; */
+  width: 350px;
   height: 260px;
-  /* Assuming the same height as videos */
   box-sizing: border-box;
-  margin-bottom: 10px;
+  margin-bottom: 47px;
 }
 
 .cartcustom-controls {

@@ -144,7 +144,7 @@ const BackupYourVideos = () => {
       let matchingSubfolder = null;
       let documentId = null;
 
-      // Iterate through subfolders to find the one that contains the image
+      
       for (const folder of folderItems.prefixes) {
         const subFolderRef = ref(storage, folder.fullPath);
         const subFolderItems = await listAll(subFolderRef);
