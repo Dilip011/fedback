@@ -23,6 +23,7 @@ import CreateVideo from './components/Createvideo';
 import Payment from './components/payment';
 import Purchases from './components/purchases';
 import Cart from './components/cart';
+import Searchvideo from './components/searchvideo';
 
 
 
@@ -57,6 +58,8 @@ function App() {
                 <Route path="/trending" element={<Trending />} />
                 <Route path="/purchases" element={<Purchases />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/searchvideo" element={<Searchvideo />} />
+                
 
               </Route>
 

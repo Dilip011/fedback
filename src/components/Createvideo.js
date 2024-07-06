@@ -14,12 +14,15 @@ import { useNavigate } from 'react-router-dom';
 const CreateVideo = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [textareaContent, setTextareaContent] = useState('');
+  const [textareatitle, setTextareatitle] = useState('');
   const { user } = useUserContext();
   const navigate = useNavigate();
 
+  
   function handleclickonfile() {
-    navigate("/yourvideos");
+    navigate(`/yourcontent/${user[6]}`);
   }
+  console.log(user);
 
   const handleFileChange = async (e) => {
     const files = Array.from(e.target.files);
@@ -57,10 +60,13 @@ const CreateVideo = () => {
   
       
       docRef = await addDoc(collection(db, 'comments'), {
+        content_title:textareatitle,
         content_comment: textareaContent,
         user_id: user[5], 
         timestamp: new Date() 
       });
+
+      
   
       const documentId = docRef.id;
   
@@ -86,11 +92,12 @@ const CreateVideo = () => {
         }
   
         // Update the Firestore document with the correct content_id
-        await updateDoc(docRef, { content_id: contentId });
+        await updateDoc(docRef, { contentfolder_id: contentId });
       }
   
       setSelectedFiles([]);
       setTextareaContent('');
+      setTextareatitle('');
     } catch (error) {
       console.error('Error uploading files: ', error);
     }
@@ -102,9 +109,14 @@ const CreateVideo = () => {
       <div className="create-video-container">
         <i className="fa-solid fa-circle-xmark" onClick={handleclickonfile}></i>
         <textarea
+          value={textareatitle}
+          onChange={(e) => setTextareatitle(e.target.value)}
+          placeholder="Enter the Title"></textarea>
+        <div className="horizontal-line"></div>
+        <textarea
           value={textareaContent}
           onChange={(e) => setTextareaContent(e.target.value)}
-          placeholder="Type your Query"></textarea>
+          placeholder="Enter the comment"></textarea>
 
         <div className="selected-files-grid" style={calculateGridStyle()}>
           {selectedFiles.map((file, index) => (

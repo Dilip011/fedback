@@ -300,26 +300,6 @@ const SearchProfile = () => {
     Navigate(`/payment/${result}`);
   };
 
-  // const addToCart = async () => {
-  //   try {
-  //     const cartCollectionRef = collection(db, 'cart');
-  //     if (userfunc && userfunc.length > 0) {
-  //       await addDoc(cartCollectionRef, {
-  //         folder_name: selectedMediaId,
-  //         user_id: id[7]
-  //       });
-  //     } else {
-  //       await addDoc(cartCollectionRef, {
-  //         media_name: selectedMediaId,
-  //         user_id: id[7]
-  //       });
-  //     }
-  //     console.log('Item added to cart successfully');
-  //   } catch (error) {
-  //     console.error('Error adding item to cart: ', error);
-  //   }
-  // };
-
 
   const addToCart = async () => {
     try {
@@ -400,6 +380,11 @@ const SearchProfile = () => {
                 id={`media-${media.name}`}
                 className="searchksdab-media"
                 controls={false}
+                onDragStart={(e) => e.preventDefault()} 
+                onDragOver={(e) => e.preventDefault()} 
+                onDragEnter={(e) => e.preventDefault()} 
+                onDragLeave={(e) => e.preventDefault()} 
+                onDrop={(e) => e.preventDefault()} 
                 onClick={() => {
                   setSelectedMediaId(media.name);
                 }}
@@ -415,6 +400,11 @@ const SearchProfile = () => {
                 onClick={() => {
                   setSelectedMediaId(media.name);
                 }}
+                onDragStart={(e) => e.preventDefault()} 
+                onDragOver={(e) => e.preventDefault()} 
+                onDragEnter={(e) => e.preventDefault()} 
+                onDragLeave={(e) => e.preventDefault()} 
+                onDrop={(e) => e.preventDefault()} 
               />
             )}
 
@@ -450,6 +440,11 @@ const SearchProfile = () => {
                   id={`media-${index}`}
                   className="searchksdab-media"
                   controls={false}
+                  onDragStart={(e) => e.preventDefault()} 
+                  onDragOver={(e) => e.preventDefault()} 
+                  onDragEnter={(e) => e.preventDefault()} 
+                  onDragLeave={(e) => e.preventDefault()} 
+                  onDrop={(e) => e.preventDefault()} 
                   onClick={() => {
                     setSelectedMediaId(media.name);
                   }}
@@ -465,6 +460,11 @@ const SearchProfile = () => {
                   onClick={() => {
                     setSelectedMediaId(media.name);
                   }}
+                  onDragStart={(e) => e.preventDefault()} 
+                  onDragOver={(e) => e.preventDefault()} 
+                  onDragEnter={(e) => e.preventDefault()} 
+                  onDragLeave={(e) => e.preventDefault()} 
+                  onDrop={(e) => e.preventDefault()} 
                 />
               )}
 
@@ -506,6 +506,11 @@ const SearchProfile = () => {
                     className="searchcustom-media"
                     controls={false}
                     ref={mediaRef}
+                    onDragStart={(e) => e.preventDefault()} 
+                    onDragOver={(e) => e.preventDefault()} 
+                    onDragEnter={(e) => e.preventDefault()} 
+                    onDragLeave={(e) => e.preventDefault()} 
+                    onDrop={(e) => e.preventDefault()} 
                   >
                     <source src={usersingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl || userfunc[selectedGroupIndex]?.downloadUrl} type="video/mp4" />
                   </video>
@@ -515,6 +520,11 @@ const SearchProfile = () => {
                     className="searchcustom-media_images"
                     src={usersingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl || userfunc[selectedGroupIndex]?.downloadUrl}
                     alt={userfunc}
+                    onDragStart={(e) => e.preventDefault()} 
+                    onDragOver={(e) => e.preventDefault()} 
+                    onDragEnter={(e) => e.preventDefault()} 
+                    onDragLeave={(e) => e.preventDefault()} 
+                    onDrop={(e) => e.preventDefault()} 
                   />
                 )}
                 {selectedMediaId.endsWith(".mp4") && (

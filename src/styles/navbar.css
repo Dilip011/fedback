@@ -134,3 +134,8 @@
   width: 35px;
   margin-bottom: -8px;
 }
+
+.search-options{cursor: pointer; display: flex;gap: 20px;margin-bottom: 7px;margin-top: 7px;}
+.search-option {cursor: pointer;padding: 5px 10px;border-radius: 5px; }
+.search-option.active {background-color: #007BFF; color: white;}
+

@@ -3,7 +3,7 @@ import profile from "../images/Profile.jpg";
 import logo from "../images/attachment.png";
 import "../styles/navbar.css";
 import { NavLink } from 'react-router-dom';
-import { collection, query, orderBy, getDocs, } from 'firebase/firestore';
+import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 import { db } from './firebaseconfig';
 import { useUserContext } from './Usercontext';
 import { useUsersearch } from "./UserContext2";
@@ -13,9 +13,9 @@ const Navbar = () => {
   const [searchHistoryVisible, setSearchHistoryVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [activeTab, setActiveTab] = useState('user');
   const searchContainerRef = useRef(null);
-  const {user} = useUserContext();
-
+  const { user } = useUserContext();
   const { setId } = useUsersearch();
 
   useEffect(() => {
@@ -25,19 +25,21 @@ const Navbar = () => {
         return;
       }
 
-      const usersCollection = collection(db, 'users');
-      const q = query(usersCollection, orderBy('name'));
-      const querySnapshot = await getDocs(q);
-      const results = querySnapshot.docs.map(doc => doc.data());
+      if (activeTab === 'user') {
+        const usersCollection = collection(db, 'users');
+        const q = query(usersCollection, orderBy('name'));
+        const querySnapshot = await getDocs(q);
+        const results = querySnapshot.docs.map(doc => doc.data());
 
-      const filteredResults = results.filter(user =>
-        user.name.toLowerCase().startsWith(searchTerm.toLowerCase())
-      );
-      setSearchResults(filteredResults);
+        const filteredResults = results.filter(user =>
+          user.name.toLowerCase().startsWith(searchTerm.toLowerCase())
+        );
+        setSearchResults(filteredResults);
+      }
     };
 
     fetchSearchResults();
-  }, [searchTerm]);
+  }, [searchTerm, activeTab]);
 
   const handleSearchBarClick = () => {
     setSearchContainerHeight(270);
@@ -53,9 +55,15 @@ const Navbar = () => {
     }
   };
 
-
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleTabClick = (tab) => {
+    if (tab === 'videos') {
+      alert('Hi');
+    }
+    setActiveTab(tab);
   };
 
   return (
@@ -82,19 +90,35 @@ const Navbar = () => {
               value={searchTerm}
             />
             <p className="left_liner_xyzab" style={{ display: searchContainerHeight === 55 ? 'none' : 'block' }}></p>
-            {searchHistoryVisible && searchResults.length > 0 && (
+            {searchContainerHeight !== 55 && (
+              <div className="search-options">
+                <span
+                  className={`search-option ${activeTab === 'user' ? 'active' : ''}`}
+                  onClick={() => handleTabClick('user')}
+                >
+                  User
+                </span>
+                <span
+                  className={`search-option ${activeTab === 'videos' ? 'active' : ''}`}
+                  onClick={() => handleTabClick('videos')}
+                >
+                  Videos
+                </span>
+              </div>
+              
+              
+            )}
+            <p className="left_liner_xyzab" style={{ display: searchContainerHeight === 55 ? 'none' : 'block' }}></p>
+            {searchHistoryVisible && searchResults.length > 0 && activeTab === 'user' && (
               <div className="search-results-container">
                 {searchResults.map((result, index) => (
                   <div key={index} className="left_search_bar_history_xyzab">
                     <img className="left_search_bar_history_xyzab_img" src={profile} alt="" />
                     <NavLink to={`/searchbar/${result.username}`} className="left_search_bar_history_xyzab_navlink"
-                      onClick={() => 
-                        setId([result.name, result.email, result.phoneNumber, result.dob, result.country, result.Document_Id, result.username,user[5]])
+                      onClick={() =>
+                        setId([result.name, result.email, result.phoneNumber, result.dob, result.country, result.Document_Id, result.username, user[5]])
                       }
                     >{result.name} </NavLink>
-                    
-
-                    {/* <i className="fa-solid fa-xmark"></i> */}
                   </div>
                 ))}
               </div>
