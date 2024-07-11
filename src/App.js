@@ -18,12 +18,14 @@ import Trending from './components/Trending';
 import { UserContextGlobal } from "./components/Usercontext";
 import { UserContextSearch } from './components/UserContext2';
 import { UserContextPayment } from './components/Usercontext3';
+import { SearchProvider } from './components/SearchContext';
 import SearchProfile from './components/searchprofile';
 import CreateVideo from './components/Createvideo';
 import Payment from './components/payment';
 import Purchases from './components/purchases';
 import Cart from './components/cart';
 import Searchvideo from './components/searchvideo';
+
 
 
 
@@ -45,6 +47,8 @@ function App() {
       <UserContextGlobal>
         <UserContextSearch>
           <UserContextPayment>
+            <SearchProvider>
+
 
             <Routes>
               <Route element={<Navlayout />}>
@@ -58,20 +62,22 @@ function App() {
                 <Route path="/trending" element={<Trending />} />
                 <Route path="/purchases" element={<Purchases />} />
                 <Route path="/cart" element={<Cart />} />
-                <Route path="/searchvideo" element={<Searchvideo />} />
+                
                 
 
               </Route>
 
               <Route path="/createvideo" element={<CreateVideo />} />
-              <Route path="/searchbar/:username" element={<SearchProfile />} />
+              <Route path="/search_user/:username" element={<SearchProfile />} />
               <Route path="/payment/:randomId" element={<Payment />} />
+              <Route path="/searchvideo" element={<Searchvideo />} />
               
               <Route path="/" element={<Signup />} />
               <Route path="/login" element={<Login />} />
 
             </Routes>
 
+            </SearchProvider>
           </UserContextPayment>
         </UserContextSearch>
       </UserContextGlobal>

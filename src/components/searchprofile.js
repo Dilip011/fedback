@@ -11,7 +11,7 @@ import { useUserpayment } from './Usercontext3';
 import { useNavigate } from 'react-router-dom';
 import { useUserContext } from './Usercontext';
 import cart from "../images/cart.jpg";
-import { addDoc,collection } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 
 const splitPipeSeparatedId = (id) => {
   const [userId, v4Id, name] = id.split('|');
@@ -71,6 +71,8 @@ const SearchProfile = () => {
       }
     }
   };
+
+  
 
   const fetchSubfolders = async () => {
     if (id && id[5]) {
@@ -304,18 +306,18 @@ const SearchProfile = () => {
   const addToCart = async () => {
     try {
       const cartCollectionRef = collection(db, 'cart');
-  
+
       const rootFolder = 'images';
       const storageRootRef = ref(storage, rootFolder);
       const folderItems = await listAll(storageRootRef);
-  
+
       let matchFound = false;
-  
+
       // Check subfolders for a match
       for (const folder of folderItems.prefixes) {
         const subFolderRef = ref(storage, folder.fullPath);
         const subFolderItems = await listAll(subFolderRef);
-  
+
         if (subFolderItems.items.some(item => item.name === selectedMediaId)) {
           const folderName = folder.name;
           await addDoc(cartCollectionRef, {
@@ -326,7 +328,7 @@ const SearchProfile = () => {
           break;
         }
       }
-  
+
       // If no match in subfolders, check single contents
       if (!matchFound) {
         for (const item of folderItems.items) {
@@ -340,7 +342,7 @@ const SearchProfile = () => {
           }
         }
       }
-  
+
       if (matchFound) {
         console.log('Item added to cart successfully');
       } else {
@@ -350,9 +352,9 @@ const SearchProfile = () => {
       console.error('Error adding item to cart: ', error);
     }
   };
-  
 
-  
+
+
 
 
 
@@ -380,11 +382,11 @@ const SearchProfile = () => {
                 id={`media-${media.name}`}
                 className="searchksdab-media"
                 controls={false}
-                onDragStart={(e) => e.preventDefault()} 
-                onDragOver={(e) => e.preventDefault()} 
-                onDragEnter={(e) => e.preventDefault()} 
-                onDragLeave={(e) => e.preventDefault()} 
-                onDrop={(e) => e.preventDefault()} 
+                onDragStart={(e) => e.preventDefault()}
+                onDragOver={(e) => e.preventDefault()}
+                onDragEnter={(e) => e.preventDefault()}
+                onDragLeave={(e) => e.preventDefault()}
+                onDrop={(e) => e.preventDefault()}
                 onClick={() => {
                   setSelectedMediaId(media.name);
                 }}
@@ -400,11 +402,11 @@ const SearchProfile = () => {
                 onClick={() => {
                   setSelectedMediaId(media.name);
                 }}
-                onDragStart={(e) => e.preventDefault()} 
-                onDragOver={(e) => e.preventDefault()} 
-                onDragEnter={(e) => e.preventDefault()} 
-                onDragLeave={(e) => e.preventDefault()} 
-                onDrop={(e) => e.preventDefault()} 
+                onDragStart={(e) => e.preventDefault()}
+                onDragOver={(e) => e.preventDefault()}
+                onDragEnter={(e) => e.preventDefault()}
+                onDragLeave={(e) => e.preventDefault()}
+                onDrop={(e) => e.preventDefault()}
               />
             )}
 
@@ -440,11 +442,11 @@ const SearchProfile = () => {
                   id={`media-${index}`}
                   className="searchksdab-media"
                   controls={false}
-                  onDragStart={(e) => e.preventDefault()} 
-                  onDragOver={(e) => e.preventDefault()} 
-                  onDragEnter={(e) => e.preventDefault()} 
-                  onDragLeave={(e) => e.preventDefault()} 
-                  onDrop={(e) => e.preventDefault()} 
+                  onDragStart={(e) => e.preventDefault()}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDragEnter={(e) => e.preventDefault()}
+                  onDragLeave={(e) => e.preventDefault()}
+                  onDrop={(e) => e.preventDefault()}
                   onClick={() => {
                     setSelectedMediaId(media.name);
                   }}
@@ -460,11 +462,11 @@ const SearchProfile = () => {
                   onClick={() => {
                     setSelectedMediaId(media.name);
                   }}
-                  onDragStart={(e) => e.preventDefault()} 
-                  onDragOver={(e) => e.preventDefault()} 
-                  onDragEnter={(e) => e.preventDefault()} 
-                  onDragLeave={(e) => e.preventDefault()} 
-                  onDrop={(e) => e.preventDefault()} 
+                  onDragStart={(e) => e.preventDefault()}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDragEnter={(e) => e.preventDefault()}
+                  onDragLeave={(e) => e.preventDefault()}
+                  onDrop={(e) => e.preventDefault()}
                 />
               )}
 
@@ -506,11 +508,11 @@ const SearchProfile = () => {
                     className="searchcustom-media"
                     controls={false}
                     ref={mediaRef}
-                    onDragStart={(e) => e.preventDefault()} 
-                    onDragOver={(e) => e.preventDefault()} 
-                    onDragEnter={(e) => e.preventDefault()} 
-                    onDragLeave={(e) => e.preventDefault()} 
-                    onDrop={(e) => e.preventDefault()} 
+                    onDragStart={(e) => e.preventDefault()}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDragEnter={(e) => e.preventDefault()}
+                    onDragLeave={(e) => e.preventDefault()}
+                    onDrop={(e) => e.preventDefault()}
                   >
                     <source src={usersingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl || userfunc[selectedGroupIndex]?.downloadUrl} type="video/mp4" />
                   </video>
@@ -520,11 +522,11 @@ const SearchProfile = () => {
                     className="searchcustom-media_images"
                     src={usersingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl || userfunc[selectedGroupIndex]?.downloadUrl}
                     alt={userfunc}
-                    onDragStart={(e) => e.preventDefault()} 
-                    onDragOver={(e) => e.preventDefault()} 
-                    onDragEnter={(e) => e.preventDefault()} 
-                    onDragLeave={(e) => e.preventDefault()} 
-                    onDrop={(e) => e.preventDefault()} 
+                    onDragStart={(e) => e.preventDefault()}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDragEnter={(e) => e.preventDefault()}
+                    onDragLeave={(e) => e.preventDefault()}
+                    onDrop={(e) => e.preventDefault()}
                   />
                 )}
                 {selectedMediaId.endsWith(".mp4") && (
@@ -560,7 +562,7 @@ const SearchProfile = () => {
                   <img onClick={addToCart} src={cart} alt="" className="searchbuy_media_ksdab_image" />
                 </div>
 
-              </div> 
+              </div>
             </div>
           </div>
 
