@@ -70,7 +70,16 @@
   margin: 1px 1px 1px 11px;
 }
 
-.left_search_container_xyzab input {
+/* .left_search_container_xyzab input {
+  outline: none;
+  border: none;
+  background-color: #f0f0f0;
+  width: 183px;
+  font-size: 18px;
+  margin: 19px 2px 14px 7px;
+} */
+
+.left_search_bar_xyzab{
   outline: none;
   border: none;
   background-color: #f0f0f0;
@@ -78,6 +87,8 @@
   font-size: 18px;
   margin: 19px 2px 14px 7px;
 }
+
+
 
 .left_search_bar_history_xyzab {
   display: flex;
@@ -139,3 +150,34 @@
 .search-option {cursor: pointer;padding: 5px 10px;border-radius: 5px; }
 .search-option.active {background-color: #007BFF; color: white;}
 
+
+.age-filter{
+  float: left;
+}
+
+.age-filter-checkbox{
+  font-size: 17px;
+}
+
+.age-filter-checkbox input{margin-left: 9px;
+  margin-top: 15px;
+  margin-right: 11px;
+  
+}
+
+.age-filter-options{
+  display: flex;
+  flex-direction: column;
+  margin-left: 45px;
+  margin-top: 12px;
+  font-size: 17px;
+}
+
+.age-filter-options label{
+  margin-bottom: 5px;
+  font-size: 17px;
+}
+
+.age-filter-options label input{
+  margin-right: 11px;
+}

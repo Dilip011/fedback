@@ -4,7 +4,7 @@ import { db } from './firebaseconfig';
 import { collection, addDoc, getDocs, where, query, updateDoc } from "firebase/firestore";
 
 const Signup = () => {
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [data, setData] = useState({
     name: '',
@@ -34,7 +34,6 @@ const Signup = () => {
     setData({ ...data, ...newInput });
   };
 
-
   const handleDobInput = (event) => {
     const value = event.target.value;
     const formattedValue = value.replace(/\D/g, '');
@@ -61,47 +60,31 @@ const Signup = () => {
     setData({ ...data, dob: formattedDob });
   };
 
-  // const generateUniqueToken = () => {
-  //   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  //   let token = '';
-  //   for (let i = 0; i < 60; i++) {
-  //     token += characters.charAt(Math.floor(Math.random() * characters.length));
-  //   }
-  //   return token;
-  // };
-
   const checkEmailExists = async (email) => {
     const q = query(collection(db, 'users'), where('email', '==', email));
     const querySnapshot = await getDocs(q);
 
     return !querySnapshot.empty;
   };
+
   const checkNumberExists = async (phoneNumber) => {
     const q = query(collection(db, 'users'), where('phoneNumber', '==', phoneNumber));
     const querySnapshot = await getDocs(q);
 
     return !querySnapshot.empty;
   };
-  // const generateUniqueUserId = async () => {
-  //   let userId;
-  //   let isUnique = false;
 
-  //   while (!isUnique) {
-  //     userId = generateUniqueToken();
-
-  //     const q = query(collection(db, 'users'), where('unique_id', '==', userId));
-  //     const querySnapshot = await getDocs(q);
-
-  //     if (querySnapshot.empty) {
-  //       isUnique = true;
-  //     }
-  //   }
-
-  //return userId;
-  //};
-
-
-
+  const calculateAge = (dob) => {
+    const [day, month, year] = dob.split('/');
+    const birthDate = new Date(year, month - 1, day);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -114,40 +97,31 @@ const Signup = () => {
     }
 
     try {
-      // const userId = await generateUniqueUserId();
-
       if (emailExists) {
         alert("Email has already been taken");
       } else if (numberexists) {
         alert("Number has already been taken");
+      } else {
+        const age = calculateAge(data.dob);
+        const docRef = await addDoc(collection(db, 'users'), {
+          ...data,
+          age,
+          Timestamp: Main_date,
+        });
+
+        const newDocId = docRef.id;
+        await updateDoc(docRef, {
+          Document_Id: newDocId,
+        });
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
       }
-
-
-      const docRef = await addDoc(collection(db, 'users'), {
-        ...data,
-        Timestamp: Main_date,
-      });
-
-      const newDocId = docRef.id;
-      await updateDoc(docRef, {
-        Document_Id: newDocId,
-      });
-
-      setTimeout(() => {
-        Navigate("/login");
-      }, 1000);
     } catch (error) {
       console.error('Error adding data to Firestore: ', error);
     }
   };
-
-
-
-
-
-
-
-
 
   return (
     <div className='signup_page'>
