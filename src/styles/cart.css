@@ -2,7 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
-/* background-color: rgba(0, 0, 0, 0.4); */
 
 :root {
   --montserrat: "Montserrat", sans-serif;
@@ -28,11 +27,9 @@
 .cart_main_container_ksdab {
   display: flex;
   flex-wrap: wrap;
-  /* justify-content: flex-start; */
   max-width: 1279px;
   margin-bottom: 200px;
   margin-top: 196px;
-  /* margin-left: 200px; */
 }
 
 .cartksdab-media-container {
@@ -44,11 +41,10 @@
 }
 
 .cartksdab-media {
-  width: 100%; /* Adjust width here */
+  width: 100%;
   height: 260px;
   box-sizing: border-box;
-  margin-bottom: 47px;
-  margin-left: 194px;
+  margin-bottom: 10px;
 }
 
 .cartcustom-controls {
@@ -123,8 +119,6 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
-  /* height: 55px;
-  width: 50px; */
 }
 
 .cartvertical-line {
@@ -156,13 +150,6 @@
   transition: background-color 0.5s;
 }
 
-
-/* .scrollable {
-  overflow-x: auto;
-  white-space: nowrap;
-} */
-
-/* Add the following styles for the right chevron */
 .fa-chevron-right {
   position: absolute;
   right: 0;
@@ -170,173 +157,11 @@
   transform: translateY(-50%);
 }
 
-/* Adjust the styles for the left chevron */
 .fa-chevron-left {
   position: absolute;
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-}
-
-/* .fa-chevron-left:hover,
-.fa-chevron-right:hover {
-  background-color: white;
-} */
-
-.chevron-right,
-.chevron-left {
-  font-size: 25px;
-}
-
-.cartmedialinker-container-comments {
-  font-weight: bold;
-  font-family: var(--montserrat);
-}
-
-.cartmedialinker-vertical-line-vol {
-  border-bottom: 1px solid black;
-  width: 100%;
-}
-
-.cartmedialinker-comments-profile-image-xyzaz {
-  border-radius: 50%;
-  margin-top: 12px;
-  height: 40px;
-  width: 43px;
-  margin-left: 4px;
-  display: inline-block;
-}
-
-.cartmedialinker-profile-name-xyzax {
-  font-weight: bold;
-  font-size: 17px;
-  font-family: var(--montserrat);
-  display: inline-block;
-  margin: 3px 7px 3px 11px;
-  top: -12px;
-  position: relative;
-}
-
-.cartmedialinker-inprofile-xyzax-comment {
-  margin: 6px 1px 1px 68px;
-}
-
-#commentText {
-  max-height: 100px;
-  overflow: hidden;
-}
-
-.cartexpanded {
-  max-height: none;
-}
-
-.cartmore-link {
-  color: blue;
-  cursor: pointer;
-  float: right;
-  margin-right: 121px;
-  position: relative;
-  top: -22px;
-}
-
-.cartmedialinker-comments-users-profile-ydxyz-img {
-  height: 38px;
-  width: 42px;
-  border-radius: 50%;
-  margin-left: 57px;
-  display: inline-block;
-}
-
-.cartmedialinker-comments-users-name-ydxyz {
-  font-size: 17px;
-  font-family: var(--Open-sans);
-  display: inline-block;
-  margin: 8px 7px 3px 106px;
-  top: -42px;
-  position: relative;
-}
-
-.cartmedialinker-comments-user-comments {
-  margin-top: 22px;
-  overflow-y: auto;
-}
-
-.cartmedialinker-comments-user-comments::-webkit-scrollbar {
-  width: 12px;
-}
-
-.cartmedialinker-comments-user-comments::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 6px;
-}
-
-.cartmedialinker-comments-user-comments::-webkit-scrollbar-thumb:hover {
-  background: #aaa;
-}
-
-.cartmedialinker-comments-users-comments-ydxyz {
-  margin: 0px 1px 1px 119px;
-  position: relative;
-  top: -27px;
-}
-
-.cartmedialinker-comments-users {
-  margin-bottom: 9px;
-}
-
-.carttop_upper_bottom_down_xdsyz {
-  position: relative;
-  margin-top: 114px;
-  background-color: #ddd;
-}
-
-.carttop_upper_bottom_down_xdsyz textarea {
-  width: 100%;
-  max-height: 200px;
-  font-size: 16px;
-  border-top: 1px solid black;
-  border-right: 1px solid white;
-  border-bottom: 1px solid white;
-  border-left: 1px solid white;
-  padding: 10px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  resize: none;
-  overflow: auto;
-  font-family: var(--montserrat);
-  background-color: #ddd;
-}
-
-.carttop_upper_bottom_down_xdsyz textarea:focus {
-  outline: none;
-}
-
-.carttop_upper_bottom_down_xdsyz textarea::placeholder {
-  color: gray;
-}
-
-.cartvertical_top_xdsyz {
-  width: 100%;
-  height: 1px;
-  background-color: black;
-  margin-right: 10px;
-}
-
-.cartvertical_down_xdsyz {
-  width: 1px;
-  background-color: black;
-  margin-left: 10px;
-}
-
-.cartsave-button {
-  background-color: black;
-  font-family: var(--montserrat);
-  position: relative;
-  left: 384px;
-  color: white;
-  padding: 8px 8px 8px 8px;
-  bottom: 62px;
 }
 
 .cartksdab_image_comment {
@@ -355,24 +180,9 @@
   font-family: var(--montserrat);
 }
 
-/* .fa_times_line{
-  width: 34px;
-  height: 100%;
-  background-color: #e2f3ff;
-  position: relative;
-  left: 0;
-} */
-
 .cartksdab_fixed {
   max-width: 100%;
   background-color: #e2f3ff;
-}
-
-.cartvertical_line_2 {
-  width: 2px;
-  height: 100%;
-  background-color: #ddd;
-  visibility: hidden;
 }
 
 .cartksdab_content_comment {
@@ -380,4 +190,46 @@
   font-family: var(--montserrat);
   position: relative;
   bottom: 11px;
+}
+
+.cartksdab-media-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(7.5px) brightness(0.8) contrast(1.2); 
+  z-index: 1;
+  transition: backdrop-filter 0.3s ease;
+  pointer-events: none;
+}
+
+.cartksdab-media-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 260px;
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color 0.55s ease;
+  pointer-events: none;
+}
+
+.cartksdab-media-container:hover::after {
+  background-color: rgba(58, 58, 58, 0.2);
+}
+
+.cartmedia-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(16px) brightness(0.8) contrast(1.2); 
+  z-index: 1;
+  transition: backdrop-filter 0.3s ease;
+  pointer-events: none;
 }
