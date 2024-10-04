@@ -233,3 +233,25 @@
   transition: backdrop-filter 0.3s ease;
   pointer-events: none;
 }
+
+.cartbuy_media_ksdab{
+  font-family: var(--montserrat);
+  position: relative;
+  background-color: #f0f0f0;
+  height: 105px;
+  top: 72%;
+}
+
+
+.cartbuy_media_ksdab_button{
+  background-color:#e2f3ff;
+  border: none;
+  border-radius: 28px;
+  font-size: 18px;
+  font-family: var(--montserrat);
+  width: 290px;
+  height: 54px;
+  margin-top: 23px;
+  margin-left: 94px;
+  cursor: pointer;
+}

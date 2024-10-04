@@ -38,7 +38,7 @@ const SearchProfile = () => {
 
 
 
-
+  
 
 
   const fetchIndividualImages = async () => {
@@ -96,7 +96,7 @@ const SearchProfile = () => {
                   downloadUrl
                 };
               } else {
-                console.log("No matching user ID or no items in folder for", folderRef.name);
+                // console.log("No matching user ID or no items in folder for", folderRef.name);
               }
             } catch (error) {
               console.error(`Error processing folder ${folderRef.name}:`, error);
@@ -148,7 +148,6 @@ const SearchProfile = () => {
       let matchingSubfolder = null;
       let documentId = null;
 
-      // Iterate through subfolders to find the one that contains the image
       for (const folder of folderItems.prefixes) {
         const subFolderRef = ref(storage, folder.fullPath);
         const subFolderItems = await listAll(subFolderRef);
@@ -175,7 +174,6 @@ const SearchProfile = () => {
           return { name: item.name, downloadUrl };
         }));
 
-        // Fetch the comment directly by documentId from Firestore
         if (documentId) {
           const docRef = doc(db, 'comments', documentId);
           const docSnap = await getDoc(docRef);
@@ -260,13 +258,12 @@ const SearchProfile = () => {
     setSelectedGroupIndex(previousIndex);
   };
 
-  const gotToNewPage = async () => {
+  const goToNewPage = async () => {
     const rootFolder = 'images';
     const storageRootRef = ref(storage, rootFolder);
     const folderItems = await listAll(storageRootRef);
 
     let matchFound = false;
-
     if (userfunc != null) {
       for (const folder of folderItems.prefixes) {
         const subFolderRef = ref(storage, folder.fullPath);
@@ -274,7 +271,7 @@ const SearchProfile = () => {
 
         if (subFolderItems.items.some(item => item.name === selectedMediaId)) {
           const folderName = folder.name;
-          setData([id[7], folderName]);
+          setData([user[5], folderName]);
           matchFound = true;
           break;
         }
@@ -284,7 +281,7 @@ const SearchProfile = () => {
     if (!matchFound) {
       for (const item of folderItems.items) {
         if (item.name === selectedMediaId) {
-          setData([id[7], selectedMediaId]);
+          setData([user[5], selectedMediaId]);
           matchFound = true;
           break;
         }
@@ -313,7 +310,6 @@ const SearchProfile = () => {
 
       let matchFound = false;
 
-      // Check subfolders for a match
       for (const folder of folderItems.prefixes) {
         const subFolderRef = ref(storage, folder.fullPath);
         const subFolderItems = await listAll(subFolderRef);
@@ -329,7 +325,6 @@ const SearchProfile = () => {
         }
       }
 
-      // If no match in subfolders, check single contents
       if (!matchFound) {
         for (const item of folderItems.items) {
           if (item.name === selectedMediaId) {
@@ -343,11 +338,11 @@ const SearchProfile = () => {
         }
       }
 
-      if (matchFound) {
-        console.log('Item added to cart successfully');
-      } else {
-        console.log('No matching item found to add to cart');
-      }
+      // if (matchFound) {
+      //   console.log('Item added to cart successfully');
+      // } else {
+      //   console.log('No matching item found to add to cart');
+      // }
     } catch (error) {
       console.error('Error adding item to cart: ', error);
     }
@@ -363,12 +358,6 @@ const SearchProfile = () => {
     // fetchImagesInSubfolders();
     fetchSubfolders();
   }, [id]);
-
-
-
-
-
-
 
 
 
@@ -558,7 +547,7 @@ const SearchProfile = () => {
                   }}
                 ></i>
                 <div className="searchbuy_media_ksdab">
-                  <button className="searchbuy_media_ksdab_button" onClick={gotToNewPage}>Buy Now</button>
+                  <button className="searchbuy_media_ksdab_button" onClick={goToNewPage}>Buy Now</button>
                   <img onClick={addToCart} src={cart} alt="" className="searchbuy_media_ksdab_image" />
                 </div>
 

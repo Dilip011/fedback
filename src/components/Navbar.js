@@ -3,7 +3,7 @@ import profile from "../images/Profile.jpg";
 import logo from "../images/attachment.png";
 import "../styles/navbar.css";
 import { NavLink, useNavigate } from 'react-router-dom';
-import { collection, query, orderBy, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, query, orderBy, getDocs,doc,getDoc } from 'firebase/firestore';
 import { db } from './firebaseconfig';
 import { useUserContext } from './Usercontext';
 import { useUsersearch } from "./UserContext2";
@@ -26,61 +26,7 @@ const Navbar = () => {
   const { setContentIdResults, setContentFolderIdResults } = useSearchContext();
   const Navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const fetchSearchResults = async () => {
-  //     if (searchTerm.trim() === '') {
-  //       setSearchResults([]);
-  //       setLocalContentIdResults([]);
-  //       setLocalContentFolderIdResults([]);
-  //       setContentIdResults([]);
-  //       setContentFolderIdResults([]);
-  //       return;
-  //     }
-
-  //     if (activeTab === 'user') {
-  //       const usersCollection = collection(db, 'users');
-  //       const q = query(usersCollection, orderBy('name'));
-  //       const querySnapshot = await getDocs(q);
-  //       const results = querySnapshot.docs
-  //         .filter(doc => doc.id !== user[5])
-  //         .map(doc => doc.data());
-
-  //       const filteredResults = results.filter(user =>
-  //         user.name.toLowerCase().startsWith(searchTerm.toLowerCase())
-  //       );
-
-  //       setSearchResults(filteredResults);
-  //     } else if (activeTab === 'videos') {
-  //       const commentsCollection = collection(db, 'comments');
-  //       const q = query(commentsCollection);
-  //       const querySnapshot = await getDocs(q);
-
-  //       const searchWords = searchTerm.toLowerCase().split(' ');
-  //       const contentIdArray = [];
-  //       const contentFolderIdArray = [];
-
-  //       querySnapshot.docs.forEach(doc => {
-  //         const data = doc.data();
-  //         const titleWords = data.content_title.toLowerCase().split(' ');
-
-  //         if (searchWords.some(word => titleWords.includes(word))) {
-  //           if (data.content_id) {
-  //             contentIdArray.push(data.content_id);
-  //           } else if (data.contentfolder_id) {
-  //             contentFolderIdArray.push(data.contentfolder_id);
-  //           }
-  //         }
-  //       });
-
-  //       setLocalContentIdResults(contentIdArray);
-  //       setLocalContentFolderIdResults(contentFolderIdArray);
-  //       setContentIdResults(contentIdArray);
-  //       setContentFolderIdResults(contentFolderIdArray);
-  //     }
-  //   };
-
-  //   fetchSearchResults();
-  // }, [searchTerm, activeTab, user[5], ageFilterVisible]);
+  
 
   useEffect(() => {
     const fetchSearchResults = async () => {
@@ -92,18 +38,21 @@ const Navbar = () => {
         setContentFolderIdResults([]);
         return;
       }
-  
+
+
+
       if (activeTab === 'user') {
         const usersCollection = collection(db, 'users');
         const q = query(usersCollection, orderBy('name'));
         const querySnapshot = await getDocs(q);
-  
+
         const filteredResults = querySnapshot.docs
           .filter(doc => doc.id !== user[5])
           .map(doc => doc.data())
           .filter(user => {
             const userAge = parseInt(user.age, 10);
             let isAgeMatch = false;
+            console.log(selectedAgeOption);
             switch (selectedAgeOption) {
               case 'less_than_7':
                 isAgeMatch = userAge < 7;
@@ -121,33 +70,38 @@ const Navbar = () => {
                 isAgeMatch = userAge > 40;
                 break;
               default:
-                isAgeMatch = true;
+                isAgeMatch = true; 
             }
+            
+            
             return isAgeMatch && user.name.toLowerCase().startsWith(searchTerm.toLowerCase());
-          });
+          })
+          ;
         setSearchResults(filteredResults);
-  
       } else if (activeTab === 'videos') {
         const commentsCollection = collection(db, 'comments');
         const q = query(commentsCollection);
         const querySnapshot = await getDocs(q);
-  
+      
         const searchWords = searchTerm.toLowerCase().split(' ');
         const contentIdArray = [];
         const contentFolderIdArray = [];
-  
-        for (const doc of querySnapshot.docs) {
-          const data = doc.data();
+      
+        for (const docSnapshot of querySnapshot.docs) {
+          const data = docSnapshot.data();
           const titleWords = data.content_title.toLowerCase().split(' ');
-  
+      
           if (searchWords.some(word => titleWords.includes(word))) {
-            const userRef = doc.data().user_id;
-            const userDoc = await getDoc(doc(db, 'users', userRef)); 
-  
+            const userId = data.user_id; // Get the user_id
+      
+            // Fetch the user document from the 'users' collection
+            const userDoc = await getDoc(doc(db, 'users', userId));
+      
             if (userDoc.exists()) {
               const userData = userDoc.data();
-              const userAge = parseInt(userData.age, 10);
-  
+              const userAge = parseInt(userData.age, 10); // Assuming age is stored as a string
+      
+              // Check if the user's age matches the selected age range
               let isAgeMatch = false;
               switch (selectedAgeOption) {
                 case 'less_than_7':
@@ -166,9 +120,10 @@ const Navbar = () => {
                   isAgeMatch = userAge > 40;
                   break;
                 default:
-                  isAgeMatch = true;
+                  isAgeMatch = true; 
               }
-  
+      
+             
               if (isAgeMatch) {
                 if (data.content_id) {
                   contentIdArray.push(data.content_id);
@@ -179,17 +134,19 @@ const Navbar = () => {
             }
           }
         }
-  
+      
+        // Set the results
         setLocalContentIdResults(contentIdArray);
         setLocalContentFolderIdResults(contentFolderIdArray);
         setContentIdResults(contentIdArray);
         setContentFolderIdResults(contentFolderIdArray);
       }
+      
+      
     };
-  
+
     fetchSearchResults();
   }, [searchTerm, activeTab, user[5], ageFilterVisible, selectedAgeOption]);
-  
 
 
 

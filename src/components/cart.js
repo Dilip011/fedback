@@ -7,6 +7,10 @@ import { ref, getDownloadURL, listAll } from 'firebase/storage';
 import { useRef } from 'react';
 import image from "../images/Profile-2.jpeg"
 import { doc, getDoc } from 'firebase/firestore';
+import { useUserpayment } from './Usercontext3';
+import { useUsersearch } from './UserContext2';
+import { useNavigate } from 'react-router-dom';
+
 
 const Cart = () => {
   const { user } = useUserContext();
@@ -21,6 +25,68 @@ const Cart = () => {
   const [isPauseIconVisible, setPauseIconVisible] = useState(true);
   const [selectedGroupIndex, setSelectedGroupIndex] = useState(0);
   const [userfunc, setuserfunc] = useState([]);
+  const { setData } = useUserpayment();
+  const { id } = useUsersearch();
+  const Navigate = useNavigate();
+  
+
+  const goToNewPage = async () => {
+    const foundMedia = fetchedSingleMedia.find((media) => media.name === selectedMediaId);
+
+    if (foundMedia) {
+      setData([user[5], foundMedia.name]);
+
+      const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+[]{}|;:,.<>?';
+      let result = '';
+      const charactersLength = characters.length;
+
+      for (let i = 0; i < 16; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+
+      Navigate(`/payment/${result}`);
+
+    } else {
+      const mediaFromUserFunc = userfunc[selectedGroupIndex];
+      const mediaId = mediaFromUserFunc.name;
+
+      try {
+        const rootFolder = 'images';
+        const storageRootRef = ref(storage, rootFolder);
+        const folderItems = await listAll(storageRootRef);
+
+        let mediaFound = null;
+
+
+        for (const folder of folderItems.prefixes) {
+
+          const folderRef = ref(storage, `${rootFolder}/${folder.name}`);
+          const subfolderItems = await listAll(folderRef);
+
+          mediaFound = subfolderItems.items.find(item => item.name === mediaId);
+
+
+          setData([user[5], folder.name]);
+          const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+[]{}|;:,.<>?';
+          let result = '';
+          const charactersLength = characters.length;
+
+          for (let i = 0; i < 16; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+          }
+
+          Navigate(`/payment/${result}`);
+
+        }
+
+
+      } catch (error) {
+        console.error('Error fetching folder from storage:', error);
+      }
+    }
+  };
+
+
 
   const fetchPurchasedItems = async () => {
     try {
@@ -75,12 +141,12 @@ const Cart = () => {
   //     const rootFolder = 'images';
   //     const storageRootRef = ref(storage, rootFolder);
   //     const folderItems = await listAll(storageRootRef);
-  
+
   //     for (const folderName of usermultiple) {
   //       for (const folder of folderItems.prefixes) {
   //         const subFolderRef = ref(storage, folder.fullPath);
   //         const subFolderItems = await listAll(subFolderRef);
-  
+
   //         if (subFolderItems.items.some(item => item.name.includes(folderName))) {
   //           console.log('Matched folder:', folder.name);
   //           break;
@@ -101,32 +167,30 @@ const Cart = () => {
       const rootFolder = 'images';
       const storageRootRef = ref(storage, rootFolder);
       const folderItems = await listAll(storageRootRef);
-  
-      
-   
+
       for (const folderName of usermultiple) {
         const matchingFolder = folderItems.prefixes.find(folder => folder.name === folderName);
-  
+
         if (matchingFolder) {
-  
+
           const subFolderRef = ref(storage, matchingFolder.fullPath);
           const subFolderItems = await listAll(subFolderRef);
-  
+
           const firstImage = subFolderItems.items.find(item =>
             item.name.endsWith('.png') ||
             item.name.endsWith('.jpg') ||
             item.name.endsWith('.jpeg') ||
             item.name.endsWith('.mp4')
           );
-  
+
           if (firstImage) {
             const downloadUrl = await getDownloadURL(firstImage);
             setFetchedMultipleMedia(prevMedia => [
               ...prevMedia,
               { name: firstImage.name, downloadUrl }
             ]);
-  
-            break; 
+
+            break;
           } else {
             // console.log("No matching image found in the subfolder.");
           }
@@ -138,11 +202,6 @@ const Cart = () => {
       console.error('Error fetching subfolder items:', error);
     }
   };
-  
-  
-  
-  
-  
 
   const handleContent = async () => {
     try {
@@ -262,6 +321,7 @@ const Cart = () => {
     setSelectedGroupIndex(previousIndex);
   };
 
+
   useEffect(() => {
     if (user) {
       fetchPurchasedItems();
@@ -276,7 +336,7 @@ const Cart = () => {
       fetchSubFolder();
 
     }
-  }, [usersingle,usermultiple]);
+  }, [usersingle, usermultiple]);
 
   useEffect(() => {
     if (selectedMediaId) {
@@ -457,6 +517,7 @@ const Cart = () => {
                 <img className='cartksdab_image_comment' src={image} alt="" />
                 <div className="cartksdab_name_comment">{user[0]}</div>
                 <div className="cartksdab_content_comment">{comments}</div>
+
               </div>
               <i
                 className="fa-solid fa-times"
@@ -467,6 +528,10 @@ const Cart = () => {
                   setComments([]);
                 }}
               ></i>
+              <div className="cartbuy_media_ksdab">
+                <button className="cartbuy_media_ksdab_button" onClick={goToNewPage}>Buy Now</button>
+                {/* <img onClick={addToCart} src={cart} alt="" className="cartbuy_media_ksdab_image" /> */}
+              </div>
             </div>
           </div>
         </div>
