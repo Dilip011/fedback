@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import "../styles/yourvideos.css";
-import { ref, getDownloadURL, listAll } from 'firebase/storage';
+import { ref, getDownloadURL, listAll, deleteObject, } from 'firebase/storage';
 import { useUserContext } from './Usercontext';
 import { storage } from './firebaseconfig';
 import image from "../images/Profile-2.jpeg"
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, query, collection, where, getDocs, deleteDoc } from 'firebase/firestore';
 import { db } from './firebaseconfig';
+import { useNavigate } from 'react-router-dom';
 
 
 const splitPipeSeparatedId = (id) => {
@@ -13,17 +14,9 @@ const splitPipeSeparatedId = (id) => {
   return { name, v4Id, userId };
 };
 
-// const foldersplit = (id) => {
-//   const [foldername, userid] = id.split('|');
-//   return { foldername, userid };
-// };
-
-
-
 
 const BackupYourVideos = () => {
   const [selectedMediaId, setSelectedMediaId] = useState(null);
-  // const [selectedlocationpath, setselectedlocationpath] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPauseIconVisible, setPauseIconVisible] = useState(true);
   const mediaRef = useRef(null);
@@ -34,9 +27,9 @@ const BackupYourVideos = () => {
   const [userfunc, setuserfunc] = useState([]);
   const [selectedGroupIndex, setSelectedGroupIndex] = useState(0);
   const [comments, setComments] = useState([]);
-
-
-
+  const [getname, setgetname] = useState(null);
+  const [mediaSource, setMediaSource] = useState(null);
+  const navigate = useNavigate();
 
   const fetchIndividualImages = async () => {
     if (user && user[5]) {
@@ -144,7 +137,7 @@ const BackupYourVideos = () => {
       let matchingSubfolder = null;
       let documentId = null;
 
-      
+
       for (const folder of folderItems.prefixes) {
         const subFolderRef = ref(storage, folder.fullPath);
         const subFolderItems = await listAll(subFolderRef);
@@ -205,8 +198,6 @@ const BackupYourVideos = () => {
         throw new Error('Invalid media ID format');
       }
 
-
-
       const docRef = doc(db, 'comments', documentId);
       const docSnap = await getDoc(docRef);
 
@@ -253,17 +244,75 @@ const BackupYourVideos = () => {
     setSelectedGroupIndex(previousIndex);
   };
 
+  const handleDelete = async () => {
+
+    if (mediaSource === 'usersingleMedia') {
+      const fileRef = ref(storage, `images/${getname.name}`);
+
+      try {
+        await deleteObject(fileRef);
+
+        const commentsRef = collection(db, 'comments');
+        const q = query(commentsRef, where('content_id', '==', `images/${getname.name}`));
+
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach(async (docSnap) => {
+          await deleteDoc(doc(db, 'comments', docSnap.id));
+        });
+
+        setSelectedMediaId(null);
+        setuserfunc([]);
+        setComments([]);
+        navigate('/home')
+      } catch (error) {
+        console.error('Error deleting file or comment:', error);
+      }
+
+    } else if (mediaSource === 'userfunc') {
+
+      const rootRef = ref(storage, 'images');
+      try {
+        const folderList = await listAll(rootRef);
+
+        for (const folder of folderList.prefixes) {
+          const folderRef = ref(storage, folder.fullPath);
+          const fileList = await listAll(folderRef);
+
+          const matchedFile = fileList.items.find((file) => file.name === getname.name);
+          if (matchedFile) {
+            for (const file of fileList.items) {
+              await deleteObject(file);
+            }
+
+            const commentsRef = collection(db, 'comments');
+            const q = query(commentsRef, where('contentfolder_id', '==', `${folder.fullPath}/${getname.name}`));
+
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach(async (docSnap) => {
+              await deleteDoc(doc(db, 'comments', docSnap.id));
+            });
+            setSelectedMediaId(null);
+            setuserfunc([]);
+            setComments([]);
+            navigate('/home')
+            break;
+          }
+        }
+      } catch (error) {
+        console.error('Error deleting files in subfolder:', error);
+      }
+    }
+  };
+
+
+
+
+
   useEffect(() => {
     fetchIndividualImages();
     // fetchImagesInSubfolders();
     fetchSubfolders();
   }, [user]);
-
-
-
-
-
-
 
 
   return (
@@ -364,13 +413,6 @@ const BackupYourVideos = () => {
 
 
 
-      {/* ***************
-
-
-                     From here the medialinker starts
-
-                                     ************************ */}
-
       {selectedMediaId && (
         <>
           <div className="backmedialinker-container scrollable">
@@ -419,11 +461,53 @@ const BackupYourVideos = () => {
                     setSelectedMediaId(null);
                     setuserfunc([]);
                     setComments([]);
+                    setMediaSource(null);
+                    setgetname(null);
                   }}
                 ></i>
+                {/* <div className="backupyourvideos_chevron_delete">
+                  <button onClick={() => {
+                    const foundMedia = usersingleMedia.find((media) => media.name === selectedMediaId);
+
+                    if (foundMedia) {
+                      setMediaSource('usersingleMedia');
+                      setgetname(foundMedia);
+                    } else {
+                      setMediaSource('userfunc');
+                      setgetname(userfunc[selectedGroupIndex]);
+                    }
+
+                    handleDelete();
+                  }}>
+                    Delete
+                  </button>
+                </div> */}
+
+                <div className="backupyourvideos_chevron_delete">
+                  <button onClick={() => {
+                    const foundMedia = usersingleMedia.find((media) => media.name === selectedMediaId);
+
+                    if (foundMedia) {
+                      setMediaSource('usersingleMedia');
+                      setgetname(foundMedia);
+                    } else {
+                      setMediaSource('userfunc');
+                      setgetname(userfunc[selectedGroupIndex]);
+                    }
+
+                    handleDelete();
+                  }}>
+                    <i className="fa fa-trash"></i> Delete
+                  </button>
+                </div>
+
+
               </div>
+
             </div>
           </div>
+
+
 
           {userfunc && userfunc.length > 0 && (
             <div className="backchevrons">
@@ -447,7 +531,7 @@ const BackupYourVideos = () => {
                 }}
                 onClick={handleNextImage}
               ></i>
-              
+
             </div>
           )}
         </>

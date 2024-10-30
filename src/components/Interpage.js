@@ -35,7 +35,7 @@ const Interpage = () => {
           </div>
 
           <div className='cards_div_xyzab'>
-            <i class="fa-solid fa-cart-shopping"></i>
+          <i className="fas fa-check-circle"></i>
             <NavLink to="/purchases">Your purchases</NavLink>
           </div>
 

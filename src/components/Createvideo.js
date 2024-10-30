@@ -22,7 +22,7 @@ const CreateVideo = () => {
   function handleclickonfile() {
     navigate(`/yourcontent/${user[6]}`);
   }
-  console.log(user);
+  
 
   const handleFileChange = async (e) => {
     const files = Array.from(e.target.files);

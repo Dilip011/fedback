@@ -33,13 +33,13 @@
   justify-content: flex-start;
   max-width: 1279px;
   margin-bottom: 200px;
-  margin-top: 196px;
-  margin-left: 200px;
+  margin-top: 147px;
+  margin-left: 138px;
 }
 
 .backksdab-media-container {
   position: relative;
-  width: calc(33.33% - 20px);
+  /* width: calc(33.33% - 224px); */
   margin: 10px;
   box-sizing: border-box;
   cursor: pointer;
@@ -47,12 +47,13 @@
 
 
 .backksdab-media {
-  width: 100%;
+  width: 346px;
   height: 260px;
-  /* Assuming the same height as videos */
   box-sizing: border-box;
   margin-bottom: 10px;
+  margin-right: 0px;
 }
+
 
 .backcustom-controls {
   font-size: 24px;
@@ -173,6 +174,7 @@
   transform: translateY(-50%);
   z-index: 1000;
 }
+
 .chevron_yourvideo_left {
   position: absolute;
   left: 12px;
@@ -211,7 +213,7 @@
   display: inline-block;
 }
 
-.backmedialinker-profile-name-xyzax{
+.backmedialinker-profile-name-xyzax {
   font-weight: bold;
   font-size: 17px;
   font-family: var(--montserrat);
@@ -221,7 +223,7 @@
   position: relative;
 }
 
-.backmedialinker-inprofile-xyzax-comment{
+.backmedialinker-inprofile-xyzax-comment {
   margin: 6px 1px 1px 68px;
 }
 
@@ -231,7 +233,7 @@
 }
 
 .backexpanded {
-  max-height: none; 
+  max-height: none;
 }
 
 .backmore-link {
@@ -244,7 +246,7 @@
 }
 
 
-.backmedialinker-comments-users-profile-ydxyz-img{
+.backmedialinker-comments-users-profile-ydxyz-img {
   height: 38px;
   width: 42px;
   border-radius: 50%;
@@ -252,7 +254,7 @@
   display: inline-block;
 }
 
-.backmedialinker-comments-users-name-ydxyz{
+.backmedialinker-comments-users-name-ydxyz {
   font-size: 17px;
   font-family: var(--Open-sans);
   display: inline-block;
@@ -279,13 +281,13 @@
   background: #aaa;
 }
 
-.backmedialinker-comments-users-comments-ydxyz{
+.backmedialinker-comments-users-comments-ydxyz {
   margin: 0px 1px 1px 119px;
   position: relative;
   top: -27px;
 }
 
-.backmedialinker-comments-users{
+.backmedialinker-comments-users {
   margin-bottom: 9px;
 }
 
@@ -298,12 +300,12 @@
 }
 
 .backtop_upper_bottom_down_xdsyz textarea {
-  width: 100%; 
+  width: 100%;
   max-height: 200px;
   font-size: 16px;
-  border-top: 1px solid black; 
+  border-top: 1px solid black;
   border-right: 1px solid white;
-  border-bottom: 1px solid white; 
+  border-bottom: 1px solid white;
   border-left: 1px solid white;
   padding: 10px;
   position: absolute;
@@ -324,19 +326,19 @@
 }
 
 .backvertical_top_xdsyz {
-  width: 100%; 
-  height: 1px; 
+  width: 100%;
+  height: 1px;
   background-color: black;
-  margin-right: 10px; 
+  margin-right: 10px;
 }
 
 .backvertical_down_xdsyz {
   width: 1px;
   background-color: black;
-  margin-left: 10px; 
+  margin-left: 10px;
 }
 
-.backsave-button{
+.backsave-button {
   background-color: black;
   font-family: var(--montserrat);
   position: relative;
@@ -346,7 +348,7 @@
   bottom: 62px;
 }
 
-.backksdab_image_comment{
+.backksdab_image_comment {
   border-radius: 50%;
   width: 35px;
   height: 35px;
@@ -354,7 +356,7 @@
   margin-top: 22px;
 }
 
-.backksdab_name_comment{
+.backksdab_name_comment {
   margin-left: 62px;
   font-weight: bold;
   position: relative;
@@ -370,19 +372,19 @@
   left: 0;
 } */
 
-.backksdab_fixed{
+.backksdab_fixed {
   max-width: 100%;
   background-color: #e2f3ff;
 }
 
-.backvertical_line_2{
+.backvertical_line_2 {
   width: 2px;
   height: 100%;
   background-color: #ddd;
   visibility: hidden;
 }
 
-.backksdab_content_comment{
+.backksdab_content_comment {
   margin-left: 81px;
   font-family: var(--montserrat);
   position: relative;
@@ -405,3 +407,61 @@
 .backksdab-media-container:hover::after {
   background-color: rgba(58, 58, 58, 0.4);
 }
+
+
+/* .backupyourvideos_chevron_delete { position: relative;top: 643px;left: -1px;display: flex;justify-content: center;}
+
+.backupyourvideos_chevron_delete button {color: white;background-color: #ff4b5c;width: 150px;padding: 10px 20px;font-family: 'Montserrat', sans-serif;border-radius: 8px;cursor: pointer;font-size: 16px;font-weight: 600;border: none;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);transition: background-color 0.3s ease, transform 0.2s ease;}
+
+.backupyourvideos_chevron_delete button:hover {background-color: #ff1f3f;transform: translateY(-2px);}
+
+.backupyourvideos_chevron_delete button:active {background-color: #e04350;transform: translateY(0);} */
+
+.backupyourvideos_chevron_delete {
+  position: relative;
+  top: 643px;
+  left: -1px;
+  display: flex;
+  justify-content: center;
+}
+
+.backupyourvideos_chevron_delete button {
+  background-color: #ff4d4d;
+  color: white;
+  width: 150px;
+  padding: 10px 20px;
+  font-family: 'Montserrat', sans-serif;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.backupyourvideos_chevron_delete button i {
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.backupyourvideos_chevron_delete button:hover {
+  background-color: #e60000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.backupyourvideos_chevron_delete button:active {
+  background-color: #cc0000;
+  box-shadow: none;
+}
+
+
+
+
+
+
+
+

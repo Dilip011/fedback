@@ -211,8 +211,6 @@ const SearchProfile = () => {
         throw new Error('Invalid media ID format');
       }
 
-
-
       const docRef = doc(db, 'comments', documentId);
       const docSnap = await getDoc(docRef);
 

@@ -3,7 +3,7 @@ import profile from "../images/Profile.jpg";
 import logo from "../images/attachment.png";
 import "../styles/navbar.css";
 import { NavLink, useNavigate } from 'react-router-dom';
-import { collection, query, orderBy, getDocs,doc,getDoc } from 'firebase/firestore';
+import { collection, query, orderBy, getDocs,doc,getDoc,updateDoc,addDoc } from 'firebase/firestore';
 import { db } from './firebaseconfig';
 import { useUserContext } from './Usercontext';
 import { useUsersearch } from "./UserContext2";
@@ -25,6 +25,31 @@ const Navbar = () => {
   const { setId } = useUsersearch();
   const { setContentIdResults, setContentFolderIdResults } = useSearchContext();
   const Navigate = useNavigate();
+
+
+
+  const handleMostSearchedUpdate = async (word) => {
+    const mostSearchedCollection = collection(db, 'most_searched');
+    const querySnapshot = await getDocs(mostSearchedCollection);
+    const wordDoc = querySnapshot.docs.find(doc => 
+      doc.data().word.toLowerCase() === word.toLowerCase()
+    );
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    if (wordDoc) {
+      const docRef = doc(db, 'most_searched', wordDoc.id);
+      await updateDoc(docRef, {
+        count: wordDoc.data().count + 1,
+        date: currentDate
+      });
+    } else {
+      await addDoc(mostSearchedCollection, {
+        word: word,
+        date: currentDate,
+        count: 1
+      });
+    }
+  };
 
   
 
@@ -79,6 +104,7 @@ const Navbar = () => {
           ;
         setSearchResults(filteredResults);
       } else if (activeTab === 'videos') {
+        // await handleMostSearchedUpdate(searchTerm);
         const commentsCollection = collection(db, 'comments');
         const q = query(commentsCollection);
         const querySnapshot = await getDocs(q);
@@ -92,16 +118,16 @@ const Navbar = () => {
           const titleWords = data.content_title.toLowerCase().split(' ');
       
           if (searchWords.some(word => titleWords.includes(word))) {
-            const userId = data.user_id; // Get the user_id
+            const userId = data.user_id; 
       
-            // Fetch the user document from the 'users' collection
+            
             const userDoc = await getDoc(doc(db, 'users', userId));
       
             if (userDoc.exists()) {
               const userData = userDoc.data();
-              const userAge = parseInt(userData.age, 10); // Assuming age is stored as a string
+              const userAge = parseInt(userData.age, 10); 
       
-              // Check if the user's age matches the selected age range
+              
               let isAgeMatch = false;
               switch (selectedAgeOption) {
                 case 'less_than_7':
@@ -135,7 +161,7 @@ const Navbar = () => {
           }
         }
       
-        // Set the results
+        
         setLocalContentIdResults(contentIdArray);
         setLocalContentFolderIdResults(contentFolderIdArray);
         setContentIdResults(contentIdArray);
@@ -172,6 +198,7 @@ const Navbar = () => {
 
   const handleSearchKeyPress = (event) => {
     if (event.key === 'Enter') {
+      handleMostSearchedUpdate(searchTerm);
       setTimeout(() => {
         Navigate('/searchvideo');
         setSearchTerm('');

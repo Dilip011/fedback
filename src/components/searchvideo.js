@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchContext } from './SearchContext';
 import { ref, getDownloadURL, listAll } from 'firebase/storage';
 import { db, storage } from './firebaseconfig';
-import { doc, getDoc, addDoc, collection } from 'firebase/firestore';
+import { doc, getDoc, addDoc, collection,getDocs,query,where,updateDoc,increment } from 'firebase/firestore';
 import image from "../images/Profile-2.jpeg"
 import { useUserContext } from './Usercontext';
 import { useUserpayment } from './Usercontext3';
@@ -28,44 +28,19 @@ const Searchvideo = () => {
   const Navigate = useNavigate();
   const { id } = useUsersearch();
 
-  // const fetchIndividualImages = async () => {
-  //   try {
-  //     const rootFolder = 'images';
-  //     const storageRootRef = ref(storage, rootFolder);
-  //     const folderItems = await listAll(storageRootRef);
-
-  //     const mediaPromises = contentIdResults.map(async (mediaPath) => {
-  //       const mediaName = mediaPath.replace('images/', '');
-  //       const mediaRef = folderItems.items.find(item => item.name === mediaName);
-  //       if (mediaRef) {
-  //         const downloadUrl = await getDownloadURL(mediaRef);
-  //         return { name: mediaName, downloadUrl };
-  //       }
-  //       return null;
-  //     });
-
-  //     const mediaResults = await Promise.all(mediaPromises);
-  //     const filteredMediaResults = mediaResults.filter(media => media !== null);
-  //     setFetchedSingleMedia(filteredMediaResults);
-  //   } catch (error) {
-  //     console.error('Error fetching individual images:', error);
-  //   }
-  // };
-
-
   const fetchIndividualImages = async () => {
     try {
       const rootFolder = 'images';
       const storageRootRef = ref(storage, rootFolder);
       const folderItems = await listAll(storageRootRef);
-  
-      // Filter folderItems based on user[5] condition
+
+
       const filteredFolderItems = folderItems.items.filter(item => {
         const itemNameParts = item.name.split('|');
         const firstPart = itemNameParts[0];
         return firstPart !== user[5];
       });
-  
+
       const mediaPromises = contentIdResults.map(async (mediaPath) => {
         const mediaName = mediaPath.replace('images/', '');
         const mediaRef = filteredFolderItems.find(item => item.name === mediaName);
@@ -75,7 +50,7 @@ const Searchvideo = () => {
         }
         return null;
       });
-  
+
       const mediaResults = await Promise.all(mediaPromises);
       const filteredMediaResults = mediaResults.filter(media => media !== null);
       setFetchedSingleMedia(filteredMediaResults);
@@ -83,92 +58,46 @@ const Searchvideo = () => {
       console.error('Error fetching individual images:', error);
     }
   };
-  
-
-  // const fetchSubFolder = async () => {
-  //   try {
-  //     const rootFolder = 'images';
-  //     const storageRootRef = ref(storage, rootFolder);
-  //     const folderItems = await listAll(storageRootRef);
-
-  //     for (const folderPath of contentFolderIdResults) {
-  //       const folderName = folderPath.replace('images/', '');
-        
-
-  //       const matchingFolder = folderItems.prefixes.find(folder => folder.name === folderName);
-
-  //       if (matchingFolder) {
-  //         const subFolderRef = ref(storage, matchingFolder.fullPath);
-  //         const subFolderItems = await listAll(subFolderRef);
-
-  //         const firstImage = subFolderItems.items.find(item =>
-  //           item.name.endsWith('.png') ||
-  //           item.name.endsWith('.jpg') ||
-  //           item.name.endsWith('.jpeg') ||
-  //           item.name.endsWith('.mp4')
-  //         );
-
-  //         if (firstImage) {
-  //           const downloadUrl = await getDownloadURL(firstImage);
-  //           setFetchedMultipleMedia(prevMedia => [
-  //             ...prevMedia,
-  //             { name: firstImage.name, downloadUrl }
-  //           ]);
-
-  //           break;
-  //         } else {
-  //           console.log('No suitable file found in subfolder:', folderName);
-  //         }
-  //       } else {
-  //         console.log('No matching folder found for:', folderName);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching subfolder items:', error);
-  //   }
-  // };
 
   const fetchSubFolder = async () => {
     try {
       const rootFolder = 'images';
       const storageRootRef = ref(storage, rootFolder);
       const folderItems = await listAll(storageRootRef);
-  
-      // Filter folderItems based on user[5] condition
       const filteredFolderItems = folderItems.prefixes.filter(item => {
         const itemNameParts = item.name.split('|');
         const secondPart = itemNameParts[1].split('<')[0];
         return secondPart !== user[5];
       });
-  
+
       for (const folderPath of contentFolderIdResults) {
         const folderName = folderPath.replace('images/', '');
-        
+
         const matchingFolder = filteredFolderItems.find(folder => folder.name === folderName);
-  
+
         if (matchingFolder) {
           const subFolderRef = ref(storage, matchingFolder.fullPath);
           const subFolderItems = await listAll(subFolderRef);
-  
+
           const firstImage = subFolderItems.items.find(item =>
             item.name.endsWith('.png') ||
             item.name.endsWith('.jpg') ||
             item.name.endsWith('.jpeg') ||
             item.name.endsWith('.mp4')
           );
-  
+
           if (firstImage) {
             const downloadUrl = await getDownloadURL(firstImage);
             setFetchedMultipleMedia(prevMedia => [
               ...prevMedia,
               { name: firstImage.name, downloadUrl }
             ]);
-  
+
             break;
           } else {
             console.log('No suitable file found in subfolder:', folderName);
           }
-          
+
         } else {
           console.log('No matching folder found for:', folderName);
         }
@@ -177,8 +106,6 @@ const Searchvideo = () => {
       console.error('Error fetching subfolder items:', error);
     }
   };
-  
-
 
   const handleContent = async () => {
     try {
@@ -196,7 +123,7 @@ const Searchvideo = () => {
       let matchingSubfolder = null;
       let documentId = null;
 
-      // Iterate through subfolders to find the one that contains the image
+
       for (const folder of folderItems.prefixes) {
         const subFolderRef = ref(storage, folder.fullPath);
         const subFolderItems = await listAll(subFolderRef);
@@ -259,8 +186,6 @@ const Searchvideo = () => {
         throw new Error('Invalid media ID format');
       }
 
-
-
       const docRef = doc(db, 'comments', documentId);
       const docSnap = await getDoc(docRef);
 
@@ -268,7 +193,6 @@ const Searchvideo = () => {
         const data = docSnap.data();
         setComments([data.content_comment]);
       } else {
-        // console.log('No such document!');
         setComments([]);
       }
     } catch (error) {
@@ -302,6 +226,8 @@ const Searchvideo = () => {
 
 
 
+
+
   const gotToNewPage = async () => {
     const rootFolder = 'images';
     const storageRootRef = ref(storage, rootFolder);
@@ -319,19 +245,14 @@ const Searchvideo = () => {
           setData([id[7], folderName]);
           matchFound = true;
           break;
-        }
-      }
-    }
-
-    if (!matchFound) {
+        }}}
+     if (!matchFound) {
       for (const item of folderItems.items) {
         if (item.name === selectedMediaId) {
           setData([id[7], selectedMediaId]);
           matchFound = true;
           break;
-        }
-      }
-    }
+        }}}
 
     const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+[]{}|;:,.<>?';
     let result = '';
@@ -344,6 +265,8 @@ const Searchvideo = () => {
     Navigate(`/payment/${result}`);
   };
 
+  
+
 
   const addToCart = async () => {
     try {
@@ -355,7 +278,6 @@ const Searchvideo = () => {
 
       let matchFound = false;
 
-      // Check subfolders for a match
       for (const folder of folderItems.prefixes) {
         const subFolderRef = ref(storage, folder.fullPath);
         const subFolderItems = await listAll(subFolderRef);
@@ -363,7 +285,7 @@ const Searchvideo = () => {
         if (subFolderItems.items.some(item => item.name === selectedMediaId)) {
           const folderName = folder.name;
           await addDoc(cartCollectionRef, {
-            folder_name: folderName,
+            folder_name: folderName, 
             user_id: id[7]
           });
           matchFound = true;
@@ -371,7 +293,6 @@ const Searchvideo = () => {
         }
       }
 
-      // If no match in subfolders, check single contents
       if (!matchFound) {
         for (const item of folderItems.items) {
           if (item.name === selectedMediaId) {
@@ -386,7 +307,7 @@ const Searchvideo = () => {
       }
 
       if (matchFound) {
-        console.log('Item added to cart successfully');
+        
       } else {
         console.log('No matching item found to add to cart');
       }
@@ -394,6 +315,81 @@ const Searchvideo = () => {
       console.error('Error adding item to cart: ', error);
     }
   };
+
+
+  const most_searched_word = async () => {
+    const currentDate = new Date().toISOString().split('T')[0];
+    try {
+      const cartCollectionRef = collection(db, 'most_popular');
+      const rootFolder = 'images';
+      const storageRootRef = ref(storage, rootFolder);
+      const folderItems = await listAll(storageRootRef);
+  
+      let matchFound = false;
+  
+      for (const folder of folderItems.prefixes) {
+        const subFolderRef = ref(storage, folder.fullPath);
+        const subFolderItems = await listAll(subFolderRef);
+  
+        if (subFolderItems.items.some(item => item.name === selectedMediaId)) {
+          const folderName = folder.name;
+  
+          const querySnapshot = await getDocs(query(cartCollectionRef, where("folder_name", "==", folderName)));
+  
+          if (!querySnapshot.empty) {
+            const docRef = querySnapshot.docs[0].ref;
+            await updateDoc(docRef, {
+              count: increment(1),
+              date: currentDate
+            });
+          } else {
+            await addDoc(cartCollectionRef, {
+              folder_name: folderName, 
+              count: 1,
+              date: currentDate
+            });
+          }
+  
+          matchFound = true;
+          break;
+        }
+      }
+  
+      if (!matchFound) {
+        for (const item of folderItems.items) {
+          if (item.name === selectedMediaId) {
+            const querySnapshot = await getDocs(query(cartCollectionRef, where("media_name", "==", selectedMediaId)));
+  
+            if (!querySnapshot.empty) {
+              const docRef = querySnapshot.docs[0].ref;
+              await updateDoc(docRef, {
+                count: increment(1),
+                date: currentDate
+              });
+            } else {
+              await addDoc(cartCollectionRef, {
+                media_name: selectedMediaId,
+                count: 1,
+                date: currentDate
+              });
+            }
+  
+            matchFound = true;
+            break;
+          }
+        }
+      }
+  
+      if (!matchFound) {
+        console.log('No matching item found to add to cart');
+      }
+    } catch (error) {
+      console.error('Error adding item to cart: ', error);
+    }
+  };
+  
+
+
 
 
   useEffect(() => {
@@ -410,20 +406,16 @@ const Searchvideo = () => {
     if (selectedMediaId) {
       handleContent();
       handlecommentforindividualmedia();
+      most_searched_word();
     }
   }, [selectedMediaId]);
-
-  // useEffect(() => {
-  //   console.log("Fetched Single Media updated:", fetchedSingleMedia);
-  //   console.log("Fetched Multiple Media updated:", fetchedMultipleMedia);
-  // }, [fetchedSingleMedia,fetchedMultipleMedia]);
 
 
 
 
   return (
     <div className='searchxyzyourvideos_main_wrapper_ksdab'>
-      <div className="searchyourvideos_main_container_ksdab">
+      <div className="searchxyzyourvideos_main_container_ksdab">
         {fetchedSingleMedia && fetchedSingleMedia.map((media) => (
           <div key={media.name} className="searchxyzksdab-media-container">
             {media.name.endsWith('.mp4') ? (
@@ -472,13 +464,6 @@ const Searchvideo = () => {
             )}
           </div>
         ))}
-
-
-
-
-
-
-
 
 
 
@@ -539,12 +524,7 @@ const Searchvideo = () => {
 
 
 
-      {/* ***************
 
-
-                     From here the medialinker starts
-
-                                     ************************ */}
 
       {selectedMediaId && (
         <>
@@ -563,13 +543,16 @@ const Searchvideo = () => {
                     onDragLeave={(e) => e.preventDefault()}
                     onDrop={(e) => e.preventDefault()}
                   >
-                    <source src={fetchedSingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl || userfunc[selectedGroupIndex]?.downloadUrl} type="video/mp4" />
+                    <source
+                      src={(fetchedSingleMedia && fetchedSingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl) || userfunc[selectedGroupIndex]?.downloadUrl}
+                      type="video/mp4"
+                    />
                   </video>
                 ) : (
                   <img
                     id={`media-${selectedMediaId}`}
                     className="searchcustom-media_images"
-                    src={fetchedSingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl || userfunc[selectedGroupIndex]?.downloadUrl}
+                    src={(fetchedSingleMedia && fetchedSingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl) || userfunc[selectedGroupIndex]?.downloadUrl}
                     alt={userfunc}
                     onDragStart={(e) => e.preventDefault()}
                     onDragOver={(e) => e.preventDefault()}
@@ -610,7 +593,6 @@ const Searchvideo = () => {
                   <button className="searchbuy_media_ksdab_button" onClick={gotToNewPage}>Buy Now</button>
                   <img onClick={addToCart} src={cart} alt="" className="searchbuy_media_ksdab_image" />
                 </div>
-
               </div>
             </div>
           </div>
@@ -637,12 +619,10 @@ const Searchvideo = () => {
                 }}
                 onClick={handleNextImage}
               ></i>
-
             </div>
           )}
         </>
       )}
-
     </div>
   );
 };

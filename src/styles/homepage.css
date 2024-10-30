@@ -120,20 +120,55 @@
 
 .selected_thumbs_down{cursor: pointer;font-size: 27px;}
 
-/* homepage.css */
-.plus-round-link {
-  position: fixed;
-  bottom: 20px; 
-  right: 120px;
-  width: 40px;
-  height: 45px;
+
+.plus-round-link {position: fixed;bottom: 20px; right: 120px;width: 40px;height: 45px;display: flex;justify-content: center;color: black;border-radius: 50%;text-decoration: none; font-size: 24px; }
+
+.xyz-button-container {
   display: flex;
-  justify-content: center;
-  color: black;
-  border-radius: 50%;
-  text-decoration: none; 
-  font-size: 24px; 
+  gap: 10px;
+  margin-left: 95px;
+  margin-bottom: 10px;
 }
+
+.xyz-add-to-cart-button {
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--montserrat);
+}
+
+.xyz-add-to-cart-button:hover {
+  background-color: #ff5252;
+}
+
+.xyz-purchase-button {
+  background-color: #4da8da;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--montserrat);
+}
+
+.xyz-purchase-button:hover {
+  background-color: #007bb5;
+}
+
+
 
 
 
