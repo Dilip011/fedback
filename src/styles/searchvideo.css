@@ -227,13 +227,7 @@
   font-family: var(--montserrat)
 }
 
-/* .fa_times_line{
-  width: 34px;
-  height: 100%;
-  background-color: #e2f3ff;
-  position: relative;
-  left: 0;
-} */
+
 
 .searchxyzksdab_fixed{
   max-width: 100%;
@@ -297,7 +291,9 @@
 
 .searchxyzksdab-media-container:hover::after {
   background-color: rgba(58, 58, 58, 0.4);
+  
 }
+
 
 .searchxyzbuy_media_ksdab_image{
   content: '';

@@ -522,10 +522,6 @@ const Searchvideo = () => {
 
       </div>
 
-
-
-
-
       {selectedMediaId && (
         <>
           <div className="searchxyzmedialinker-container scrollable">
