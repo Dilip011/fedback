@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Plyr from 'plyr';
 import { db, storage } from './firebaseconfig';
-import { collection, getDocs, orderBy, query, limit } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query, limit,getDoc,doc } from 'firebase/firestore';
 import { getDownloadURL, ref, listAll } from 'firebase/storage';
 import pic from "../images/Profile-2.jpeg";
 import "../styles/homepage.css";
@@ -47,56 +47,76 @@ const Homepage = () => {
 
   const fetchIndividualContent = async () => {
     const matchedContent = [];
+    
     if (mediaNameArray.length > 0) {
       for (const mediaName of mediaNameArray) {
         const contentId = mediaName.split('|')[0];
         if (contentId === user[5]) {
           continue;
         }
-
+  
         const fileRef = ref(storage, `images/${mediaName}`);
         try {
           const downloadUrl = await getDownloadURL(fileRef);
-          matchedContent.push({ name: mediaName, downloadUrl });
+          const userDocRef = doc(db, "users", contentId);
+          const userDoc = await getDoc(userDocRef);
+  
+          if (userDoc.exists()) {
+            const username = userDoc.data().name;
+            matchedContent.push({name:mediaName,contentId:username, downloadUrl });
+          } else {
+            console.log(`No document found for contentId: ${contentId}`);
+          }
         } catch (error) {
-          console.log(`Error fetching file for ${mediaName}:`, error);
+          console.log(`Error fetching file or Firestore data for ${mediaName}:`, error);
         }
       }
     }
+    
     return matchedContent;
   };
 
   const fetchSubfolderContent = async () => {
     const parentArray = [];
-
+  
     for (const folderName of folderNameArray) {
       const folderId = folderName.split('|')[1].split('<')[0];
-
+  
       if (folderId === user[5]) {
         continue;
       }
-
+  
       const subfolderRef = ref(storage, `images/${folderName}`);
       const subfolderContent = [];
-
+  
+      const userDocRef = doc(db, "users", folderId);
+      const userDoc = await getDoc(userDocRef);
+      let username = "";
+  
+      if (userDoc.exists()) {
+        username = userDoc.data().name;
+      } else {
+        console.log(`No document found for folderId: ${folderId}`);
+      }
+  
       try {
         const result = await listAll(subfolderRef);
-
+  
         for (const item of result.items) {
           try {
             const downloadUrl = await getDownloadURL(item);
-            subfolderContent.push({ name: item.name, downloadUrl });
+            subfolderContent.push({ name: item.name,contentId:username, downloadUrl});
           } catch (error) {
             console.log(`Error fetching file in ${folderName}:`, error);
           }
         }
-
+  
         parentArray.push(subfolderContent);
       } catch (error) {
         console.log(`Error accessing subfolder ${folderName}:`, error);
       }
     }
-
+  
     setSubfolderContentArray(parentArray);
   };
 
@@ -119,6 +139,8 @@ const Homepage = () => {
     players.forEach(player => new Plyr(player));
   }, []);
 
+  
+
 
 
   return (
@@ -133,7 +155,7 @@ const Homepage = () => {
                   alt="Profile"
                   className="xyz-profile-image-homepage"
                 />
-                <p className="xyz-user-name">User Name 1</p>
+                <p className="xyz-user-name">{media.contentId}</p>
               </div>
               <p className='xyz-horizontal-line'></p>
               {media.name.endsWith('.mp4') ? (
@@ -147,20 +169,7 @@ const Homepage = () => {
                   </video>
                 </div>
               ) : (
-                // <img
-                //   id={`media-${media.name}`}
-                //   className="homexyzksdab-media"
-                //   src={media.downloadUrl}
-                //   alt="Image"
-                //   onClick={() => {
-                //     setSelectedMediaId(media.name);
-                //   }}
-                //   onDragStart={(e) => e.preventDefault()}
-                //   onDragOver={(e) => e.preventDefault()}
-                //   onDragEnter={(e) => e.preventDefault()}
-                //   onDragLeave={(e) => e.preventDefault()}
-                //   onDrop={(e) => e.preventDefault()}
-                // />
+                
                 <div className="image-container">
                   <img
                     id={`media-${media.name}`}
@@ -189,7 +198,7 @@ const Homepage = () => {
             <div className="xyz-profile-box" key={index}>
               <div className="xyz-profile-image-container">
                 <img src={pic} alt="Profile" className="xyz-profile-image-homepage" />
-                <p className="xyz-user-name">User Name 2</p>
+                <p className="xyz-user-name">{subfolder[0]?.contentId || "Unknown User"}</p>
               </div>
               <p className='xyz-horizontal-line'></p>
               <div className="xyz-two-column-media-grid">
