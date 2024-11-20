@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Plyr from 'plyr';
 import { db, storage } from './firebaseconfig';
-import { collection, getDocs, orderBy, query, limit,getDoc,doc } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query, limit, getDoc, doc,addDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, listAll } from 'firebase/storage';
 import pic from "../images/Profile-2.jpeg";
 import "../styles/homepage.css";
 import { useUserContext } from './Usercontext';
+import { useUsersearch } from './UserContext2';
 
 const Homepage = () => {
   const [mediaNameArray, setMediaNameArray] = useState([]);
@@ -14,6 +15,9 @@ const Homepage = () => {
   const [subfolderContentArray, setSubfolderContentArray] = useState([]);
   const [selectedMediaId, setSelectedMediaId] = useState(null);
   const { user } = useUserContext();
+  const { id } = useUsersearch();
+
+  
 
   useEffect(() => {
     const fetchTopDocuments = async () => {
@@ -47,23 +51,33 @@ const Homepage = () => {
 
   const fetchIndividualContent = async () => {
     const matchedContent = [];
-    
+
     if (mediaNameArray.length > 0) {
       for (const mediaName of mediaNameArray) {
         const contentId = mediaName.split('|')[0];
         if (contentId === user[5]) {
           continue;
         }
-  
+
         const fileRef = ref(storage, `images/${mediaName}`);
         try {
           const downloadUrl = await getDownloadURL(fileRef);
           const userDocRef = doc(db, "users", contentId);
           const userDoc = await getDoc(userDocRef);
-  
+          const commentsCollectionRef = collection(db, "comments");
+          const querySnapshot = await getDocs(commentsCollectionRef);
+          let docCommentId = "";
+
+          querySnapshot.forEach((doc) => {
+            const docContentId = doc.data().content_id?.replace(/^images\//, "");
+            if (docContentId === mediaName) {
+              docCommentId = doc.data().content_comment
+
+            }
+          })
           if (userDoc.exists()) {
             const username = userDoc.data().name;
-            matchedContent.push({name:mediaName,contentId:username, downloadUrl });
+            matchedContent.push({ name: mediaName, contentId: username, docCommentId, downloadUrl });
           } else {
             console.log(`No document found for contentId: ${contentId}`);
           }
@@ -72,52 +86,105 @@ const Homepage = () => {
         }
       }
     }
-    
+
     return matchedContent;
   };
 
   const fetchSubfolderContent = async () => {
     const parentArray = [];
-  
+
     for (const folderName of folderNameArray) {
       const folderId = folderName.split('|')[1].split('<')[0];
-  
+
       if (folderId === user[5]) {
         continue;
       }
-  
+
       const subfolderRef = ref(storage, `images/${folderName}`);
       const subfolderContent = [];
-  
+
       const userDocRef = doc(db, "users", folderId);
       const userDoc = await getDoc(userDocRef);
       let username = "";
-  
+      const commentsCollectionRef = collection(db, "comments");
+      const querySnapshot = await getDocs(commentsCollectionRef);
+      let docCommentId = "";
+
+      querySnapshot.forEach((doc) => {
+        const docContentId = doc.data().contentfolder_id?.replace(/^images\//, "");
+        if (docContentId === folderName) {
+          docCommentId = doc.data().content_comment
+        }
+      })
       if (userDoc.exists()) {
         username = userDoc.data().name;
       } else {
         console.log(`No document found for folderId: ${folderId}`);
       }
-  
+
       try {
         const result = await listAll(subfolderRef);
-  
+
         for (const item of result.items) {
           try {
             const downloadUrl = await getDownloadURL(item);
-            subfolderContent.push({ name: item.name,contentId:username, downloadUrl});
+            subfolderContent.push({ name: item.name, contentId: username, docCommentId, downloadUrl });
           } catch (error) {
             console.log(`Error fetching file in ${folderName}:`, error);
           }
         }
-  
+
         parentArray.push(subfolderContent);
       } catch (error) {
         console.log(`Error accessing subfolder ${folderName}:`, error);
       }
     }
-  
     setSubfolderContentArray(parentArray);
+  };
+
+  const addToCart = async () => {
+    try {
+      const cartCollectionRef = collection(db, 'cart');
+      const rootFolder = 'images';
+      const storageRootRef = ref(storage, rootFolder);
+      const folderItems = await listAll(storageRootRef);
+
+      let matchFound = false;
+      for (const folder of folderItems.prefixes) {
+        const subFolderRef = ref(storage, folder.fullPath);
+        const subFolderItems = await listAll(subFolderRef);
+
+        if (subFolderItems.items.some(item => item.name === selectedMediaId)) {
+          const folderName = folder.name;
+          await addDoc(cartCollectionRef, {
+            folder_name: folderName, 
+            user_id: user[5]
+          });
+          matchFound = true;
+          break;
+        }
+      }
+      if (!matchFound) {
+        for (const item of folderItems.items) {
+          if (item.name === selectedMediaId) {
+            await addDoc(cartCollectionRef, {
+              media_name: selectedMediaId,
+              user_id:user[5]
+            });
+            matchFound = true;
+            break;
+          }
+        }
+      }
+      
+      if (matchFound){
+
+      } else {
+        console.log('No matching item found to add to cart');
+      }
+    } catch (error) {
+      console.error('Error adding item to cart: ', error);
+    }
   };
 
 
@@ -139,10 +206,7 @@ const Homepage = () => {
     players.forEach(player => new Plyr(player));
   }, []);
 
-  
-
-
-
+ 
   return (
     <div className='main-homepage-wrapper'>
       <div className="homepage-container">
@@ -150,50 +214,39 @@ const Homepage = () => {
           {individualContentArray.map((media, index) => (
             <div className="xyz-profile-box" key={index}>
               <div className="xyz-profile-image-container">
-                <img
-                  src={pic}
-                  alt="Profile"
-                  className="xyz-profile-image-homepage"
-                />
+                <img src={pic} alt="Profile" className="xyz-profile-image-homepage" />
                 <p className="xyz-user-name">{media.contentId}</p>
               </div>
               <p className='xyz-horizontal-line'></p>
               {media.name.endsWith('.mp4') ? (
                 <div className="xyz-video-container">
-                  <video
-                    id={`media-${media.name}`}
-                    className="xyz-video plyr"
-                    controls
-                  >
+                  <video id={`media-${media.name}`} className="xyz-video plyr" controls>
                     <source src={media.downloadUrl} type="video/mp4" />
                   </video>
                 </div>
               ) : (
-                
                 <div className="image-container">
-                  <img
-                    id={`media-${media.name}`}
-                    className="homexyzksdab-media"
-                    src={media.downloadUrl}
-                    alt="Image"
-                    onClick={() => {
-                      setSelectedMediaId(media.name);
-                    }}
-                  />
+                  <img id={`media-${media.name}`} className="homexyzksdab-media" src={media.downloadUrl} alt="Image"  />
                 </div>
               )}
-              <p className="xyz-statement">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
+              <p className="xyz-statement">{media.docCommentId}</p>
               <div className="xyz-button-container">
-                <button className="xyz-add-to-cart-button">
-                  <i className="fas fa-shopping-cart"></i> Add to Cart
+                <button className="xyz-add-to-cart-button" onClick={async() =>{
+                  setSelectedMediaId(media.name)
+                  if (selectedMediaId) {
+                    await addToCart(); 
+                    setSelectedMediaId(null);
+                  }}}>
+                    <i className="fas fa-shopping-cart"></i> Add to Cart
                 </button>
+
                 <button className="xyz-purchase-button">
                   <i className="fas fa-check-circle"></i> Buy Now
                 </button>
               </div>
             </div>
           ))}
-
+  
           {subfolderContentArray.map((subfolder, index) => (
             <div className="xyz-profile-box" key={index}>
               <div className="xyz-profile-image-container">
@@ -209,22 +262,14 @@ const Homepage = () => {
                         <source src={media.downloadUrl} type="video/mp4" />
                       </video>
                     ) : (
-                      <img
-                        id={`media-${media.name}`}
-                        className="xyz-subfolder-media"
-                        src={media.downloadUrl}
-                        alt="Image"
-                        onClick={() => {
-                          setSelectedMediaId(media.name);
-                        }}
-                      />
+                      <img id={`media-${media.name}`} className="xyz-subfolder-media" src={media.downloadUrl} alt="Image"  />
                     )}
                   </div>
                 ))}
               </div>
-              <p className="xyz-statement">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
+              <p className="xyz-statement">{subfolder[0]?.docCommentId || "Unknown User"}</p>
               <div className="xyz-button-container">
-                <button className="xyz-add-to-cart-button">
+                <button className="xyz-add-to-cart-button" onClick={() => setSelectedMediaId(subfolder[0]?.name)}>
                   <i className="fas fa-shopping-cart"></i> Add to Cart
                 </button>
                 <button className="xyz-purchase-button">
@@ -237,7 +282,6 @@ const Homepage = () => {
       </div>
     </div>
   );
-
 };
 
 export default Homepage;

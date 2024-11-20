@@ -265,9 +265,6 @@ const Searchvideo = () => {
     Navigate(`/payment/${result}`);
   };
 
-  
-
-
   const addToCart = async () => {
     try {
       const cartCollectionRef = collection(db, 'cart');
@@ -286,7 +283,7 @@ const Searchvideo = () => {
           const folderName = folder.name;
           await addDoc(cartCollectionRef, {
             folder_name: folderName, 
-            user_id: id[7]
+            user_id: user[5]
           });
           matchFound = true;
           break;
@@ -298,7 +295,7 @@ const Searchvideo = () => {
           if (item.name === selectedMediaId) {
             await addDoc(cartCollectionRef, {
               media_name: selectedMediaId,
-              user_id: id[7]
+              user_id: user[5]
             });
             matchFound = true;
             break;
@@ -409,9 +406,6 @@ const Searchvideo = () => {
       most_searched_word();
     }
   }, [selectedMediaId]);
-
-
-
 
   return (
     <div className='searchxyzyourvideos_main_wrapper_ksdab'>

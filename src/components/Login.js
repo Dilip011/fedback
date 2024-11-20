@@ -7,10 +7,7 @@ import { db } from './firebaseconfig';
 
 const Login = () => {
     const Navigate = useNavigate();
-    const [data, setData] = useState({
-        email: '',
-        password: ''
-      });
+    const [data, setData] = useState({email: '',password: ''});
     const { setUser } = useUserContext();
     
       const handleInput = (event) => {
