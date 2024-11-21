@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Plyr from 'plyr';
 import { db, storage } from './firebaseconfig';
-import { collection, getDocs, orderBy, query, limit, getDoc, doc,addDoc } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query, limit, getDoc, doc, addDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, listAll } from 'firebase/storage';
 import pic from "../images/Profile-2.jpeg";
 import "../styles/homepage.css";
 import { useUserContext } from './Usercontext';
 import { useUsersearch } from './UserContext2';
+import { useUserpayment } from './Usercontext3';
+import { useNavigate } from 'react-router-dom';
 
 const Homepage = () => {
   const [mediaNameArray, setMediaNameArray] = useState([]);
@@ -16,8 +18,10 @@ const Homepage = () => {
   const [selectedMediaId, setSelectedMediaId] = useState(null);
   const { user } = useUserContext();
   const { id } = useUsersearch();
-
-  
+  const { setData } = useUserpayment();
+  const Navigate = useNavigate();
+  const [usersingle, setUsersingle] = useState([]);
+  const [usermultiple, setUsermultiple] = useState([]);
 
   useEffect(() => {
     const fetchTopDocuments = async () => {
@@ -48,6 +52,43 @@ const Homepage = () => {
 
     fetchTopDocuments();
   }, []);
+
+  const goToNewPage = async () => {
+    const rootFolder = 'images';
+    const storageRootRef = ref(storage, rootFolder);
+    const folderItems = await listAll(storageRootRef);
+
+    let matchFound = false;
+
+    if (selectedMediaId != null) {
+      for (const folder of folderItems.prefixes) {
+        const subFolderRef = ref(storage, folder.fullPath);
+        const subFolderItems = await listAll(subFolderRef);
+
+        if (subFolderItems.items.some(item => item.name === selectedMediaId)) {
+          const folderName = folder.name;
+          setData([user[5], folderName]);
+          matchFound = true;
+          break;
+        }}}
+     if (!matchFound) {
+      for (const item of folderItems.items) {
+        if (item.name === selectedMediaId) {
+          setData([user[5], selectedMediaId]);
+          matchFound = true;
+          break;
+        }}}
+
+    const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+[]{}|;:,.<>?';
+    let result = '';
+    const charactersLength = characters.length;
+
+    for (let i = 0; i < 16; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    Navigate(`/payment/${result}`);
+  };
 
   const fetchIndividualContent = async () => {
     const matchedContent = [];
@@ -88,6 +129,31 @@ const Homepage = () => {
     }
 
     return matchedContent;
+  };
+
+  const fetchPurchasedItems = async () => {
+    try {
+      const purchasedCollection = collection(db, 'purchased');
+      const purchasedSnapshot = await getDocs(purchasedCollection);
+
+      const singleMediaArray = [];
+      const multipleMediaArray = [];
+
+      purchasedSnapshot.forEach((doc) => {
+        if (doc.data().user_id === user[5]) {
+          if (doc.data().media_name) {
+            singleMediaArray.push(doc.data().media_name);
+          } else {
+            multipleMediaArray.push(doc.data().folder_name);
+          }
+        }
+      });
+      
+      setUsersingle(singleMediaArray);
+      setUsermultiple(multipleMediaArray);
+    } catch (error) {
+      console.error('Error fetching purchased items:', error);
+    }
   };
 
   const fetchSubfolderContent = async () => {
@@ -157,7 +223,7 @@ const Homepage = () => {
         if (subFolderItems.items.some(item => item.name === selectedMediaId)) {
           const folderName = folder.name;
           await addDoc(cartCollectionRef, {
-            folder_name: folderName, 
+            folder_name: folderName,
             user_id: user[5]
           });
           matchFound = true;
@@ -169,15 +235,15 @@ const Homepage = () => {
           if (item.name === selectedMediaId) {
             await addDoc(cartCollectionRef, {
               media_name: selectedMediaId,
-              user_id:user[5]
+              user_id: user[5]
             });
             matchFound = true;
             break;
           }
         }
       }
-      
-      if (matchFound){
+
+      if (matchFound) {
 
       } else {
         console.log('No matching item found to add to cart');
@@ -206,7 +272,9 @@ const Homepage = () => {
     players.forEach(player => new Plyr(player));
   }, []);
 
- 
+  
+  
+
   return (
     <div className='main-homepage-wrapper'>
       <div className="homepage-container">
@@ -226,27 +294,34 @@ const Homepage = () => {
                 </div>
               ) : (
                 <div className="image-container">
-                  <img id={`media-${media.name}`} className="homexyzksdab-media" src={media.downloadUrl} alt="Image"  />
+                  <img id={`media-${media.name}`} className="homexyzksdab-media" src={media.downloadUrl} alt="Image" />
                 </div>
               )}
               <p className="xyz-statement">{media.docCommentId}</p>
               <div className="xyz-button-container">
-                <button className="xyz-add-to-cart-button" onClick={async() =>{
+                <button className="xyz-add-to-cart-button" onClick={async () => {
                   setSelectedMediaId(media.name)
                   if (selectedMediaId) {
-                    await addToCart(); 
+                    await addToCart();
                     setSelectedMediaId(null);
-                  }}}>
-                    <i className="fas fa-shopping-cart"></i> Add to Cart
+                  }
+                }}>
+                  <i className="fas fa-shopping-cart"></i> Add to Cart
                 </button>
 
-                <button className="xyz-purchase-button">
+                <button className="xyz-purchase-button" onClick={async()=>{
+                  setSelectedMediaId(media.name)
+                  if(selectedMediaId){
+                    await goToNewPage()
+                    setSelectedMediaId(null);
+                  }
+                  }}>
                   <i className="fas fa-check-circle"></i> Buy Now
                 </button>
               </div>
             </div>
           ))}
-  
+
           {subfolderContentArray.map((subfolder, index) => (
             <div className="xyz-profile-box" key={index}>
               <div className="xyz-profile-image-container">
@@ -262,17 +337,29 @@ const Homepage = () => {
                         <source src={media.downloadUrl} type="video/mp4" />
                       </video>
                     ) : (
-                      <img id={`media-${media.name}`} className="xyz-subfolder-media" src={media.downloadUrl} alt="Image"  />
+                      <img id={`media-${media.name}`} className="xyz-subfolder-media" src={media.downloadUrl} alt="Image" />
                     )}
                   </div>
                 ))}
               </div>
               <p className="xyz-statement">{subfolder[0]?.docCommentId || "Unknown User"}</p>
               <div className="xyz-button-container">
-                <button className="xyz-add-to-cart-button" onClick={() => setSelectedMediaId(subfolder[0]?.name)}>
+                <button className="xyz-add-to-cart-button"  onClick={async () => {
+                  setSelectedMediaId(subfolder[0]?.name)
+                  if (selectedMediaId) {
+                    await addToCart();
+                    setSelectedMediaId(null);
+                  }
+                }}>
                   <i className="fas fa-shopping-cart"></i> Add to Cart
                 </button>
-                <button className="xyz-purchase-button">
+                <button className="xyz-purchase-button" onClick={async()=>{
+                  setSelectedMediaId(subfolder[0]?.name)
+                  if(selectedMediaId){
+                    await goToNewPage()
+                    setSelectedMediaId(null);
+                  }
+                  }}>
                   <i className="fas fa-check-circle"></i> Buy Now
                 </button>
               </div>

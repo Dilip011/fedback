@@ -224,11 +224,7 @@ const Searchvideo = () => {
     setSelectedGroupIndex(previousIndex);
   };
 
-
-
-
-
-  const gotToNewPage = async () => {
+  const goToNewPage = async () => {
     const rootFolder = 'images';
     const storageRootRef = ref(storage, rootFolder);
     const folderItems = await listAll(storageRootRef);
@@ -580,7 +576,7 @@ const Searchvideo = () => {
                   }}
                 ></i>
                 <div className="searchxyzbuy_media_ksdab">
-                  <button className="searchbuy_media_ksdab_button" onClick={gotToNewPage}>Buy Now</button>
+                  <button className="searchbuy_media_ksdab_button" onClick={goToNewPage}>Buy Now</button>
                   <img onClick={addToCart} src={cart} alt="" className="searchbuy_media_ksdab_image" />
                 </div>
               </div>

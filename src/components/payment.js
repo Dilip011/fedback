@@ -5,11 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import { ref, listAll, getDownloadURL } from 'firebase/storage';
 import { storage, db } from './firebaseconfig';
 import { addDoc, collection } from 'firebase/firestore';
+import { useEffect } from 'react';
 
 const Payment = () => {
     const { data } = useUserpayment();
     const navigate = useNavigate();
 
+    
+    
     const paymentdetector = async () => {
         if (!data) return;
 
@@ -20,7 +23,6 @@ const Payment = () => {
         try {
             const folderItems = await listAll(storageRootRef);
             const matchingFolder = folderItems.prefixes.find(folder => folder.name === itemName);
-
             if (matchingFolder) {
                 const collectionRef = collection(db, 'purchased');
                 await addDoc(collectionRef, {
@@ -42,7 +44,7 @@ const Payment = () => {
                     console.error('Matching folder or file not found');
                 }
             }
-            navigate('/home'); 
+            // navigate('/home'); 
         } catch (error) {
             console.error('Error fetching items or writing to Firestore:', error);
         }
