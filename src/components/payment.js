@@ -10,15 +10,13 @@ import { useEffect } from 'react';
 const Payment = () => {
     const { data } = useUserpayment();
     const navigate = useNavigate();
-
-    
     
     const paymentdetector = async () => {
         if (!data) return;
 
         const itemName = data[1];
         const userId = data[0];
-        const storageRootRef = ref(storage, 'images'); 
+        const storageRootRef = ref(storage, 'images');
 
         try {
             const folderItems = await listAll(storageRootRef);
@@ -34,7 +32,7 @@ const Payment = () => {
 
                 if (matchingFile) {
                     await getDownloadURL(ref(storage, `images/${itemName}`));
-                    
+
                     const collectionRef = collection(db, 'purchased');
                     await addDoc(collectionRef, {
                         media_name: itemName,
@@ -44,7 +42,7 @@ const Payment = () => {
                     console.error('Matching folder or file not found');
                 }
             }
-            // navigate('/home'); 
+            navigate('/home'); 
         } catch (error) {
             console.error('Error fetching items or writing to Firestore:', error);
         }

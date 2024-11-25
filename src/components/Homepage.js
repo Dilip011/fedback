@@ -20,7 +20,7 @@ const Homepage = () => {
   const { id } = useUsersearch();
   const { setData } = useUserpayment();
   const Navigate = useNavigate();
-  const [usersingle, setUsersingle] = useState([]);
+  const [purchaseIdentified, setpurchaseIdentified] = useState([]);
   const [usermultiple, setUsermultiple] = useState([]);
 
   useEffect(() => {
@@ -70,14 +70,18 @@ const Homepage = () => {
           setData([user[5], folderName]);
           matchFound = true;
           break;
-        }}}
-     if (!matchFound) {
+        }
+      }
+    }
+    if (!matchFound) {
       for (const item of folderItems.items) {
         if (item.name === selectedMediaId) {
           setData([user[5], selectedMediaId]);
           matchFound = true;
           break;
-        }}}
+        }
+      }
+    }
 
     const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+[]{}|;:,.<>?';
     let result = '';
@@ -133,26 +137,25 @@ const Homepage = () => {
 
   const fetchPurchasedItems = async () => {
     try {
-      const purchasedCollection = collection(db, 'purchased');
-      const purchasedSnapshot = await getDocs(purchasedCollection);
+      const purchasedCollectionRef = collection(db, "purchased");
+      const purchasedSnapshot = await getDocs(purchasedCollectionRef);
 
-      const singleMediaArray = [];
-      const multipleMediaArray = [];
+      const matchedItems = [];
+      const foldermatchedItems = [];
 
       purchasedSnapshot.forEach((doc) => {
-        if (doc.data().user_id === user[5]) {
-          if (doc.data().media_name) {
-            singleMediaArray.push(doc.data().media_name);
-          } else {
-            multipleMediaArray.push(doc.data().folder_name);
-          }
+        const data = doc.data();
+        if (data.media_name && individualContentArray.some(item => item.name === data.media_name)) {
+          matchedItems.push(doc.data());
         }
+
       });
+
       
-      setUsersingle(singleMediaArray);
-      setUsermultiple(multipleMediaArray);
+      
+      setpurchaseIdentified(matchedItems);
     } catch (error) {
-      console.error('Error fetching purchased items:', error);
+      console.error("Error fetching purchased items:", error);
     }
   };
 
@@ -272,8 +275,10 @@ const Homepage = () => {
     players.forEach(player => new Plyr(player));
   }, []);
 
-  
-  
+  useEffect(() => {
+    fetchPurchasedItems();
+  }, [individualContentArray]);
+
 
   return (
     <div className='main-homepage-wrapper'>
@@ -298,29 +303,36 @@ const Homepage = () => {
                 </div>
               )}
               <p className="xyz-statement">{media.docCommentId}</p>
-              <div className="xyz-button-container">
-                <button className="xyz-add-to-cart-button" onClick={async () => {
-                  setSelectedMediaId(media.name)
-                  if (selectedMediaId) {
-                    await addToCart();
-                    setSelectedMediaId(null);
-                  }
-                }}>
-                  <i className="fas fa-shopping-cart"></i> Add to Cart
-                </button>
 
-                <button className="xyz-purchase-button" onClick={async()=>{
-                  setSelectedMediaId(media.name)
-                  if(selectedMediaId){
-                    await goToNewPage()
-                    setSelectedMediaId(null);
-                  }
+
+              {purchaseIdentified.some(item => item.media_name === media.name) ? (
+                <p className='xyz-purchase-statement'>You already purchased it</p>
+              ) : (
+                <div className="xyz-button-container">
+                  <button className="xyz-add-to-cart-button" onClick={async () => {
+                    setSelectedMediaId(media.name);
+                    if (selectedMediaId) {
+                      await addToCart();
+                      setSelectedMediaId(null);
+                    }
                   }}>
-                  <i className="fas fa-check-circle"></i> Buy Now
-                </button>
-              </div>
+                    <i className="fas fa-shopping-cart"></i> Add to Cart
+                  </button>
+
+                  <button className="xyz-purchase-button" onClick={async () => {
+                    setSelectedMediaId(media.name);
+                    if (selectedMediaId) {
+                      await goToNewPage();
+                      setSelectedMediaId(null);
+                    }
+                  }}>
+                    <i className="fas fa-check-circle"></i> Buy Now
+                  </button>
+                </div>
+              )}
             </div>
           ))}
+
 
           {subfolderContentArray.map((subfolder, index) => (
             <div className="xyz-profile-box" key={index}>
@@ -344,7 +356,7 @@ const Homepage = () => {
               </div>
               <p className="xyz-statement">{subfolder[0]?.docCommentId || "Unknown User"}</p>
               <div className="xyz-button-container">
-                <button className="xyz-add-to-cart-button"  onClick={async () => {
+                <button className="xyz-add-to-cart-button" onClick={async () => {
                   setSelectedMediaId(subfolder[0]?.name)
                   if (selectedMediaId) {
                     await addToCart();
@@ -353,13 +365,13 @@ const Homepage = () => {
                 }}>
                   <i className="fas fa-shopping-cart"></i> Add to Cart
                 </button>
-                <button className="xyz-purchase-button" onClick={async()=>{
+                <button className="xyz-purchase-button" onClick={async () => {
                   setSelectedMediaId(subfolder[0]?.name)
-                  if(selectedMediaId){
+                  if (selectedMediaId) {
                     await goToNewPage()
                     setSelectedMediaId(null);
                   }
-                  }}>
+                }}>
                   <i className="fas fa-check-circle"></i> Buy Now
                 </button>
               </div>
