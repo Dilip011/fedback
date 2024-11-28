@@ -135,40 +135,15 @@ const Homepage = () => {
     return matchedContent;
   };
 
-  const fetchPurchasedItems = async () => {
-    try {
-      const purchasedCollectionRef = collection(db, "purchased");
-      const purchasedSnapshot = await getDocs(purchasedCollectionRef);
-
-      const matchedItems = [];
-      const foldermatchedItems = [];
-
-      purchasedSnapshot.forEach((doc) => {
-        const data = doc.data();
-        if (data.media_name && individualContentArray.some(item => item.name === data.media_name)) {
-          matchedItems.push(doc.data());
-        }
-
-      });
-
-      
-      
-      setpurchaseIdentified(matchedItems);
-    } catch (error) {
-      console.error("Error fetching purchased items:", error);
-    }
-  };
 
   const fetchSubfolderContent = async () => {
     const parentArray = [];
 
     for (const folderName of folderNameArray) {
       const folderId = folderName.split('|')[1].split('<')[0];
-
       if (folderId === user[5]) {
         continue;
       }
-
       const subfolderRef = ref(storage, `images/${folderName}`);
       const subfolderContent = [];
 
@@ -193,11 +168,10 @@ const Homepage = () => {
 
       try {
         const result = await listAll(subfolderRef);
-
         for (const item of result.items) {
           try {
             const downloadUrl = await getDownloadURL(item);
-            subfolderContent.push({ name: item.name, contentId: username, docCommentId, downloadUrl });
+            subfolderContent.push({ name: item.name, contentId: username, docCommentId, downloadUrl, folderName });
           } catch (error) {
             console.log(`Error fetching file in ${folderName}:`, error);
           }
@@ -210,6 +184,53 @@ const Homepage = () => {
     }
     setSubfolderContentArray(parentArray);
   };
+
+  const fetchPurchasedItems = async () => {
+    try {
+      const folderMatchedItems = [];
+      const matchedItems = [];
+      const storageRootRef = ref(storage, "images");
+
+      const folderList = await listAll(storageRootRef);
+
+      for (const folder of folderList.prefixes) {
+        const folderName = folder.name;
+        const folderRef = ref(storageRootRef, folderName);
+
+        const fileList = await listAll(folderRef);
+
+        for (const file of fileList.items) {
+          const fileName = file.name;
+
+          if (Array.isArray(subfolderContentArray) && Array.isArray(subfolderContentArray[0])) {
+            const isMatch = subfolderContentArray[0].some(item => item.name.includes(fileName));
+
+            if (isMatch) {
+              folderMatchedItems.push(folderName);
+              break;
+            }
+          }
+        }
+      }
+
+      const purchasedCollectionRef = collection(db, "purchased");
+      const purchasedSnapshot = await getDocs(purchasedCollectionRef);
+
+      purchasedSnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.media_name && individualContentArray.some(item => item.name === data.media_name)) {
+          matchedItems.push(data);
+        }
+      });
+      setpurchaseIdentified(matchedItems);
+      setUsermultiple(folderMatchedItems);
+
+    } catch (error) {
+      console.error('Error fetching purchased items:', error);
+    }
+  };
+
+
 
   const addToCart = async () => {
     try {
@@ -277,7 +298,17 @@ const Homepage = () => {
 
   useEffect(() => {
     fetchPurchasedItems();
-  }, [individualContentArray]);
+  }, [individualContentArray, subfolderContentArray]);
+
+  useEffect(() => {
+    if (usermultiple.length > 0) {
+      console.log("This is usermultiple", usermultiple);
+
+    }
+
+  }, [])
+
+
 
 
   return (
@@ -355,26 +386,39 @@ const Homepage = () => {
                 ))}
               </div>
               <p className="xyz-statement">{subfolder[0]?.docCommentId || "Unknown User"}</p>
-              <div className="xyz-button-container">
-                <button className="xyz-add-to-cart-button" onClick={async () => {
-                  setSelectedMediaId(subfolder[0]?.name)
-                  if (selectedMediaId) {
-                    await addToCart();
-                    setSelectedMediaId(null);
-                  }
-                }}>
-                  <i className="fas fa-shopping-cart"></i> Add to Cart
-                </button>
-                <button className="xyz-purchase-button" onClick={async () => {
-                  setSelectedMediaId(subfolder[0]?.name)
-                  if (selectedMediaId) {
-                    await goToNewPage()
-                    setSelectedMediaId(null);
-                  }
-                }}>
-                  <i className="fas fa-check-circle"></i> Buy Now
-                </button>
-              </div>
+
+              {usermultiple.length>0 === subfolder[0]?.folderName ? (
+                <p className="xyz-purchase-statement">You already purchased it</p>
+              ) : (
+                <div className="xyz-button-container">
+                  <button
+                    className="xyz-add-to-cart-button"
+                    onClick={async () => {
+                      setSelectedMediaId(subfolder[0]?.name);
+                      if (selectedMediaId) {
+                        await addToCart();
+                        setSelectedMediaId(null);
+                      }
+                    }}
+                  >
+                    <i className="fas fa-shopping-cart"></i> Add to Cart
+                  </button>
+                  <button
+                    className="xyz-purchase-button"
+                    onClick={async () => {
+                      setSelectedMediaId(subfolder[0]?.name);
+                      if (selectedMediaId) {
+                        await goToNewPage();
+                        setSelectedMediaId(null);
+                      }
+                    }}
+                  >
+                    <i className="fas fa-check-circle"></i> Buy Now
+                  </button>
+                </div>
+              )}
+
+
             </div>
           ))}
         </div>
