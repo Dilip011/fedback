@@ -1,8 +1,5 @@
 
-* {
-  margin: 0;
-  padding: 0;
-}
+
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
@@ -15,6 +12,12 @@
   --Lato: "Lato", sans-serif;
   --Open-sans: "Open Sans", sans-serif;
   --Poppins: "Poppins", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: var(--montserrat)
 }
 
 .main-homepage-wrapper {
@@ -143,7 +146,11 @@
 
 .xyz-subfolder-video, .xyz-subfolder-media {width: 100%;height: auto;cursor: pointer;}
 
+.xyz-purchase{display: flex;align-items: center;margin: 0px 0px 0px 115px;}
 
+.xyz-tick-statement{height: 47px;width: 54px;}
+
+.xyz-purchase-statement{margin: 0;font-size: 15px;font-weight: bold;}
 
 
 

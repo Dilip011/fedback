@@ -9,6 +9,7 @@ import { useUserContext } from './Usercontext';
 import { useUsersearch } from './UserContext2';
 import { useUserpayment } from './Usercontext3';
 import { useNavigate } from 'react-router-dom';
+import Tick_mark from "../images/Tick_mark.jpg"
 
 const Homepage = () => {
   const [mediaNameArray, setMediaNameArray] = useState([]);
@@ -277,6 +278,27 @@ const Homepage = () => {
     }
   };
 
+  // useEffect(() => {
+  //   const updateContent = async () => {
+  //     const content = await fetchIndividualContent();
+  //     setIndividualContentArray(content);
+  //   };
+
+  //   updateContent();
+  // }, [mediaNameArray]);
+
+  // useEffect(() => {
+  //   fetchSubfolderContent();
+  // }, [folderNameArray]);
+
+  // useEffect(() => {
+  //   const players = Array.from(document.querySelectorAll('.plyr'));
+  //   players.forEach(player => new Plyr(player));
+  // }, []);
+
+  // useEffect(() => {
+  //   fetchPurchasedItems();
+  // }, [individualContentArray, subfolderContentArray]);
 
   useEffect(() => {
     const updateContent = async () => {
@@ -284,31 +306,26 @@ const Homepage = () => {
       setIndividualContentArray(content);
     };
 
-    updateContent();
-  }, [mediaNameArray]);
+    const initializePlayers = () => {
+      const players = Array.from(document.querySelectorAll('.plyr'));
+      players.forEach(player => new Plyr(player));
+    };
 
-  useEffect(() => {
-    fetchSubfolderContent();
-  }, [folderNameArray]);
+    const fetchAllData = async () => {
+      if (mediaNameArray?.length > 0) {
+        await updateContent();
+      }
+      if (folderNameArray?.length > 0) {
+        await fetchSubfolderContent();
+      }
+      if (individualContentArray?.length > 0 || subfolderContentArray?.length > 0) {
+        await fetchPurchasedItems();
+      }
+      initializePlayers();
+    };
 
-  useEffect(() => {
-    const players = Array.from(document.querySelectorAll('.plyr'));
-    players.forEach(player => new Plyr(player));
-  }, []);
-
-  useEffect(() => {
-    fetchPurchasedItems();
-  }, [individualContentArray, subfolderContentArray]);
-
-  useEffect(() => {
-    if (usermultiple.length > 0) {
-      console.log("This is usermultiple", usermultiple);
-
-    }
-
-  }, [])
-
-
+    fetchAllData();
+  }, [mediaNameArray, folderNameArray, individualContentArray, subfolderContentArray]);
 
 
   return (
@@ -337,7 +354,11 @@ const Homepage = () => {
 
 
               {purchaseIdentified.some(item => item.media_name === media.name) ? (
-                <p className='xyz-purchase-statement'>You already purchased it</p>
+                <div className='xyz-purchase'>
+                  <img className='xyz-tick-statement' src={Tick_mark} alt="" />
+                  <p className="xyz-purchase-statement">You already purchased it</p>
+                </div>
+
               ) : (
                 <div className="xyz-button-container">
                   <button className="xyz-add-to-cart-button" onClick={async () => {
@@ -387,8 +408,12 @@ const Homepage = () => {
               </div>
               <p className="xyz-statement">{subfolder[0]?.docCommentId || "Unknown User"}</p>
 
-              {usermultiple.length>0 === subfolder[0]?.folderName ? (
-                <p className="xyz-purchase-statement">You already purchased it</p>
+              {usermultiple.includes(subfolder[0]?.folderName) ? (
+                <div className='xyz-purchase'>
+                  <img className='xyz-tick-statement' src={Tick_mark} alt="" />
+                  <p className="xyz-purchase-statement">You already purchased it</p>
+                </div>
+
               ) : (
                 <div className="xyz-button-container">
                   <button
@@ -417,7 +442,6 @@ const Homepage = () => {
                   </button>
                 </div>
               )}
-
 
             </div>
           ))}
