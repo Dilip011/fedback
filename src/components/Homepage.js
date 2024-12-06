@@ -190,46 +190,38 @@ const Homepage = () => {
     try {
       const folderMatchedItems = [];
       const matchedItems = [];
-      const storageRootRef = ref(storage, "images");
-
-      const folderList = await listAll(storageRootRef);
-
-      for (const folder of folderList.prefixes) {
-        const folderName = folder.name;
-        const folderRef = ref(storageRootRef, folderName);
-
-        const fileList = await listAll(folderRef);
-
-        for (const file of fileList.items) {
-          const fileName = file.name;
-
-          if (Array.isArray(subfolderContentArray) && Array.isArray(subfolderContentArray[0])) {
-            const isMatch = subfolderContentArray[0].some(item => item.name.includes(fileName));
-
-            if (isMatch) {
-              folderMatchedItems.push(folderName);
-              break;
-            }
-          }
-        }
-      }
-
+  
       const purchasedCollectionRef = collection(db, "purchased");
       const purchasedSnapshot = await getDocs(purchasedCollectionRef);
-
+  
       purchasedSnapshot.forEach((doc) => {
         const data = doc.data();
+  
         if (data.media_name && individualContentArray.some(item => item.name === data.media_name)) {
           matchedItems.push(data);
         }
+        console.log("This is FolderName",data.folder_name);
+        console.log("This is Array.isArray",Array.isArray(subfolderContentArray));
+        if (data.folder_name && Array.isArray(subfolderContentArray)) {
+          const isFolderMatch = subfolderContentArray.some((items) =>
+            items.some((item) => item.folderName === data.folder_name)
+          );
+          
+          if (isFolderMatch) {
+            folderMatchedItems.push(data.folder_name);
+          }
+        }
       });
+  
+      // console.log("Matched folder names:", folderMatchedItems);
+  
       setpurchaseIdentified(matchedItems);
       setUsermultiple(folderMatchedItems);
-
     } catch (error) {
-      console.error('Error fetching purchased items:', error);
+      console.error("Error fetching purchased items:", error);
     }
   };
+  
 
 
 
@@ -260,7 +252,7 @@ const Homepage = () => {
           if (item.name === selectedMediaId) {
             await addDoc(cartCollectionRef, {
               media_name: selectedMediaId,
-              user_id: user[5]
+              user_id:user[5]
             });
             matchFound = true;
             break;
@@ -278,54 +270,56 @@ const Homepage = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const updateContent = async () => {
-  //     const content = await fetchIndividualContent();
-  //     setIndividualContentArray(content);
-  //   };
-
-  //   updateContent();
-  // }, [mediaNameArray]);
-
-  // useEffect(() => {
-  //   fetchSubfolderContent();
-  // }, [folderNameArray]);
-
-  // useEffect(() => {
-  //   const players = Array.from(document.querySelectorAll('.plyr'));
-  //   players.forEach(player => new Plyr(player));
-  // }, []);
-
-  // useEffect(() => {
-  //   fetchPurchasedItems();
-  // }, [individualContentArray, subfolderContentArray]);
-
   useEffect(() => {
     const updateContent = async () => {
       const content = await fetchIndividualContent();
       setIndividualContentArray(content);
     };
 
-    const initializePlayers = () => {
-      const players = Array.from(document.querySelectorAll('.plyr'));
-      players.forEach(player => new Plyr(player));
-    };
+    updateContent();
+  }, [mediaNameArray]);
 
-    const fetchAllData = async () => {
-      if (mediaNameArray?.length > 0) {
-        await updateContent();
-      }
-      if (folderNameArray?.length > 0) {
-        await fetchSubfolderContent();
-      }
-      if (individualContentArray?.length > 0 || subfolderContentArray?.length > 0) {
-        await fetchPurchasedItems();
-      }
-      initializePlayers();
-    };
+  useEffect(() => {
+    fetchSubfolderContent();
+  }, [folderNameArray]);
 
-    fetchAllData();
-  }, [mediaNameArray, folderNameArray, individualContentArray, subfolderContentArray]);
+  useEffect(() => {
+    const players = Array.from(document.querySelectorAll('.plyr'));
+    players.forEach(player => new Plyr(player));
+  }, []);
+
+  useEffect(() => {
+    fetchPurchasedItems();
+  }, [individualContentArray, subfolderContentArray]);
+
+  
+
+  // useEffect(() => {
+  //   const updateContent = async () => {
+  //     const content = await fetchIndividualContent();
+  //     setIndividualContentArray(content);
+  //   };
+
+  //   const initializePlayers = () => {
+  //     const players = Array.from(document.querySelectorAll('.plyr'));
+  //     players.forEach(player => new Plyr(player));
+  //   };
+
+  //   const fetchAllData = async () => {
+  //     if (mediaNameArray?.length > 0) {
+  //       await updateContent();
+  //     }
+  //     if (folderNameArray?.length > 0) {
+  //       await fetchSubfolderContent();
+  //     }
+  //     if (individualContentArray?.length > 0 || subfolderContentArray?.length > 0) {
+  //       await fetchPurchasedItems();
+  //     }
+  //     initializePlayers();
+  //   };
+
+  //   fetchAllData();
+  // }, [mediaNameArray, folderNameArray, individualContentArray, subfolderContentArray]);
 
 
   return (
