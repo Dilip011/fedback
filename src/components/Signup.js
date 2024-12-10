@@ -6,15 +6,7 @@ import { collection, addDoc, getDocs, where, query, updateDoc } from "firebase/f
 const Signup = () => {
   const navigate = useNavigate();
 
-  const [data, setData] = useState({
-    name: '',
-    email: '',
-    phoneNumber: '',
-    dob: '',
-    country: '',
-    password: '',
-    confirmPassword: '',
-  });
+  const [data, setData] = useState({name: '',email: '',phoneNumber: '',dob: '',country: '',password: '',confirmPassword: '',});
   let date = new Date().getTime();
   let dataObj = new Date(date);
   let month = dataObj.getMonth();
@@ -224,9 +216,7 @@ const Signup = () => {
             />
           </div>
 
-          <button className="register_button" onClick={handleSubmit}>
-            Register
-          </button>
+          <button className="register_button" onClick={handleSubmit}>Register</button>
         </form>
         <p className='Have_a_account_login'>Have a Account<a className='Have_a_account_login_p' href="/login">Login</a></p>
       </div>

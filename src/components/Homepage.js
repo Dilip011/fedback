@@ -200,8 +200,6 @@ const Homepage = () => {
         if (data.media_name && individualContentArray.some(item => item.name === data.media_name)) {
           matchedItems.push(data);
         }
-        console.log("This is FolderName",data.folder_name);
-        console.log("This is Array.isArray",Array.isArray(subfolderContentArray));
         if (data.folder_name && Array.isArray(subfolderContentArray)) {
           const isFolderMatch = subfolderContentArray.some((items) =>
             items.some((item) => item.folderName === data.folder_name)
@@ -212,8 +210,6 @@ const Homepage = () => {
           }
         }
       });
-  
-      // console.log("Matched folder names:", folderMatchedItems);
   
       setpurchaseIdentified(matchedItems);
       setUsermultiple(folderMatchedItems);
@@ -270,27 +266,27 @@ const Homepage = () => {
     }
   };
 
-  useEffect(() => {
-    const updateContent = async () => {
-      const content = await fetchIndividualContent();
-      setIndividualContentArray(content);
-    };
+  // useEffect(() => {
+  //   const updateContent = async () => {
+  //     const content = await fetchIndividualContent();
+  //     setIndividualContentArray(content);
+  //   };
 
-    updateContent();
-  }, [mediaNameArray]);
+  //   updateContent();
+  // }, [mediaNameArray]);
 
-  useEffect(() => {
-    fetchSubfolderContent();
-  }, [folderNameArray]);
+  // useEffect(() => {
+  //   fetchSubfolderContent();
+  // }, [folderNameArray]);
 
-  useEffect(() => {
-    const players = Array.from(document.querySelectorAll('.plyr'));
-    players.forEach(player => new Plyr(player));
-  }, []);
+  // useEffect(() => {
+  //   const players = Array.from(document.querySelectorAll('.plyr'));
+  //   players.forEach(player => new Plyr(player));
+  // }, []);
 
-  useEffect(() => {
-    fetchPurchasedItems();
-  }, [individualContentArray, subfolderContentArray]);
+  // useEffect(() => {
+  //   fetchPurchasedItems();
+  // }, [individualContentArray, subfolderContentArray]);
 
   
 

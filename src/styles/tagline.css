@@ -1,55 +1,9 @@
-/* 
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
 
 :root {
   --montserrat: "Montserrat", sans-serif;
-  --Lato: "Lato", sans-serif;
-  --Open-sans: "Open Sans", sans-serif;
-  --Poppins: "Poppins", sans-serif;
-}
-
-
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-
-.tagline_main_wrapper_container {
-  font-family: var(--montserrat);
-  background-color: #e2f3ff;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.top_tagline{
-    font-size: 26px;
-    padding-bottom: 5px;
-}
-
-.tagline_main_container img{
-    height: 410px;
-    width: 405px;
-    border-radius: 6px;
-} */
-
-
-
-
-
-
-
-
-/* @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
-
-:root {
-  --montserrat: "Montserrat", sans-serif;
+  --primary-color: #66a3ff; 
 }
 
 * {
@@ -69,111 +23,101 @@
 
 .tagline-main-container {
   text-align: center;
-  padding: 20px;
   border-radius: 10px;
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.top-tagline {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
+  display: flex;
+  width: 884px;
+  height: 444px;
 }
 
 .tagline-main-container-img {
-  width: 100%;
-  max-width: 400px;
-  border-radius: 8px;
   margin-bottom: 15px;
+  width: 402px;
+  height: 444px;
 }
 
-.tagline-main-container p {
-  font-size: 18px;
-  color: #555;
-}
 
-.tagline-main-container a {
-  color: black;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.tagline-main-container a:hover {
-  text-decoration: underline;
-} */
-
-
-
-
-
-
-
-
-
-
-/* tagline.css */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
-
-:root {
-  --montserrat: "Montserrat", sans-serif;
-  --primary-color: #66a3ff; /* Lighter blue color for the button */
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.tagline-main-wrapper-container {
-  font-family: var(--montserrat);
-  background-color: #e2f3ff;
-  min-height: 100vh;
+.tgz-tagline-apply-form {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.tagline-main-container {
-  text-align: center;
-  padding: 20px;
-  border-radius: 10px;
-  background-color: white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column; /* Updated to column layout */
-  align-items: center;
-  width: 465px;
-}
-
-.top-tagline {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.tagline-main-container-img {
+  gap: 20px;
   width: 100%;
-  max-width: 300px; /* Adjusted image size */
-  border-radius: 8px;
-  margin-bottom: 15px;
+  padding: 30px;
 }
 
-.tagline-main-container button {
-  background-color: var(--primary-color);
+.tgz-tagline-apply-form input {
+  width: 90%;
+  padding: 15px;
+  font-size: 16px;
+  font-family: var(--montserrat);
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border 0.3s ease-in-out;
+}
+
+.tgz-tagline-apply-form input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 8px rgba(102, 163, 255, 0.5);
+}
+
+.tgz-tagline-apply-form input::placeholder {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.tgz-tagline-apply-form input:focus::placeholder {
+  color: var(--primary-color);
+}
+
+
+.tgz-tagline-button {
+  margin-top: 20px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-family: var(--montserrat);
   color: white;
-  padding: 12px 24px;
-  font-size: 18px;
+  background-color: #ff6f61;;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
 }
 
-.tagline-main-container button:hover {
-  background-color: #4c80ff; /* Darker shade on hover */
+.tgz-tagline-button:hover {
+  background-color: #e65c50;
+  transform: scale(1.05);
 }
+
+.tgz-tagline-button:active {
+  background-color: #cc4f44;
+  transform: scale(0.98);
+}
+
+
+
+/* const handleSubmit = async(event) => {
+  event.preventDefault();
+  
+  const DocRef = await addDoc(collection(db,"Activation"),{
+    name:user[0],
+    email:user[1],
+    phoneNumber:user[2],
+    dob:user[3],
+    country:user[4],
+    Document_users_id:user[5],
+    username:user[6],
+    bankname:data.bank_name,
+    bank_number:data.number,
+    bank_code:data.code
+  })
+  setData({ bank_name: '', number: '', code: '' })
+
+}; */
+
+
+
 
