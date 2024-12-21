@@ -1,0 +1,533 @@
+body {
+    background: #e2f3ff;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.usersprofile-container {
+    width: 90%;
+    max-width: 1200px;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+    margin: 40px auto;
+    padding: 30px;
+}
+
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-name {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #34495e;
+    margin: 0;
+}
+
+.profile-details-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.detail-frame {
+    border: 2px solid #b4d9ee;
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #2c3e50;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #2980b9;
+    margin-bottom: 5px;
+}
+
+.detail-value {
+    color: #34495e;
+}
+
+
+.searchyourvideos_main_wrapper_ksdabqsrt {
+    background-color: #e2f3ff;
+    min-height: 100vh;
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .searchyourvideos_main_container_ksdabqsrt {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    max-width: 1279px;
+    margin-bottom: 200px;
+    margin-top: 42px;
+    margin-left: 306px;
+  }
+  
+  .searchksdab-media-containerqsrt {
+    position: relative;
+    width: calc(33.33% - 20px);
+    margin: 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+  }
+  
+  .searchksdab-mediaqsrt {
+    width: 100%;
+    height: 260px;
+    /* Assuming the same height as videos */
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+  
+  .searchcustom-controlsqsrt {
+    font-size: 24px;
+    color: white;
+    background-color: black;
+    border-radius: 50%;
+    padding: 5px 9px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+  }
+  
+  .searchmedialinker-containerqsrt {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+  }
+  
+  .searchcustom-media-containerqsrt {
+    position: relative;
+    display: flex;
+    width: 100%;
+    max-width: 1400px;
+    height: 850px;
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .searchmedia-contentqsrt {
+    width: 70%;
+    height: 100%;
+    box-sizing: border-box;
+    border-radius: 8px 0 0 8px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .searchmedia-contentqsrt::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(16px) brightness(0.8) contrast(1.2); 
+    z-index: 1;
+    transition: backdrop-filter 0.3s ease;
+    pointer-events: none; 
+  }
+  
+  
+  
+  .searchcustom-mediaqsrt {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px 0 0 8px;
+    object-fit: cover;
+  }
+  
+  .searchcustom-media_imagesqsrt {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px 0 0 8px;
+  }
+  
+  .searchmedialinker-controlsqsrt {
+    font-size: 36px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    padding: 12px;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    /* height: 55px;
+    width: 50px; */
+  }
+  
+  .searchvertical-lineqsrt {
+    width: 2px;
+    height: 100%;
+    background-color: #ddd;
+  }
+  
+  .searchblank_area_divqsrt {
+    width: 37%;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    background-color: #fff;
+    flex-direction: column;
+  }
+  
+  .fa-times {
+    display: flex;
+    margin: 0px auto;
+    padding: 6px 6px 6px 7px;
+    position: relative;
+    left: 47%;
+    bottom: 12%;
+  }
+  
+  .fa-times:hover {
+    background-color: #f3565d;
+    transition: background-color 0.5s;
+  }
+  
+  .chevron_searchvideo_rightqsrt {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+  }
+  .chevron_searchvideo_leftqsrt {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+  }
+  
+  .chevron_yourvideo_leftqsrt:hover,
+  .chevron_yourvideo_rightqsrt:hover {
+    cursor: pointer;
+  }
+  
+  
+  
+  .fa-chevron-right {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  /* Adjust the styles for the left chevron */
+  .fa-chevron-left {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  /* .fa-chevron-left:hover,
+  .fa-chevron-right:hover {
+    background-color: white;
+  } */
+  
+  .chevron-right,
+  .chevron-left {
+    font-size: 25px;
+  }
+  
+  
+  .searchmedialinker-container-commentsqsrt {
+    font-weight: bold;
+    font-family: var(--montserrat);
+  }
+  
+  .searchmedialinker-vertical-line-volqsrt {
+    border-bottom: 1px solid black;
+    width: 100%;
+  }
+  
+  .searchmedialinker-comments-profile-image-xyzazqsrt {
+    border-radius: 50%;
+    margin-top: 12px;
+    height: 40px;
+    width: 43px;
+    margin-left: 4px;
+    display: inline-block;
+  }
+  
+  .searchmedialinker-profile-name-xyzaxqsrt{
+    font-weight: bold;
+    font-size: 17px;
+    font-family: var(--montserrat);
+    display: inline-block;
+    margin: 3px 7px 3px 11px;
+    top: -12px;
+    position: relative;
+  }
+  
+  .searchmedialinker-inprofile-xyzax-commentqsrt{
+    margin: 6px 1px 1px 68px;
+  }
+  
+  #commentTextqsrt {
+    max-height: 100px;
+    overflow: hidden;
+  }
+  
+  .searchexpandedqsrt {
+    max-height: none; 
+  }
+  
+  .searchmore-linkqsrt {
+    color: blue;
+    cursor: pointer;
+    float: right;
+    margin-right: 121px;
+    position: relative;
+    top: -22px;
+  }
+  
+  
+  .searchmedialinker-comments-users-profile-ydxyz-imgqsrt{
+    height: 38px;
+    width: 42px;
+    border-radius: 50%;
+    margin-left: 57px;
+    display: inline-block;
+  }
+  
+  .searchmedialinker-comments-users-name-ydxyzqsrt{
+    font-size: 17px;
+    font-family: var(--Open-sans);
+    display: inline-block;
+    margin: 8px 7px 3px 106px;
+    top: -42px;
+    position: relative;
+  }
+  
+  .searchmedialinker-comments-user-commentsqsrt {
+    margin-top: 22px;
+    overflow-y: auto;
+  }
+  
+  .searchmedialinker-comments-user-commentsqsrt::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  .searchmedialinker-comments-user-commentsqsrt::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 6px;
+  }
+  
+  .searchmedialinker-comments-user-commentsqsrt::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+  }
+  
+  .searchmedialinker-comments-users-comments-ydxyzqsrt{
+    margin: 0px 1px 1px 119px;
+    position: relative;
+    top: -27px;
+  }
+  
+  .searchmedialinker-comments-usersqsrt{
+    margin-bottom: 9px;
+  }
+  
+  
+  
+  .searchtop_upper_bottom_down_xdsyzqsrt {
+    position: relative;
+    margin-top: 114px;
+    background-color: #ddd;
+  }
+  
+  .searchtop_upper_bottom_down_xdsyzqsrt textarea {
+    width: 100%; 
+    max-height: 200px;
+    font-size: 16px;
+    border-top: 1px solid black; 
+    border-right: 1px solid white;
+    border-bottom: 1px solid white; 
+    border-left: 1px solid white;
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    resize: none;
+    overflow: auto;
+    font-family: var(--montserrat);
+    background-color: #ddd;
+  }
+  
+  .searchtop_upper_bottom_down_xdsyzqsrt textarea:focus {
+    outline: none;
+  }
+  
+  .searchtop_upper_bottom_down_xdsyzqsrt textarea::placeholder {
+    color: gray;
+  }
+  
+  .searchvertical_top_xdsyzqsrt {
+    width: 100%; 
+    height: 1px; 
+    background-color: black;
+    margin-right: 10px; 
+  }
+  
+  .searchvertical_down_xdsyzqsrt {
+    width: 1px;
+    background-color: black;
+    margin-left: 10px; 
+  }
+  
+  .searchsave-buttonqsrt{
+    background-color: black;
+    font-family: var(--montserrat);
+    position: relative;
+    left: 384px;
+    color: white;
+    padding: 8px 8px 8px 8px;
+    bottom: 62px;
+  }
+  
+  .searchksdab_image_commentqsrt{
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    margin-left: 19px;
+    margin-top: 22px;
+  }
+  
+  .searchksdab_name_commentqsrt{
+    margin-left: 62px;
+    font-weight: bold;
+    position: relative;
+    top: -30.5px;
+    font-family: var(--montserrat)
+  }
+  
+  /* .fa_times_line{
+    width: 34px;
+    height: 100%;
+    background-color: #e2f3ff;
+    position: relative;
+    left: 0;
+  } */
+  
+  .searchksdab_fixedqsrt{
+    max-width: 100%;
+    background-color: #e2f3ff;
+  }
+  
+  .searchvertical_line_2qsrt{
+    width: 2px;
+    height: 100%;
+    background-color: #ddd;
+    visibility: hidden;
+  }
+  
+  .searchksdab_content_commentqsrt{
+    margin-left: 81px;
+    font-family: var(--montserrat);
+    position: relative;
+    bottom: 11px;
+  }
+  
+  .searchbuy_media_ksdabqsrt{
+      font-family: var(--montserrat);
+      position: relative;
+      background-color: #f0f0f0;
+      height: 105px;
+      top: 72%;
+  }
+  
+  .searchbuy_media_ksdab_buttonqsrt{
+      background-color:#e2f3ff;
+      border: none;
+      border-radius: 28px;
+      font-size: 18px;
+      font-family: var(--montserrat);
+      width: 290px;
+      height: 54px;
+      margin-top: 23px;
+      margin-left: 39px;
+  }
+  
+  .searchbuy_media_ksdab_buttonqsrt:hover{ background-color:#BFFBFF; cursor: pointer;}
+  
+  .searchksdab-media-containerqsrt::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(7.5px) brightness(0.8) contrast(1.2); 
+    z-index: 1;
+    transition: backdrop-filter 0.3s ease;
+    pointer-events: none; 
+  }
+  
+  .searchksdab-media-containerqsrt::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 260px;
+    background-color: rgba(0, 0, 0, 0);
+    transition: background-color 0.55s ease;
+    pointer-events: none;
+  }
+  
+  .searchksdab-media-containerqsrt:hover::after {
+    background-color: rgba(58, 58, 58, 0.4);
+  }
+  
+  .searchbuy_media_ksdab_imageqsrt{
+    content: '';
+    border-radius: 50%;
+    height: 48px;
+    width: 56px;
+    margin-left: 58px;
+    position: relative;
+    top: 18px;
+  }

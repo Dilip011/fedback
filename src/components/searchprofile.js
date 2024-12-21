@@ -19,7 +19,6 @@ const splitPipeSeparatedId = (id) => {
 };
 
 
-
 const SearchProfile = () => {
   const [selectedMediaId, setSelectedMediaId] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -35,11 +34,6 @@ const SearchProfile = () => {
   const [comments, setComments] = useState([]);
   const Navigate = useNavigate();
   const { user } = useUserContext();
-
-
-
-  
-
 
   const fetchIndividualImages = async () => {
     if (id && id[5]) {
@@ -412,15 +406,6 @@ const SearchProfile = () => {
         ))}
 
 
-
-
-
-
-
-
-
-
-
         {usermultiplebackerMedia && usermultiplebackerMedia.map((media, index) => (
           <div key={index} className="searchksdab-media-container">
             <div>
@@ -532,7 +517,7 @@ const SearchProfile = () => {
               <div className="searchblank_area_div">
                 <div className="searchksdab_fixed">
                   <img className='searchksdab_image_comment' src={image} alt="" />
-                  <div className="searchksdab_name_comment">{user[0]}</div>
+                  <div className="searchksdab_name_comment">{id[0]}</div>
                   <div className="searchksdab_content_comment">{comments}</div>
                 </div>
                 <i

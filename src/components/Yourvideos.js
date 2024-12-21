@@ -1,28 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
 import "../styles/yourvideos.css";
-import { ref, getDownloadURL, listAll } from 'firebase/storage';
+import { ref, getDownloadURL, listAll, deleteObject, } from 'firebase/storage';
 import { useUserContext } from './Usercontext';
 import { storage } from './firebaseconfig';
 import image from "../images/Profile-2.jpeg"
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, query, collection, where, getDocs, deleteDoc } from 'firebase/firestore';
 import { db } from './firebaseconfig';
+import { useNavigate } from 'react-router-dom';
+
 
 const splitPipeSeparatedId = (id) => {
   const [userId, v4Id, name] = id.split('|');
   return { name, v4Id, userId };
 };
 
-// const foldersplit = (id) => {
-//   const [foldername, userid] = id.split('|');
-//   return { foldername, userid };
-// };
 
-
-
-
-const BackupYourVideos = () => {
+const YourVideos = () => {
   const [selectedMediaId, setSelectedMediaId] = useState(null);
-  // const [selectedlocationpath, setselectedlocationpath] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPauseIconVisible, setPauseIconVisible] = useState(true);
   const mediaRef = useRef(null);
@@ -33,10 +27,10 @@ const BackupYourVideos = () => {
   const [userfunc, setuserfunc] = useState([]);
   const [selectedGroupIndex, setSelectedGroupIndex] = useState(0);
   const [comments, setComments] = useState([]);
+  const [getname, setgetname] = useState(null);
+  const [mediaSource, setMediaSource] = useState(null);
+  const navigate = useNavigate();
 
-
-
-  
   const fetchIndividualImages = async () => {
     if (user && user[5]) {
       try {
@@ -143,7 +137,7 @@ const BackupYourVideos = () => {
       let matchingSubfolder = null;
       let documentId = null;
 
-      // Iterate through subfolders to find the one that contains the image
+
       for (const folder of folderItems.prefixes) {
         const subFolderRef = ref(storage, folder.fullPath);
         const subFolderItems = await listAll(subFolderRef);
@@ -204,8 +198,6 @@ const BackupYourVideos = () => {
         throw new Error('Invalid media ID format');
       }
 
-
-
       const docRef = doc(db, 'comments', documentId);
       const docSnap = await getDoc(docRef);
 
@@ -252,6 +244,70 @@ const BackupYourVideos = () => {
     setSelectedGroupIndex(previousIndex);
   };
 
+  const handleDelete = async () => {
+
+    if (mediaSource === 'usersingleMedia') {
+      const fileRef = ref(storage, `images/${getname.name}`);
+
+      try {
+        await deleteObject(fileRef);
+
+        const commentsRef = collection(db, 'comments');
+        const q = query(commentsRef, where('content_id', '==', `images/${getname.name}`));
+
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach(async (docSnap) => {
+          await deleteDoc(doc(db, 'comments', docSnap.id));
+        });
+
+        setSelectedMediaId(null);
+        setuserfunc([]);
+        setComments([]);
+        navigate('/home')
+      } catch (error) {
+        console.error('Error deleting file or comment:', error);
+      }
+
+    } else if (mediaSource === 'userfunc') {
+
+      const rootRef = ref(storage, 'images');
+      try {
+        const folderList = await listAll(rootRef);
+
+        for (const folder of folderList.prefixes) {
+          const folderRef = ref(storage, folder.fullPath);
+          const fileList = await listAll(folderRef);
+
+          const matchedFile = fileList.items.find((file) => file.name === getname.name);
+          if (matchedFile) {
+            for (const file of fileList.items) {
+              await deleteObject(file);
+            }
+
+            const commentsRef = collection(db, 'comments');
+            const q = query(commentsRef, where('contentfolder_id', '==', `${folder.fullPath}/${getname.name}`));
+
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach(async (docSnap) => {
+              await deleteDoc(doc(db, 'comments', docSnap.id));
+            });
+            setSelectedMediaId(null);
+            setuserfunc([]);
+            setComments([]);
+            navigate('/home')
+            break;
+          }
+        }
+      } catch (error) {
+        console.error('Error deleting files in subfolder:', error);
+      }
+    }
+  };
+
+
+
+
+
   useEffect(() => {
     fetchIndividualImages();
     // fetchImagesInSubfolders();
@@ -259,21 +315,15 @@ const BackupYourVideos = () => {
   }, [user]);
 
 
-
-
-
-
-
-
   return (
-    <div className='yourvideos_main_wrapper_ksdab'>
-      <div className="yourvideos_main_container_ksdab">
+    <div className='backyourvideos_main_wrapper_ksdab'>
+      <div className="backyourvideos_main_container_ksdab">
         {usersingleMedia && usersingleMedia.map((media) => (
-          <div key={media.name} className="ksdab-media-container">
+          <div key={media.name} className="backksdab-media-container">
             {media.name.endsWith('.mp4') ? (
               <video
                 id={`media-${media.name}`}
-                className="ksdab-media"
+                className="backksdab-media"
                 controls={false}
                 onClick={() => {
                   setSelectedMediaId(media.name);
@@ -284,7 +334,7 @@ const BackupYourVideos = () => {
             ) : (
               <img
                 id={`media-${media.name}`}
-                className="ksdab-media"
+                className="backksdab-media"
                 src={media.downloadUrl}
                 alt="Error Displaying image"
                 onClick={() => {
@@ -294,7 +344,7 @@ const BackupYourVideos = () => {
             )}
 
             {media.name.endsWith('.mp4') && (
-              <div className="custom-controls">
+              <div className="backcustom-controls">
                 <i
                   className="fa-solid fa-play"
                   style={{ color: '#ffffff' }}
@@ -318,12 +368,12 @@ const BackupYourVideos = () => {
 
 
         {usermultiplebackerMedia && usermultiplebackerMedia.map((media, index) => (
-          <div key={index} className="ksdab-media-container">
+          <div key={index} className="backksdab-media-container">
             <div>
               {media.type === 'video' ? (
                 <video
                   id={`media-${index}`}
-                  className="ksdab-media"
+                  className="backksdab-media"
                   controls={false}
                   onClick={() => {
                     setSelectedMediaId(media.name);
@@ -334,7 +384,7 @@ const BackupYourVideos = () => {
               ) : (
                 <img
                   id={`media-${index}`}
-                  className="ksdab-media"
+                  className="backksdab-media"
                   src={media.downloadUrl}
                   alt="Error Displaying image"
                   onClick={() => {
@@ -344,7 +394,7 @@ const BackupYourVideos = () => {
               )}
 
               {media.type === 'video' && (
-                <div className="custom-controls">
+                <div className="backcustom-controls">
                   <i
                     className="fa-solid fa-play"
                     style={{ color: '#ffffff' }}
@@ -363,95 +413,133 @@ const BackupYourVideos = () => {
 
 
 
-      {/* ***************
-
-
-                     From here the medialinker starts
-
-                                     ************************ */}
-
       {selectedMediaId && (
-        <div className="medialinker-container scrollable">
-          <div className="custom-media-container">
-            <div className="media-content">
-              {selectedMediaId.endsWith('.mp4') ? (
-                <video
-                  id={`media-${selectedMediaId}`}
-                  className="custom-media"
-                  controls={false}
-                  ref={mediaRef}
-                >
-                  <source src={usersingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl || userfunc[selectedGroupIndex]?.downloadUrl} type="video/mp4" />
-                </video>
-              ) : (
-                <img
-                  id={`media-${selectedMediaId}`}
-                  className="custom-media_images"
-                  src={usersingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl || userfunc[selectedGroupIndex]?.downloadUrl}
-                  alt={userfunc}
-                />
-              )}
-              {selectedMediaId.endsWith(".mp4") && (
-              <div
-                id={`controls-${selectedMediaId}`}
-                className="medialinker-controls"
-                onClick={handleTogglePlayPause}
-              >
-                
-                  <i className={`fa-solid ${isPlaying ? 'fa-pause' : 'fa-play'}`} style={{ color: '#ffffff', visibility: isPauseIconVisible ? 'visible' : 'hidden' }}></i>
-                
+        <>
+          <div className="backmedialinker-container scrollable">
+            <div className="backcustom-media-container">
+              <div className="backmedia-content">
+                {selectedMediaId.endsWith('.mp4') ? (
+                  <video
+                    id={`media-${selectedMediaId}`}
+                    className="backcustom-media"
+                    controls={false}
+                    ref={mediaRef}
+                  >
+                    <source src={usersingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl || userfunc[selectedGroupIndex]?.downloadUrl} type="video/mp4" />
+                  </video>
+                ) : (
+                  <img
+                    id={`media-${selectedMediaId}`}
+                    className="backcustom-media_images"
+                    src={usersingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl || userfunc[selectedGroupIndex]?.downloadUrl}
+                    alt={userfunc}
+                  />
+                )}
+                {selectedMediaId.endsWith(".mp4") && (
+                  <div
+                    id={`controls-${selectedMediaId}`}
+                    className="backmedialinker-controls"
+                    onClick={handleTogglePlayPause}
+                  >
+                    <i className={`fa-solid ${isPlaying ? 'fa-pause' : 'fa-play'}`} style={{ color: '#ffffff', visibility: isPauseIconVisible ? 'visible' : 'hidden' }}></i>
+                  </div>
+                )}
               </div>
-              )}
-              {userfunc && userfunc.length > 0 && (
-                <div className="chevrons">
-                  <i
-                    className="fa-solid fa-chevron-left"
-                    style={{
-                      color: 'black',
-                      visibility: selectedGroupIndex === 0 ? 'hidden' : 'visible',
-                      height: '24px',
-                      width: '24px'
-                    }}
-                    onClick={handlePreviousImage}
-                  ></i>
-                  <i
-                    className="fa-solid fa-chevron-right"
-                    style={{
-                      color: 'black',
-                      visibility: selectedGroupIndex === userfunc.length - 1 ? 'hidden' : 'visible',
-                      height: '24px',
-                      width: '24px'
-                    }}
-                    onClick={handleNextImage}
-                  ></i>
+
+              <div className="backvertical-line"></div>
+
+              <div className="backblank_area_div">
+                <div className="backksdab_fixed">
+                  <img className='backksdab_image_comment' src={image} alt="" />
+                  <div className="backksdab_name_comment">{user[0]}</div>
+                  <div className="backksdab_content_comment">{comments}</div>
                 </div>
-              )}
-            </div>
+                <i
+                  className="fa-solid fa-times"
+                  style={{ color: 'black', fontSize: '24px', cursor: 'pointer' }}
+                  onClick={() => {
+                    setSelectedMediaId(null);
+                    setuserfunc([]);
+                    setComments([]);
+                    setMediaSource(null);
+                    setgetname(null);
+                  }}
+                ></i>
+                {/* <div className="backupyourvideos_chevron_delete">
+                  <button onClick={() => {
+                    const foundMedia = usersingleMedia.find((media) => media.name === selectedMediaId);
 
-            <div className="vertical-line"></div>
+                    if (foundMedia) {
+                      setMediaSource('usersingleMedia');
+                      setgetname(foundMedia);
+                    } else {
+                      setMediaSource('userfunc');
+                      setgetname(userfunc[selectedGroupIndex]);
+                    }
 
-            <div className="blank_area_div">
-              <div className="ksdab_fixed">
-                <img className='ksdab_image_comment' src={image} alt="" />
-                <div className="ksdab_name_comment">{user[0]}</div>
-                <div className="ksdab_content_comment">{comments}</div>
+                    handleDelete();
+                  }}>
+                    Delete
+                  </button>
+                </div> */}
+
+                <div className="backupyourvideos_chevron_delete">
+                  <button onClick={() => {
+                    const foundMedia = usersingleMedia.find((media) => media.name === selectedMediaId);
+
+                    if (foundMedia) {
+                      setMediaSource('usersingleMedia');
+                      setgetname(foundMedia);
+                    } else {
+                      setMediaSource('userfunc');
+                      setgetname(userfunc[selectedGroupIndex]);
+                    }
+
+                    handleDelete();
+                  }}>
+                    <i className="fa fa-trash"></i> Delete
+                  </button>
+                </div>
+
+
               </div>
-              <i
-                className="fa-solid fa-times"
-                style={{ color: 'black', fontSize: '24px', cursor: 'pointer' }}
-                onClick={() => {
-                  setSelectedMediaId(null);
-                  setuserfunc([]);
-                  setComments([]);
-                }}
-              ></i>
+
             </div>
           </div>
-        </div>
+
+
+
+          {userfunc && userfunc.length > 0 && (
+            <div className="backchevrons">
+              <i
+                className="fa-solid fa-chevron-left chevron_yourvideo_left"
+                style={{
+                  color: 'black',
+                  visibility: selectedGroupIndex === 0 ? 'hidden' : 'visible',
+                  height: '24px',
+                  width: '24px'
+                }}
+                onClick={handlePreviousImage}
+              ></i>
+              <i
+                className="fa-solid fa-chevron-right chevron_yourvideo_right"
+                style={{
+                  color: 'black',
+                  visibility: selectedGroupIndex === userfunc.length - 1 ? 'hidden' : 'visible',
+                  height: '24px',
+                  width: '24px'
+                }}
+                onClick={handleNextImage}
+              ></i>
+
+            </div>
+          )}
+        </>
       )}
 
     </div>
+
   );
 };
 
-export default BackupYourVideos;
+export default YourVideos;

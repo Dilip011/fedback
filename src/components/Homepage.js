@@ -8,8 +8,10 @@ import "../styles/homepage.css";
 import { useUserContext } from './Usercontext';
 import { useUsersearch } from './UserContext2';
 import { useUserpayment } from './Usercontext3';
+import { UserContextProfile, useUserprofile } from './Usercontext4';
 import { useNavigate } from 'react-router-dom';
 import Tick_mark from "../images/Tick_mark.jpg"
+
 
 const Homepage = () => {
   const [mediaNameArray, setMediaNameArray] = useState([]);
@@ -20,9 +22,12 @@ const Homepage = () => {
   const { user } = useUserContext();
   const { id } = useUsersearch();
   const { setData } = useUserpayment();
+  const { setProfile } = useUserprofile();
   const Navigate = useNavigate();
   const [purchaseIdentified, setpurchaseIdentified] = useState([]);
   const [usermultiple, setUsermultiple] = useState([]);
+  const [userid,setuserid] = useState("");
+  
 
   useEffect(() => {
     const fetchTopDocuments = async () => {
@@ -123,7 +128,8 @@ const Homepage = () => {
           })
           if (userDoc.exists()) {
             const username = userDoc.data().name;
-            matchedContent.push({ name: mediaName, contentId: username, docCommentId, downloadUrl });
+            const field_id = userDoc.data().Document_Id;
+            matchedContent.push({ name: mediaName, contentId: username, docCommentId, downloadUrl,field_id });
           } else {
             console.log(`No document found for contentId: ${contentId}`);
           }
@@ -151,6 +157,7 @@ const Homepage = () => {
       const userDocRef = doc(db, "users", folderId);
       const userDoc = await getDoc(userDocRef);
       let username = "";
+      let field_id = "";
       const commentsCollectionRef = collection(db, "comments");
       const querySnapshot = await getDocs(commentsCollectionRef);
       let docCommentId = "";
@@ -163,6 +170,7 @@ const Homepage = () => {
       })
       if (userDoc.exists()) {
         username = userDoc.data().name;
+        field_id = userDoc.data().Document_Id;
       } else {
         console.log(`No document found for folderId: ${folderId}`);
       }
@@ -172,7 +180,7 @@ const Homepage = () => {
         for (const item of result.items) {
           try {
             const downloadUrl = await getDownloadURL(item);
-            subfolderContent.push({ name: item.name, contentId: username, docCommentId, downloadUrl, folderName });
+            subfolderContent.push({ name: item.name, contentId: username, docCommentId, downloadUrl, folderName,field_id });
           } catch (error) {
             console.log(`Error fetching file in ${folderName}:`, error);
           }
@@ -217,9 +225,28 @@ const Homepage = () => {
       console.error("Error fetching purchased items:", error);
     }
   };
+
+  const checkword = async () =>{
+    try {
+      const userRef = doc(db,"users",userid);
+      const getuserRef = await getDoc(userRef);
+      if(getuserRef.exists()){
+        const data = getuserRef.data();
+        const userArray = [data.name, data.email, data.phoneNumber, data.dob, data.country, data.Document_Id, data.username,data.age];
+        
+        setProfile(userArray)
+        Navigate("/usersprofile")
+        
+      }else{
+        console.log("No such document exists");
+      }
+
+    } catch (error) {
+      console.error("Error checking document:", error);
+    }
+    setuserid("");
+  }
   
-
-
 
   const addToCart = async () => {
     try {
@@ -266,58 +293,35 @@ const Homepage = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const updateContent = async () => {
-  //     const content = await fetchIndividualContent();
-  //     setIndividualContentArray(content);
-  //   };
-
-  //   updateContent();
-  // }, [mediaNameArray]);
-
-  // useEffect(() => {
-  //   fetchSubfolderContent();
-  // }, [folderNameArray]);
-
-  // useEffect(() => {
-  //   const players = Array.from(document.querySelectorAll('.plyr'));
-  //   players.forEach(player => new Plyr(player));
-  // }, []);
-
-  // useEffect(() => {
-  //   fetchPurchasedItems();
-  // }, [individualContentArray, subfolderContentArray]);
-
   
 
-  // useEffect(() => {
-  //   const updateContent = async () => {
-  //     const content = await fetchIndividualContent();
-  //     setIndividualContentArray(content);
-  //   };
+  useEffect(() => {
+    const updateContent = async () => {
+      const content = await fetchIndividualContent();
+      setIndividualContentArray(content);
+    };
 
-  //   const initializePlayers = () => {
-  //     const players = Array.from(document.querySelectorAll('.plyr'));
-  //     players.forEach(player => new Plyr(player));
-  //   };
+    updateContent();
+  }, [mediaNameArray]);
 
-  //   const fetchAllData = async () => {
-  //     if (mediaNameArray?.length > 0) {
-  //       await updateContent();
-  //     }
-  //     if (folderNameArray?.length > 0) {
-  //       await fetchSubfolderContent();
-  //     }
-  //     if (individualContentArray?.length > 0 || subfolderContentArray?.length > 0) {
-  //       await fetchPurchasedItems();
-  //     }
-  //     initializePlayers();
-  //   };
+  useEffect(() => {
+    fetchSubfolderContent();
+  }, [folderNameArray]);
 
-  //   fetchAllData();
-  // }, [mediaNameArray, folderNameArray, individualContentArray, subfolderContentArray]);
+  useEffect(() => {
+    const players = Array.from(document.querySelectorAll('.plyr'));
+    players.forEach(player => new Plyr(player));
+  }, []);
 
+  useEffect(() => {
+    fetchPurchasedItems();
+  }, [individualContentArray, subfolderContentArray]);
 
+  if(userid.length>0){
+    checkword();
+  }
+
+ 
   return (
     <div className='main-homepage-wrapper'>
       <div className="homepage-container">
@@ -326,7 +330,7 @@ const Homepage = () => {
             <div className="xyz-profile-box" key={index}>
               <div className="xyz-profile-image-container">
                 <img src={pic} alt="Profile" className="xyz-profile-image-homepage" />
-                <p className="xyz-user-name">{media.contentId}</p>
+                <p className="xyz-user-name" onClick={()=>{setuserid(media.field_id)}} >{media.contentId}</p>
               </div>
               <p className='xyz-horizontal-line'></p>
               {media.name.endsWith('.mp4') ? (
@@ -380,7 +384,7 @@ const Homepage = () => {
             <div className="xyz-profile-box" key={index}>
               <div className="xyz-profile-image-container">
                 <img src={pic} alt="Profile" className="xyz-profile-image-homepage" />
-                <p className="xyz-user-name">{subfolder[0]?.contentId || "Unknown User"}</p>
+                <p className="xyz-user-name" onClick={()=>{setuserid(subfolder[0]?.field_id)}}>{subfolder[0]?.contentId || "Unknown User"}</p>
               </div>
               <p className='xyz-horizontal-line'></p>
               <div className="xyz-two-column-media-grid">

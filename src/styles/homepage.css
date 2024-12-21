@@ -68,15 +68,9 @@
   margin-left: 11px;
 }
 
+.xyz-user-name {margin: 0;font-size: 15px;font-family: var(--montserrat);font-weight: bold;margin-top: 11px;}
 
-
-.xyz-user-name {
-  margin: 0;
-  font-size: 15px;
-  font-family: var(--montserrat);
-  font-weight: bold;
-  margin-top: 11px;
-}
+.xyz-user-name:hover{text-decoration: underline; cursor: pointer;}
 
 .xyz-statement {
   margin: 14px 13px;

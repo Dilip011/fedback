@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { db } from './firebaseconfig';
+import "../styles/signup.css"
 import { collection, addDoc, getDocs, where, query, updateDoc } from "firebase/firestore";
 
 const Signup = () => {

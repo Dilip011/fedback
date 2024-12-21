@@ -1,6 +1,7 @@
 import React from 'react';
 import userImage from '../images/Profile.jpg';
 import { useUserContext } from './Usercontext';
+import "../styles/profile.css";
 
 const Profile = () => {
   const {user} = useUserContext();
