@@ -1,8 +1,16 @@
 body {
-    background: #e2f3ff;
+    background-color: #f0f0f0;
     font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
+}
+
+.searchyourvideos_main_wrapper_ksdabqsrt {
+  background-color: #f0f0f0;
+  min-height: 100vh;
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
 }
 
 .usersprofile-container {
@@ -72,13 +80,7 @@ body {
 }
 
 
-.searchyourvideos_main_wrapper_ksdabqsrt {
-    background-color: #e2f3ff;
-    min-height: 100vh;
-    /* display: flex; */
-    justify-content: center;
-    align-items: center;
-  }
+
   
   .searchyourvideos_main_container_ksdabqsrt {
     display: flex;

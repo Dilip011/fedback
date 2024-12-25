@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import "../styles/interpage.css";
 import profile_img from "../images/Profile.jpg"
@@ -55,7 +54,7 @@ const Interpage = () => {
 
           <div className='cards_div_xyzab'>
             <i class="fa-solid fa-video"></i>
-            <NavLink to={`/yourcontent/${user[6]}`}>Your Content</NavLink>
+            <NavLink activeClassName="active" to={`/yourcontent/${user[6]}`}>Your Content</NavLink>
           </div>
 
 
@@ -68,29 +67,29 @@ const Interpage = () => {
           {!checktagline && (
             <div className='cards_div_xyzab'>
               <i class="fa-solid fa-hashtag"></i>
-              <NavLink to="/tagline">Tagline</NavLink>
+              <NavLink activeClassName="active" to="/tagline">Tagline</NavLink>
             </div>
 
           )}
 
           <div className='cards_div_xyzab'>
             <i class="fa-solid fa-arrow-trend-up"></i>
-            <NavLink to="/trending">Trending</NavLink>
+            <NavLink activeClassName="active" to="/trending">Trending</NavLink>
           </div>
 
           <div className='cards_div_xyzab'>
             <i className="fas fa-check-circle"></i>
-            <NavLink to="/purchases">Your purchases</NavLink>
+            <NavLink activeClassName="active" to="/purchases">Your purchases</NavLink>
           </div>
 
           <div className='cards_div_xyzab'>
             <i class="fa-solid fa-money-bills"></i>
-            <NavLink to="/">Billing</NavLink>
+            <NavLink activeClassName="active" to="/">Billing</NavLink>
           </div>
 
           <div className='cards_div_xyzab'>
             <i class="fa-solid fa-cart-shopping"></i>
-            <NavLink to="/cart">Cart</NavLink>
+            <NavLink activeClassName="active" to="/cart">Cart</NavLink>
           </div>
         </div>
 

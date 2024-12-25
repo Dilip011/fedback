@@ -18,16 +18,24 @@
   box-sizing: border-box;
 }
 
+.pymt_main_container{
+  background-color: #f0f0f0;
+  min-height: 100vh;
+  font-family: 'Montserrat', sans-serif; 
+}
+
 .payment_ksdab_media{
-    background-color:#e2f3ff;
+    background-color:#008080;
     border: none;
+    color: #fff;
     border-radius: 28px;
     font-size: 18px;
     font-family: var(--montserrat);
+    font-weight: bold;
     width: 290px;
     height: 54px;
     margin-top: 23px;
     margin-left: 85px;
 }
 
-.payment_ksdab_media:hover{background-color:#BFFBFF; cursor: pointer;}
+.payment_ksdab_media:hover{background-color:#00a3a3; cursor: pointer;}

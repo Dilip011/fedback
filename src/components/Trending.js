@@ -1,8 +1,9 @@
 import React from 'react'
+import "../styles/trending.css"
 
 const Trending = () => {
   return (
-    <div>Trending</div>
+    <div className='qsrt_trend_container'>Trending</div>
   )
 }
 

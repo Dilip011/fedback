@@ -7,7 +7,7 @@ import Homepage from './components/Homepage';
 import Notifications from './components/Notifications';
 import Profile from './components/Profile';
 import Interpage from './components/Interpage';
-import YourVideos from "./components/Yourvideos"
+import YourVideos from "./components/Yourvideos";
 import Tagline from './components/Tagline';
 import Trending from './components/Trending';
 import { UserContextGlobal } from "./components/Usercontext";
@@ -34,9 +34,6 @@ const Navlayout = () => (
 );
 
 function App() {
-
-
-
   return (
     <div>
 

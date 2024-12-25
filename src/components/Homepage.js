@@ -10,7 +10,8 @@ import { useUsersearch } from './UserContext2';
 import { useUserpayment } from './Usercontext3';
 import { UserContextProfile, useUserprofile } from './Usercontext4';
 import { useNavigate } from 'react-router-dom';
-import Tick_mark from "../images/Tick_mark.jpg"
+import Tick_mark from "../images/Tick_mark.jpg";
+import {useLocation} from "react-router-dom";
 
 
 const Homepage = () => {
@@ -26,8 +27,11 @@ const Homepage = () => {
   const Navigate = useNavigate();
   const [purchaseIdentified, setpurchaseIdentified] = useState([]);
   const [usermultiple, setUsermultiple] = useState([]);
-  const [userid,setuserid] = useState("");
-  
+  const [userid, setuserid] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
+  const location = useLocation();
+  const message = location.state?.message;
+
 
   useEffect(() => {
     const fetchTopDocuments = async () => {
@@ -129,7 +133,7 @@ const Homepage = () => {
           if (userDoc.exists()) {
             const username = userDoc.data().name;
             const field_id = userDoc.data().Document_Id;
-            matchedContent.push({ name: mediaName, contentId: username, docCommentId, downloadUrl,field_id });
+            matchedContent.push({ name: mediaName, contentId: username, docCommentId, downloadUrl, field_id });
           } else {
             console.log(`No document found for contentId: ${contentId}`);
           }
@@ -180,7 +184,7 @@ const Homepage = () => {
         for (const item of result.items) {
           try {
             const downloadUrl = await getDownloadURL(item);
-            subfolderContent.push({ name: item.name, contentId: username, docCommentId, downloadUrl, folderName,field_id });
+            subfolderContent.push({ name: item.name, contentId: username, docCommentId, downloadUrl, folderName, field_id });
           } catch (error) {
             console.log(`Error fetching file in ${folderName}:`, error);
           }
@@ -198,13 +202,13 @@ const Homepage = () => {
     try {
       const folderMatchedItems = [];
       const matchedItems = [];
-  
+
       const purchasedCollectionRef = collection(db, "purchased");
       const purchasedSnapshot = await getDocs(purchasedCollectionRef);
-  
+
       purchasedSnapshot.forEach((doc) => {
         const data = doc.data();
-  
+
         if (data.media_name && individualContentArray.some(item => item.name === data.media_name)) {
           matchedItems.push(data);
         }
@@ -212,13 +216,13 @@ const Homepage = () => {
           const isFolderMatch = subfolderContentArray.some((items) =>
             items.some((item) => item.folderName === data.folder_name)
           );
-          
+
           if (isFolderMatch) {
             folderMatchedItems.push(data.folder_name);
           }
         }
       });
-  
+
       setpurchaseIdentified(matchedItems);
       setUsermultiple(folderMatchedItems);
     } catch (error) {
@@ -226,18 +230,18 @@ const Homepage = () => {
     }
   };
 
-  const checkword = async () =>{
+  const checkword = async () => {
     try {
-      const userRef = doc(db,"users",userid);
+      const userRef = doc(db, "users", userid);
       const getuserRef = await getDoc(userRef);
-      if(getuserRef.exists()){
+      if (getuserRef.exists()) {
         const data = getuserRef.data();
-        const userArray = [data.name, data.email, data.phoneNumber, data.dob, data.country, data.Document_Id, data.username,data.age];
-        
+        const userArray = [data.name, data.email, data.phoneNumber, data.dob, data.country, data.Document_Id, data.username, data.age];
+
         setProfile(userArray)
         Navigate("/usersprofile")
-        
-      }else{
+
+      } else {
         console.log("No such document exists");
       }
 
@@ -246,7 +250,7 @@ const Homepage = () => {
     }
     setuserid("");
   }
-  
+
 
   const addToCart = async () => {
     try {
@@ -275,7 +279,7 @@ const Homepage = () => {
           if (item.name === selectedMediaId) {
             await addDoc(cartCollectionRef, {
               media_name: selectedMediaId,
-              user_id:user[5]
+              user_id: user[5]
             });
             matchFound = true;
             break;
@@ -292,8 +296,6 @@ const Homepage = () => {
       console.error('Error adding item to cart: ', error);
     }
   };
-
-  
 
   useEffect(() => {
     const updateContent = async () => {
@@ -317,42 +319,47 @@ const Homepage = () => {
     fetchPurchasedItems();
   }, [individualContentArray, subfolderContentArray]);
 
-  if(userid.length>0){
+  if (userid.length > 0) {
     checkword();
   }
+  useEffect(() => {
+    // Check if the message is "success" and set visibility to true
+    if (location.state && location.state.message === "success") {
+        setIsVisible(true);
+    }
+}, [location.state]);
 
- 
+
   return (
     <div className='main-homepage-wrapper'>
       <div className="homepage-container">
         <div className="app xyzzz">
+          {/* {message && <p className="success-message">{message}</p>} */}
           {individualContentArray.map((media, index) => (
             <div className="xyz-profile-box" key={index}>
               <div className="xyz-profile-image-container">
                 <img src={pic} alt="Profile" className="xyz-profile-image-homepage" />
-                <p className="xyz-user-name" onClick={()=>{setuserid(media.field_id)}} >{media.contentId}</p>
+                <p className="xyz-user-name" onClick={() => { setuserid(media.field_id); }}>{media.contentId}</p>
               </div>
               <p className='xyz-horizontal-line'></p>
               {media.name.endsWith('.mp4') ? (
-                <div className="xyz-video-container">
+                <div className={`xyz-video-container ${purchaseIdentified.some(item => item.media_name === media.name) ? 'no-blur' : ''}`}>
                   <video id={`media-${media.name}`} className="xyz-video plyr" controls>
                     <source src={media.downloadUrl} type="video/mp4" />
                   </video>
                 </div>
               ) : (
-                <div className="image-container">
+                <div className={`image-container ${purchaseIdentified.some(item => item.media_name === media.name) ? 'no-blur' : ''}`}>
                   <img id={`media-${media.name}`} className="homexyzksdab-media" src={media.downloadUrl} alt="Image" />
                 </div>
               )}
               <p className="xyz-statement">{media.docCommentId}</p>
-
 
               {purchaseIdentified.some(item => item.media_name === media.name) ? (
                 <div className='xyz-purchase'>
                   <img className='xyz-tick-statement' src={Tick_mark} alt="" />
                   <p className="xyz-purchase-statement">You already purchased it</p>
                 </div>
-
               ) : (
                 <div className="xyz-button-container">
                   <button className="xyz-add-to-cart-button" onClick={async () => {
@@ -380,16 +387,20 @@ const Homepage = () => {
           ))}
 
 
+
           {subfolderContentArray.map((subfolder, index) => (
             <div className="xyz-profile-box" key={index}>
               <div className="xyz-profile-image-container">
                 <img src={pic} alt="Profile" className="xyz-profile-image-homepage" />
-                <p className="xyz-user-name" onClick={()=>{setuserid(subfolder[0]?.field_id)}}>{subfolder[0]?.contentId || "Unknown User"}</p>
+                <p className="xyz-user-name" onClick={() => { setuserid(subfolder[0]?.field_id) }}>{subfolder[0]?.contentId || "Unknown User"}</p>
               </div>
               <p className='xyz-horizontal-line'></p>
               <div className="xyz-two-column-media-grid">
                 {subfolder.map((media, subIndex) => (
-                  <div className="xyz-media-item" key={subIndex}>
+                  <div
+                    className={`xyz-media-item ${usermultiple.includes(subfolder[0]?.folderName) ? 'no-blur' : ''}`}
+                    key={subIndex}
+                  >
                     {media.name.endsWith('.mp4') ? (
                       <video id={`media-${media.name}`} className="xyz-subfolder-video plyr" controls>
                         <source src={media.downloadUrl} type="video/mp4" />
@@ -407,7 +418,6 @@ const Homepage = () => {
                   <img className='xyz-tick-statement' src={Tick_mark} alt="" />
                   <p className="xyz-purchase-statement">You already purchased it</p>
                 </div>
-
               ) : (
                 <div className="xyz-button-container">
                   <button
@@ -430,17 +440,21 @@ const Homepage = () => {
                         await goToNewPage();
                         setSelectedMediaId(null);
                       }
-                    }}
-                  >
+                    }}>
                     <i className="fas fa-check-circle"></i> Buy Now
                   </button>
                 </div>
               )}
-
             </div>
           ))}
+
+        </div>
+        <div className="successful-card" style={{visibility:isVisible?'visible':'hidden'}}>
+          <p>Purchase has been successful</p>
+          <i className="fa-solid fa-times purchase-times" style={{ color: 'white', fontSize: '18px', cursor: 'pointer' }} onClick={()=>setIsVisible(false)}></i>
         </div>
       </div>
+
     </div>
   );
 };

@@ -1,69 +1,76 @@
-/* .Interpage_main_wrapper_rsdab{
-    position: absolute;
-    top: 119px;
-    left: 316px;
-
+* {
+  margin: 0;
+  padding: 0;
 }
 
-.Interpage_main_verticaline_rsdab{
-    border-right:2px solid #ddd;
-    height: 800px;
-} */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
 
+:root {
+  --montserrat: "Montserrat", sans-serif;
+  --Lato: "Lato", sans-serif;
+  --Open-sans: "Open Sans", sans-serif;
+  --Poppins: "Poppins", sans-serif;
+}
 
-* {
-    margin: 0;
-    padding: 0;
-  }
-  
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
-  
-  :root {
-    --montserrat: "Montserrat", sans-serif;
-    --Lato: "Lato", sans-serif;
-    --Open-sans: "Open Sans", sans-serif;
-    --Poppins: "Poppins", sans-serif;
-  }
-  
-  .Interpage_main_wrapper_rsdab {
-    position: fixed;
-    top: 89px;
-    left: 48px;
-    display: flex;
-    font-family: var(--montserrat);
-  }
-  
-  .Interpage_main_verticaline_rsdab {
-    border-right: 2px solid #ddd;
-    height: 865px;
-    margin-right: 20px; /* Adjust this margin as needed */
-  }
-  
-  .cards {
-    display: flex;
-    flex-direction: column;
-    margin-right: 40px;
-    margin-top: 71px;
-  }
-  
-  .cards_div_xyzab {
-    display: flex;
-    align-items: center; /* Align icon and text vertically */
-    margin-bottom: 31px;
-    font-size: 18px;
-  }
-  
-  .cards_div_xyzab i {
-    margin-right: 10px; /* Adjust the spacing between the icon and text */
-  }
-  
-  .cards_div_xyzab a {
-    text-decoration: none;
-    color: #333;
-  }
+.Interpage_main_wrapper_rsdab {
+  position: fixed;
+  top: 89px;
+  left: 48px;
+  display: flex;
+  font-family: var(--montserrat);
+}
+
+.Interpage_main_verticaline_rsdab {
+  border-right: 2px solid #ddd;
+  height: 865px;
+  margin-right: 20px;
+  /* Adjust this margin as needed */
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  margin-right: 40px;
+  margin-top: 71px;
+}
+
+.cards_div_xyzab {
+  display: flex;
+  align-items: center;
+  margin-bottom: 31px;
+  font-size: 18px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cards_div_xyzab i {
+  margin-right: 10px;
+  color: #333;
+}
+
+.cards_div_xyzab a {
+  text-decoration: none;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.cards_div_xyzab a:hover {
+  color: #008080;
+  transform: scale(1.05);
+  font-weight: bold;
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+}
+
+.cards_div_xyzab .active {
+  color: #008080;
+  font-weight: bold;
+  background-color: #e0f7fa;
+  padding: 5px 10px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 10px rgba(0, 128, 128, 0.3);
+}
 
 .cards_div_down_xyzab {
   margin-top: 360px;
@@ -78,10 +85,7 @@
   border-radius: 50%;
 }
 
-.cards_div_down_xyzab p{
+.cards_div_down_xyzab p {
   margin-top: 9px;
   margin-left: 10px;
 }
-  
-  
-  

@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { ref, listAll, getDownloadURL } from 'firebase/storage';
 import { storage, db } from './firebaseconfig';
 import { addDoc, collection } from 'firebase/firestore';
-import { useEffect } from 'react';
 
 const Payment = () => {
     const { data } = useUserpayment();
@@ -42,14 +41,15 @@ const Payment = () => {
                     console.error('Matching folder or file not found');
                 }
             }
-            navigate('/home'); 
+
+            navigate('/home',{state:{message:'success'}}); 
         } catch (error) {
             console.error('Error fetching items or writing to Firestore:', error);
         }
     };
 
     return (
-        <div>
+        <div className='pymt_main_container'>
             <button onClick={paymentdetector} className='payment_ksdab_media'>Pay Now</button>
             {data ? (
                 <h1>{data[0]}</h1>

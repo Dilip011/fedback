@@ -1,6 +1,3 @@
-
-
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
@@ -21,7 +18,7 @@
 }
 
 .main-homepage-wrapper {
-  background-color: #e2f3ff;
+  background-color: #f0f0f0;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -70,7 +67,7 @@
 
 .xyz-user-name {margin: 0;font-size: 15px;font-family: var(--montserrat);font-weight: bold;margin-top: 11px;}
 
-.xyz-user-name:hover{text-decoration: underline; cursor: pointer;}
+.xyz-user-name:hover{text-decoration: underline; cursor: pointer;color: #008080;}
 
 .xyz-statement {
   margin: 14px 13px;
@@ -97,6 +94,8 @@
 
 .image-container::before,.xyz-video-container::before {content: '';position: absolute;top: 0;left: 0;right: 0;bottom: 0;backdrop-filter: blur(7.5px) brightness(0.8) contrast(1.2);background-color: rgba(58, 58, 58, 0);transition: background-color 0.5s ease;z-index: 1;}
 
+.image-container.no-blur::before,.xyz-video-container.no-blur::before {content: none;}
+
 .image-container:hover::before,.xyz-video-container:hover::before {background-color: rgba(58, 58, 58, 0.4);}
 
 .xyz-media-item,.xyz-subfolder-media {position: relative;overflow: hidden;cursor: pointer;}
@@ -105,13 +104,13 @@
 
 .xyz-media-item:hover::before,.xyz-subfolder-media:hover::before {background-color: rgba(58, 58, 58, 0.4);}
 
+.xyz-media-item.no-blur::before,.xyz-subfolder-media.no-blur::before {content: none;}
+
 .xyz-button-container {display: flex;gap: 10px;margin-left: 95px;margin-bottom: 10px;}
 
 .xyz-add-to-cart-button {background-color: #ff6b6b;color: white;border: none;padding: 12px 20px;font-size: 16px;font-weight: bold;border-radius: 8px;cursor: pointer;display: flex;align-items: center;gap: 8px;font-family: var(--montserrat);}
 
-.xyz-add-to-cart-button:hover {
-  background-color: #ff5252;
-}
+.xyz-add-to-cart-button:hover {background-color: #ff5252;}
 
 .xyz-purchase-button {background-color: #4da8da;color: white;border: none;padding: 12px 20px;font-size: 16px;font-weight: bold;border-radius: 8px;cursor: pointer;display: flex;align-items: center;gap: 8px;font-family: var(--montserrat);}
 
@@ -138,13 +137,29 @@
 
 .xyz-media-item {border-radius: 10px;overflow: hidden;}
 
-.xyz-subfolder-video, .xyz-subfolder-media {width: 100%;height: auto;cursor: pointer;}
+.xyz-subfolder-video, .xyz-subfolder-media {width: 100%;height: auto;cursor: pointer;height: 100%;}
 
 .xyz-purchase{display: flex;align-items: center;margin: 0px 0px 0px 115px;}
 
 .xyz-tick-statement{height: 47px;width: 54px;}
 
 .xyz-purchase-statement{margin: 0;font-size: 15px;font-weight: bold;}
+
+.successful-card{background-color: #ff4500 ;display: flex;position: fixed;left: 85%;top: 87%;font-family: var(--montserrat);color: white;width: 13.8%;}
+
+.successful-card p{padding-top: 10px;padding-left: 8px;padding-bottom: 10px;font-size: 15px;}
+
+.successful-card i{padding-top: 11px;position: absolute;left: 88%;top: 0.3px;}
+
+
+.success-message {
+  color: green;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+}
+
+
+
 
 
 

@@ -268,7 +268,7 @@
 }
 
 .create-video-container button {
-  background-color: var(--primary-color);
+  background-color: #008080;
   color: #fff;
   border: none;
   border-radius: 28px;
@@ -280,7 +280,7 @@
 }
 
 .create-video-container button:hover {
-  background-color: var(--button-hover-color);
+  background-color: #00a3a3;
 }
 
 .fa-file:hover {

@@ -22,6 +22,7 @@
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-family: 'Montserrat', sans-serif;
+  
 }
 
 .left-xyzab {
@@ -88,8 +89,6 @@
   margin: 19px 2px 14px 7px;
 }
 
-
-
 .left_search_bar_history_xyzab {
   display: flex;
   align-items: center;
@@ -132,12 +131,28 @@
 .right-xyzac {
   font-size: 18px;
   margin-right: 9px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .right-xyzac a {
   text-decoration: none;
-  padding-right: 24px;
+  margin-right: 20px;
   color: black;
+  padding: 5px 5px 5px 5px;
+}
+
+.right-xyzac a:hover{
+  color: #008080;
+  transform: scale(1.05);
+  font-weight: bold;
+}
+
+.right-xyzac .active{
+  color: #008080;
+  font-weight: bold;
+  background-color: #e0f7fa;
+  border-radius: 5px;
+  box-shadow: inset 0 0 10px rgba(0, 128, 128, 0.3);
 }
 
 .right_profile_image_xyzac {
@@ -148,7 +163,7 @@
 
 .search-options{cursor: pointer; display: flex;gap: 20px;margin-bottom: 7px;margin-top: 7px;}
 .search-option {cursor: pointer;padding: 5px 10px;border-radius: 5px; }
-.search-option.active {background-color: #007BFF; color: white;}
+.search-option.active {background-color: #008080; color: white;}
 
 
 .age-filter{
@@ -159,11 +174,8 @@
   font-size: 17px;
 }
 
-.age-filter-checkbox input{margin-left: 9px;
-  margin-top: 15px;
-  margin-right: 11px;
-  
-}
+.age-filter-checkbox input{margin-left: 9px;margin-top: 15px;margin-right: 11px;}
+
 
 .age-filter-options{
   display: flex;

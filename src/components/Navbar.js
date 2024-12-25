@@ -174,10 +174,6 @@ const Navbar = () => {
     fetchSearchResults();
   }, [searchTerm, activeTab, user[5], ageFilterVisible, selectedAgeOption]);
 
-
-
-
-
   const handleSearchBarClick = () => {
     setSearchContainerHeight(270);
     setSearchHistoryVisible(true);
@@ -269,7 +265,6 @@ const Navbar = () => {
     }
   }; 
   
-
   return (
     <div className="navbar">
       <div className="left-xyzab">
@@ -300,21 +295,15 @@ const Navbar = () => {
                 <div className="search-options">
                   <span
                     className={`search-option ${activeTab === 'user' ? 'active' : ''}`}
-                    onClick={() => handleTabClick('user')}
-                  >
-                    User
+                    onClick={() => handleTabClick('user')}>User
                   </span>
                   <span
                     className={`search-option ${activeTab === 'videos' ? 'active' : ''}`}
-                    onClick={() => handleTabClick('videos')}
-                  >
-                    Videos
+                    onClick={() => handleTabClick('videos')}>Videos
                   </span>
                   <span
                     className={`search-option ${activeTab === 'filter' ? 'active' : ''}`}
-                    onClick={() => handleTabClick('filter')}
-                  >
-                    Filters
+                    onClick={() => handleTabClick('filter')}>Filters
                   </span>
                 </div>
                 {activeTab === 'filter' && (
@@ -399,9 +388,9 @@ const Navbar = () => {
         </div>
       </div>
       <div className="right-xyzac">
-        <NavLink to="/home">Home</NavLink>
-        <NavLink to="/notifications">Notifications</NavLink>
-        <NavLink to="/login">Logout</NavLink>
+        <NavLink activeClassName="active" to="/home">Home</NavLink>
+        <NavLink activeClassName="active" to="/notifications">Notifications</NavLink>
+        <NavLink activeClassName="active" to="/login">Logout</NavLink>
       </div>
     </div>
   );
