@@ -323,7 +323,6 @@ const Homepage = () => {
     checkword();
   }
   useEffect(() => {
-    // Check if the message is "success" and set visibility to true
     if (location.state && location.state.message === "success") {
         setIsVisible(true);
     }

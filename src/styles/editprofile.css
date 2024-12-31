@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+    --montserrat: "Montserrat", sans-serif;
+}
+
+.editprofile-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #f5f5f5;
+    padding: 50px;
+    font-family: var(--montserrat);
+  }
+  
+  .editprofile-card {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px; /* Increased maximum width */
+    padding: 30px; /* Added more padding */
+  }
+  
+  .editprofile-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    background-color: #008080; /* Teal background */
+    padding: 20px; /* Added padding for better spacing */
+    border-radius: 8px;
+  }
+  
+  .editprofile-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ffffff; /* White border for contrast */
+  }
+  
+  .editprofile-name {
+    font-size: 2rem; /* Slightly increased font size */
+    font-weight: bold;
+    color: #ffffff; /* White text for better contrast */
+    margin: 0;
+  }
+  
+  .editprofile-details {
+    margin-bottom: 20px;
+  }
+  
+  .editprofile-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .editprofile-detail-label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #555;
+    margin-right: 10px;
+    flex: 1;
+  }
+  
+  .editprofile-detail-value {
+    font-size: 1rem;
+    color: #333;
+    cursor: pointer;
+    flex: 2;
+    padding: 5px;
+  }
+  
+  .editprofile-detail-value:hover {
+    color: #007bff;
+    text-decoration: underline;
+  }
+  
+  .editprofile-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 2;
+  }
+  
+  .editprofile-input {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .editprofile-save-button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    color: #ffffff;
+    background-color: #28a745;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .editprofile-save-button:hover {
+    background-color: #218838;
+  }
+  
+  .editprofile-bars {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .editprofile-bar {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .editprofile-bar:hover {
+    background-color: #0056b3;
+  }
+  
+  .editprofile-bio {
+    margin-top: 20px;
+  }
+  
+  .editprofile-bio h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .editprofile-bio p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+  }
+  
+  

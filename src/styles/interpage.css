@@ -59,7 +59,7 @@
 .cards_div_xyzab a:hover {
   color: #008080;
   transform: scale(1.05);
-  font-weight: bold;
+  /* font-weight: bold; */
   /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
 }
 

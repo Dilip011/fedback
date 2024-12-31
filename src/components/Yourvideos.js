@@ -4,7 +4,7 @@ import { ref, getDownloadURL, listAll, deleteObject, } from 'firebase/storage';
 import { useUserContext } from './Usercontext';
 import { storage } from './firebaseconfig';
 import image from "../images/Profile-2.jpeg"
-import { doc, getDoc, query, collection, where, getDocs, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, query, collection, where, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from './firebaseconfig';
 import { useNavigate } from 'react-router-dom';
 
@@ -256,7 +256,18 @@ const YourVideos = () => {
         const q = query(commentsRef, where('content_id', '==', `images/${getname.name}`));
 
         const querySnapshot = await getDocs(q);
+
         querySnapshot.forEach(async (docSnap) => {
+          const docData = docSnap.data();
+          const userDocRef = doc(db, 'users', docData.user_id);
+          const userDocSnap = await getDoc(userDocRef);
+          const userDocData = userDocSnap.data();
+          if (userDocData.Totalposts && typeof userDocData.Totalposts === 'number') {
+            // Decrement the Totalposts field
+            await updateDoc(userDocRef, {
+              Totalposts: userDocData.Totalposts - 1,
+            });
+          }
           await deleteDoc(doc(db, 'comments', docSnap.id));
         });
 
@@ -285,10 +296,21 @@ const YourVideos = () => {
             }
 
             const commentsRef = collection(db, 'comments');
-            const q = query(commentsRef, where('contentfolder_id', '==', `${folder.fullPath}/${getname.name}`));
+
+            const q = query(commentsRef, where('contentfolder_id', '==', `${folder.fullPath}`));
 
             const querySnapshot = await getDocs(q);
             querySnapshot.forEach(async (docSnap) => {
+              const docData = docSnap.data();
+              const userDocRef = doc(db, 'users', docData.user_id);
+              const userDocSnap = await getDoc(userDocRef);
+              const userDocData = userDocSnap.data();
+              if (userDocData.Totalposts && typeof userDocData.Totalposts === 'number') {
+                await updateDoc(userDocRef, {
+                  Totalposts: userDocData.Totalposts - 1,
+                });
+              }
+
               await deleteDoc(doc(db, 'comments', docSnap.id));
             });
             setSelectedMediaId(null);
@@ -507,19 +529,14 @@ const YourVideos = () => {
             </div>
           </div>
 
-
-
           {userfunc && userfunc.length > 0 && (
             <div className="backchevrons">
               <i
                 className="fa-solid fa-chevron-left chevron_yourvideo_left"
                 style={{
-                  color: 'black',
-                  visibility: selectedGroupIndex === 0 ? 'hidden' : 'visible',
-                  height: '24px',
+                  color: 'black', visibility: selectedGroupIndex === 0 ? 'hidden' : 'visible', height: '24px',
                   width: '24px'
-                }}
-                onClick={handlePreviousImage}
+                }} onClick={handlePreviousImage}
               ></i>
               <i
                 className="fa-solid fa-chevron-right chevron_yourvideo_right"

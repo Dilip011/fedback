@@ -99,6 +99,7 @@ const Signup = () => {
         const docRef = await addDoc(collection(db, 'users'), {
           ...data,
           age,
+          Totalposts:0,
           Timestamp: Main_date,
         });
 

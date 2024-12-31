@@ -22,8 +22,7 @@ import Purchases from './components/purchases';
 import Cart from './components/cart';
 import Searchvideo from './components/searchvideo';
 import Usersprofile from './components/Usersprofile';
-
-
+import Editprofile from './components/Editprofile';
 
 const Navlayout = () => (
   <>
@@ -52,6 +51,7 @@ function App() {
                     <Route path="/trending" element={<Trending />} />
                     <Route path="/purchases" element={<Purchases />} />
                     <Route path="/cart" element={<Cart />} />
+                    <Route path="/editprofile" element={<Editprofile />} />
                   </Route>
 
                   <Route path="/createvideo" element={<CreateVideo />} />

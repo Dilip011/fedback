@@ -3,12 +3,10 @@ import { useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
 import { storage, db } from './firebaseconfig';
-import { addDoc, collection,updateDoc } from 'firebase/firestore';
+import { addDoc, collection,updateDoc,doc,getDoc,setDoc } from 'firebase/firestore';
 import "../styles/createvideo.css"
 import { useUserContext } from './Usercontext';
 import { useNavigate } from 'react-router-dom';
-
-
 
 
 const CreateVideo = () => {
@@ -55,53 +53,65 @@ const CreateVideo = () => {
 
   const handleUploadNow = async () => {
     try {
-      let contentId;
-      let docRef;
-  
-      
-      docRef = await addDoc(collection(db, 'comments'), {
-        content_title:textareatitle,
-        content_comment: textareaContent,
-        user_id: user[5], 
-        timestamp: new Date() 
-      });
+        let contentId;
+        let docRef;
 
-      
-  
-      const documentId = docRef.id;
-  
-      if (selectedFiles.length === 1) {
-        const file = selectedFiles[0];
-        contentId = `images/${user[5] + '|' + v4() + '<' + documentId + '>' + file.name}`;
-        const imageRef = ref(storage, contentId);
-        await uploadBytes(imageRef, file);
-  
-        const uploadedFilePath = await getDownloadURL(imageRef);
-  
-        // Update the Firestore document with the correct content_id
-        await updateDoc(docRef, { content_id: contentId });
-  
-      } else {
-        const groupId = v4();
-        contentId = `images/${v4() + '|' + user[5] + '<' + documentId + '>'}`;
-        for (const file of selectedFiles) {
-          const imageRef = ref(storage, `${contentId}/${user[5] + '|' + v4() + '|' + file.name}`);
-          await uploadBytes(imageRef, file);
-  
-          const uploadedFilePath = await getDownloadURL(imageRef);
+        // Add the new comment to the "comments" collection
+        docRef = await addDoc(collection(db, 'comments'), {
+            content_title: textareatitle,
+            content_comment: textareaContent,
+            user_id: user[5],
+            timestamp: new Date()
+        });
+
+        const documentId = docRef.id;
+
+        // Handle single or multiple file uploads
+        if (selectedFiles.length === 1) {
+            const file = selectedFiles[0];
+            contentId = `images/${user[5] + '|' + v4() + '<' + documentId + '>' + file.name}`;
+            const imageRef = ref(storage, contentId);
+            await uploadBytes(imageRef, file);
+
+            const uploadedFilePath = await getDownloadURL(imageRef);
+
+            // Update the Firestore document with the correct content_id
+            await updateDoc(docRef, { content_id: contentId });
+        } else {
+            const groupId = v4();
+            contentId = `images/${v4() + '|' + user[5] + '<' + documentId + '>'}`;
+            for (const file of selectedFiles) {
+                const imageRef = ref(storage, `${contentId}/${user[5] + '|' + v4() + '|' + file.name}`);
+                await uploadBytes(imageRef, file);
+
+                const uploadedFilePath = await getDownloadURL(imageRef);
+            }
+
+            // Update the Firestore document with the correct content_id
+            await updateDoc(docRef, { contentfolder_id: contentId });
         }
-  
-        // Update the Firestore document with the correct content_id
-        await updateDoc(docRef, { contentfolder_id: contentId });
-      }
-  
-      setSelectedFiles([]);
-      setTextareaContent('');
-      setTextareatitle('');
+
+        // Update the user's Totalposts field in the users collection
+        const userDocRef = doc(db, 'users', user[5]);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+            const userData = userDocSnap.data();
+            const currentTotalPosts = userData.Totalposts || 0;
+            await updateDoc(userDocRef, { Totalposts: currentTotalPosts + 1 });
+        } else {
+            await setDoc(userDocRef, { Totalposts: 1 }, { merge: true });
+        }
+
+        // Reset UI states
+        setSelectedFiles([]);
+        setTextareaContent('');
+        setTextareatitle('');
     } catch (error) {
-      console.error('Error uploading files: ', error);
+        console.error('Error uploading files or updating Totalposts: ', error);
     }
-  };
+};
+
      
 
   return (
