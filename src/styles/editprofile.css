@@ -1,153 +1,115 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+:root {
+  --montserrat: "Montserrat", sans-serif;
+  --primary-bg: #008080;
+  --light-gray: #f0f0f0;
+  --glow-color: rgba(0, 128, 128, 0.5);
+  --box-shadow: 0 0 10px rgba(0, 128, 128, 0.5);
+}
 
 * {
   margin: 0;
   padding: 0;
-}
-
-:root {
-    --montserrat: "Montserrat", sans-serif;
+  box-sizing: border-box;
 }
 
 .editprofile-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    width: 100%;
-    background-color: #f5f5f5;
-    padding: 50px;
-    font-family: var(--montserrat);
-  }
-  
-  .editprofile-card {
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 600px; /* Increased maximum width */
-    padding: 30px; /* Added more padding */
-  }
-  
-  .editprofile-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    background-color: #008080; /* Teal background */
-    padding: 20px; /* Added padding for better spacing */
-    border-radius: 8px;
-  }
-  
-  .editprofile-image {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #ffffff; /* White border for contrast */
-  }
-  
-  .editprofile-name {
-    font-size: 2rem; /* Slightly increased font size */
-    font-weight: bold;
-    color: #ffffff; /* White text for better contrast */
-    margin: 0;
-  }
-  
-  .editprofile-details {
-    margin-bottom: 20px;
-  }
-  
-  .editprofile-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .editprofile-detail-label {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #555;
-    margin-right: 10px;
-    flex: 1;
-  }
-  
-  .editprofile-detail-value {
-    font-size: 1rem;
-    color: #333;
-    cursor: pointer;
-    flex: 2;
-    padding: 5px;
-  }
-  
-  .editprofile-detail-value:hover {
-    color: #007bff;
-    text-decoration: underline;
-  }
-  
-  .editprofile-input-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex: 2;
-  }
-  
-  .editprofile-input {
-    width: 100%;
-    padding: 8px 10px;
-    font-size: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .editprofile-save-button {
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    color: #ffffff;
-    background-color: #28a745;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .editprofile-save-button:hover {
-    background-color: #218838;
-  }
-  
-  .editprofile-bars {
-    text-align: center;
-    margin-top: 20px;
-  }
-  
-  .editprofile-bar {
-    padding: 10px 20px;
-    font-size: 1rem;
-    color: #ffffff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .editprofile-bar:hover {
-    background-color: #0056b3;
-  }
-  
-  .editprofile-bio {
-    margin-top: 20px;
-  }
-  
-  .editprofile-bio h2 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 10px;
-  }
-  
-  .editprofile-bio p {
-    font-size: 1rem;
-    color: #666;
-    line-height: 1.5;
-  }
-  
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--light-gray);
+  padding: 20px;
+  font-family: var(--montserrat);
+}
+
+.editprofile-card {
+  width: 800px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  text-align: left;
+  padding: 0px 20px 20px 20px;
+}
+
+.editprofile-header {
+  background-color: var(--primary-bg);
+  color: white;
+  padding: 12px;
+  margin: -35px -20px 0px -20px;
+  border-bottom: 2px solid var(--light-gray);
+  text-align: center;
+}
+
+.editprofile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  margin-bottom: 10px;
+}
+
+.profile-editcard {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.profile-editcard.active {
+  box-shadow: var(--box-shadow);
+}
+
+.profile-editcard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.edit-profiletimes{display: flex;margin: 0px auto;padding: 6px 6px 6px 7px;position: relative;left: 98%;}
+
+.profile-editcard-content div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.edit-item-card {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.edit-item-card-value {
+  font-size: 14px;
+  color: #555;
+  padding-left: 40px;
+}
+
+.profile-editcard hr {
+  margin: 10px 0;
+  border: none;
+  border-top: 1px solid var(--light-gray);
+}
+
+.summit-edit-item-details{
+  margin-top: 15px; background-color: #006666;color: white;border: none;border-radius: 5px;
+  padding: 8px 24px; font-size: 16px;font-weight: bold;cursor: pointer;transition: background-color 0.3s ease;position: relative;left: 45%;}
+
+.summit-edit-item-details:hover{background-color: #004d4d;}
+
+.edit-item-input {
+  outline: none;
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+  padding: 5px;
+}
+
+.edit-item-input:focus {
+  border: 1px solid white; /* Blue border on focus */
+}
+

@@ -527,8 +527,7 @@ const Searchvideo = () => {
                     onDragOver={(e) => e.preventDefault()}
                     onDragEnter={(e) => e.preventDefault()}
                     onDragLeave={(e) => e.preventDefault()}
-                    onDrop={(e) => e.preventDefault()}
-                  >
+                    onDrop={(e) => e.preventDefault()}>
                     <source
                       src={(fetchedSingleMedia && fetchedSingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl) || userfunc[selectedGroupIndex]?.downloadUrl}
                       type="video/mp4"
