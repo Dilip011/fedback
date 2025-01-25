@@ -180,7 +180,14 @@
   color: #555;
 }
 
-
+.about-me-input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 
 @media (max-width: 768px) {
   .user-profile-card {

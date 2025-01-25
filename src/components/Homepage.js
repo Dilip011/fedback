@@ -11,7 +11,7 @@ import { useUserpayment } from './Usercontext3';
 import { UserContextProfile, useUserprofile } from './Usercontext4';
 import { useNavigate } from 'react-router-dom';
 import Tick_mark from "../images/Tick_mark.jpg";
-import {useLocation} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 
 const Homepage = () => {
@@ -297,36 +297,36 @@ const Homepage = () => {
     }
   };
 
-  useEffect(() => {
-    const updateContent = async () => {
-      const content = await fetchIndividualContent();
-      setIndividualContentArray(content);
-    };
+  // useEffect(() => {
+  //   const updateContent = async () => {
+  //     const content = await fetchIndividualContent();
+  //     setIndividualContentArray(content);
+  //   };
 
-    updateContent();
-  }, [mediaNameArray]);
+  //   updateContent();
+  // }, [mediaNameArray]);
 
-  useEffect(() => {
-    fetchSubfolderContent();
-  }, [folderNameArray]);
+  // useEffect(() => {
+  //   fetchSubfolderContent();
+  // }, [folderNameArray]);
 
-  useEffect(() => {
-    const players = Array.from(document.querySelectorAll('.plyr'));
-    players.forEach(player => new Plyr(player));
-  }, []);
+  //   useEffect(() => {
+  //     const players = Array.from(document.querySelectorAll('.plyr'));
+  //     players.forEach(player => new Plyr(player));
+  //   }, []);
 
-  useEffect(() => {
-    fetchPurchasedItems();
-  }, [individualContentArray, subfolderContentArray]);
+  //   useEffect(() => {
+  //     fetchPurchasedItems();
+  //   }, [individualContentArray, subfolderContentArray]);
 
-  if (userid.length > 0) {
-    checkword();
-  }
-  useEffect(() => {
-    if (location.state && location.state.message === "success") {
-        setIsVisible(true);
-    }
-}, [location.state]);
+  //   if (userid.length > 0) {
+  //     checkword();
+  //   }
+  //   useEffect(() => {
+  //     if (location.state && location.state.message === "success") {
+  //         setIsVisible(true);
+  //     }
+  // }, [location.state]);
 
 
   return (
@@ -448,9 +448,9 @@ const Homepage = () => {
           ))}
 
         </div>
-        <div className="successful-card" style={{visibility:isVisible?'visible':'hidden'}}>
+        <div className="successful-card" style={{ visibility: isVisible ? 'visible' : 'hidden' }}>
           <p>Purchase has been successful</p>
-          <i className="fa-solid fa-times purchase-times" style={{ color: 'white', fontSize: '18px', cursor: 'pointer' }} onClick={()=>setIsVisible(false)}></i>
+          <i className="fa-solid fa-times purchase-times" style={{ color: 'white', fontSize: '18px', cursor: 'pointer' }} onClick={() => setIsVisible(false)}></i>
         </div>
       </div>
 

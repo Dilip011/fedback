@@ -4,12 +4,12 @@ import { useUserpayment } from './Usercontext3';
 import { useNavigate } from 'react-router-dom';
 import { ref, listAll, getDownloadURL } from 'firebase/storage';
 import { storage, db } from './firebaseconfig';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, increment, updateDoc, doc } from 'firebase/firestore';
 
 const Payment = () => {
     const { data } = useUserpayment();
     const navigate = useNavigate();
-    
+
     const paymentdetector = async () => {
         if (!data) return;
 
@@ -26,6 +26,14 @@ const Payment = () => {
                     folder_name: itemName,
                     user_id: userId
                 });
+                const id_split = itemName.split('|')[1];
+                const id_split_two = id_split.split('<')[0];
+                const notification = doc(db, "users", id_split_two);
+                await updateDoc(notification, {
+                    Total_post_sold: increment(1)
+                })
+
+
             } else {
                 const matchingFile = folderItems.items.find(file => file.name === itemName);
 
@@ -33,15 +41,21 @@ const Payment = () => {
                     await getDownloadURL(ref(storage, `images/${itemName}`));
 
                     const collectionRef = collection(db, 'purchased');
+
                     await addDoc(collectionRef, {
                         media_name: itemName,
                         user_id: userId
                     });
+                    const id_split = itemName.split('|')[0];
+                    const notification = doc(db, "users", id_split);
+                    await updateDoc(notification, {
+                        Total_post_sold: increment(1)
+                    })
+
                 } else {
                     console.error('Matching folder or file not found');
                 }
             }
-
             navigate('/home',{state:{message:'success'}}); 
         } catch (error) {
             console.error('Error fetching items or writing to Firestore:', error);

@@ -1,56 +1,64 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import creator from '../images/creator.jpg';
-import '../styles/profile.css';
 import { useUserContext } from './Usercontext';
-import { db } from './firebaseconfig';
-import { getDoc, doc } from 'firebase/firestore';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { db, storage } from './firebaseconfig';
+import { ref, getDownloadURL } from 'firebase/storage';
+import { getDoc, doc, updateDoc } from 'firebase/firestore';
+import '../styles/profile.css';
 
 const Profile = () => {
   const navigate = useNavigate();
   const { user } = useUserContext();
   const [checktagline, setchecktagline] = useState(false);
+  const [profileImage, setprofileImage] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [aboutMe, setAboutMe] = useState(user[9]);
 
   useEffect(() => {
-
     const check_tag = async () => {
       try {
         const documentId = user[5];
         const docRef = doc(db, "users", documentId);
         const docSnap = await getDoc(docRef);
-
         if (docSnap.exists()) {
           const data = docSnap.data();
-          const hasBankName = "bankname" in data;
-          const hasBankNumber = "bank_number" in data;
-          const hasBankCode = "bank_code" in data;
-
-          if (hasBankName && hasBankNumber && hasBankCode) {
+          if ("bankname" in data && "bank_number" in data && "bank_code" in data) {
             setchecktagline(true);
-          } else {
-            console.log("One or more required fields are missing.");
-            return false;
           }
-        } else {
-          console.log("Document does not exist.");
-          return false;
+          const fetchImage = ref(storage, `profile/${user[5]}`);
+          const fetchurl = await getDownloadURL(fetchImage);
+          setprofileImage(fetchurl);
+          if (data.aboutMe) {
+            setAboutMe(data.aboutMe);
+          }
         }
       } catch (error) {
         console.error("Error checking document:", error);
-        return false;
       }
     };
-    check_tag();}, [user])
+    check_tag();
+  }, [user]);
+
+  const handleAboutMeEdit = async (e) => {
+    if (e.key === "Enter") {
+      try {
+        const documentId = user[5];
+        const docRef = doc(db, "users", documentId);
+        await updateDoc(docRef, { aboutMe });
+        setIsEditing(false);
+      } catch (error) {
+        console.error("Error updating About Me:", error);
+      }
+    }
+  };
 
   return (
     <div className="user-profile-wrapper">
       <div className="user-profile-card">
         <div className="user-profile-header">
-          <img src={creator} alt="User" className="user-profile-image" />
+          <img src={profileImage} alt="User" className="user-profile-image" />
           <h1 className="user-profile-name">{user[0]}</h1>
-          <button className='user-profile-button' onClick={() => navigate("/editprofile")}>Edit Profile</button>
+          <button className="user-profile-button" onClick={() => navigate("/editprofile")}>Edit Profile</button>
         </div>
         <div className="user-profile-details">
           <div className="user-profile-row">
@@ -76,17 +84,16 @@ const Profile = () => {
           <div className="user-profile-row">
             <i className="fa-solid fa-building-columns"></i>
             <span className="user-detail-label">Bank Name:</span>
-            <span className="user-detail-value">{user[8]}</span>
+            <span className="user-detail-value">{user[10]}</span>
           </div>
         </div>
-
-        {!checktagline &&
+        {!checktagline && (
           <div className="user-profile-bars">
             <button className="user-profile-bar" onClick={() => navigate('/tagline')}>
               <i className="fa-solid fa-user-plus"></i>Became a Member
             </button>
-          </div>}
-
+          </div>
+        )}
         <div className="user-profile-circles-container">
           <div className="user-profile-circle">
             <i className="circle-icon fas fa-user"></i>
@@ -95,15 +102,25 @@ const Profile = () => {
           </div>
           <div className="user-profile-circle">
             <i className="circle-icon fas fa-chart-line"></i>
-            <div className="user-circle-value">25</div>
+            <div className="user-circle-value">{user[8]}</div>
             <div className="user-circle-label">Total Posts Sold</div>
           </div>
         </div>
         <div className="user-profile-bio">
           <h2>About Me</h2>
-          <p>
-            Passionate about creating innovative solutions. Skilled in modern web development and always eager to learn.
-          </p>
+          {!isEditing ? (
+            <p onClick={() => setIsEditing(true)} style={{ cursor: "pointer" }}>
+              {aboutMe} <i className="fas fa-pencil-alt"></i>
+            </p>
+          ) : (
+            <input
+              type="text"
+              value={aboutMe}
+              onChange={(e) => setAboutMe(e.target.value)}
+              onKeyDown={handleAboutMeEdit}
+              className="about-me-input"
+            />
+          )}
         </div>
       </div>
     </div>

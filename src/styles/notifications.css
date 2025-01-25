@@ -46,20 +46,23 @@
   margin-top: 119px;
   margin-bottom: 22px;
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-  padding: 20px;
+  padding: 0px 0px 20px 0px;
   border-radius: 12px;
   font-family: var(--montserrat);
 }
 
 .notifications_main_container_wzxab h2 {
   margin-bottom: 15px;
+  padding: 10px;
+  color: white;
+  background-color: #008080;
 }
 
 .notification_item {
   display: flex;
   align-items: center;
   border-bottom: 1px solid #ddd;
-  padding: 10px 0;
+  padding: 10px 10px 10px 10px;
 }
 
 .user_profile_image {

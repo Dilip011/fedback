@@ -101,6 +101,7 @@ const Signup = () => {
           age,
           Totalposts:0,
           Timestamp: Main_date,
+          Total_post_sold:0
         });
 
         const newDocId = docRef.id;

@@ -37,9 +37,9 @@ const Login = () => {
     const hasBankCode = "bank_code" in userData;
 
     if (hasBankName && hasBankNumber && hasBankCode) {
-      userArray = [userData.name, userData.email, userData.phoneNumber, userData.dob, userData.country, userData.Document_Id, userData.username, userData.Totalposts, userData.bankname, userData.bank_number, userData.bank_code];
+      userArray = [userData.name, userData.email, userData.phoneNumber, userData.dob, userData.country, userData.Document_Id, userData.username, userData.Totalposts,userData.Total_post_sold,userData.aboutMe,userData.bankname, userData.bank_number, userData.bank_code,];
     } else {
-      userArray = [userData.name, userData.email, userData.phoneNumber, userData.dob, userData.country, userData.Document_Id, userData.username, userData.Totalposts];
+      userArray = [userData.name, userData.email, userData.phoneNumber, userData.dob, userData.country, userData.Document_Id, userData.username, userData.Totalposts,userData.Total_post_sold,userData.aboutMe];
     }
 
     if (userData.password === password && userData.email === email) {

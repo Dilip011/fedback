@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchContext } from './SearchContext';
 import { ref, getDownloadURL, listAll } from 'firebase/storage';
 import { db, storage } from './firebaseconfig';
-import { doc, getDoc, addDoc, collection,getDocs,query,where,updateDoc,increment } from 'firebase/firestore';
+import { doc, getDoc, addDoc, collection, getDocs, query, where, updateDoc, increment } from 'firebase/firestore';
 import image from "../images/Profile-2.jpeg"
 import { useUserContext } from './Usercontext';
 import { useUserpayment } from './Usercontext3';
@@ -11,6 +11,7 @@ import "../styles/searchvideo.css";
 import { useNavigate } from 'react-router-dom';
 import cart from "../images/cart.jpg";
 import { useUsersearch } from './UserContext2';
+import Tick_mark from "../images/Tick_mark.jpg";
 
 const Searchvideo = () => {
   const { contentIdResults, contentFolderIdResults } = useSearchContext();
@@ -27,6 +28,12 @@ const Searchvideo = () => {
   const { setData } = useUserpayment();
   const Navigate = useNavigate();
   const { id } = useUsersearch();
+  const [purchaseIdentified, setpurchaseIdentified] = useState([]);
+  const [usermultiple, setUsermultiple] = useState([]);
+  const [individualContentArray, setIndividualContentArray] = useState([]);
+
+  console.log("This is user", user);
+
 
   const fetchIndividualImages = async () => {
     try {
@@ -70,6 +77,7 @@ const Searchvideo = () => {
         return secondPart !== user[5];
       });
 
+
       for (const folderPath of contentFolderIdResults) {
         const folderName = folderPath.replace('images/', '');
 
@@ -90,7 +98,7 @@ const Searchvideo = () => {
             const downloadUrl = await getDownloadURL(firstImage);
             setFetchedMultipleMedia(prevMedia => [
               ...prevMedia,
-              { name: firstImage.name, downloadUrl }
+              { name: firstImage.name, downloadUrl, folder: folderName }
             ]);
 
             break;
@@ -175,8 +183,6 @@ const Searchvideo = () => {
     }
   }
 
-
-
   const handlecommentforindividualmedia = async () => {
     try {
       const mediaId = selectedMediaId;
@@ -238,17 +244,21 @@ const Searchvideo = () => {
 
         if (subFolderItems.items.some(item => item.name === selectedMediaId)) {
           const folderName = folder.name;
-          setData([id[7], folderName]);
+          setData([user[5], folderName]);
           matchFound = true;
           break;
-        }}}
-     if (!matchFound) {
+        }
+      }
+    }
+    if (!matchFound) {
       for (const item of folderItems.items) {
         if (item.name === selectedMediaId) {
-          setData([id[7], selectedMediaId]);
+          setData([user[5], selectedMediaId]);
           matchFound = true;
           break;
-        }}}
+        }
+      }
+    }
 
     const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+[]{}|;:,.<>?';
     let result = '';
@@ -278,14 +288,13 @@ const Searchvideo = () => {
         if (subFolderItems.items.some(item => item.name === selectedMediaId)) {
           const folderName = folder.name;
           await addDoc(cartCollectionRef, {
-            folder_name: folderName, 
+            folder_name: folderName,
             user_id: user[5]
           });
           matchFound = true;
           break;
         }
       }
-
       if (!matchFound) {
         for (const item of folderItems.items) {
           if (item.name === selectedMediaId) {
@@ -300,7 +309,7 @@ const Searchvideo = () => {
       }
 
       if (matchFound) {
-        
+
       } else {
         console.log('No matching item found to add to cart');
       }
@@ -309,7 +318,6 @@ const Searchvideo = () => {
     }
   };
 
-
   const most_searched_word = async () => {
     const currentDate = new Date().toISOString().split('T')[0];
     try {
@@ -317,18 +325,18 @@ const Searchvideo = () => {
       const rootFolder = 'images';
       const storageRootRef = ref(storage, rootFolder);
       const folderItems = await listAll(storageRootRef);
-  
+
       let matchFound = false;
-  
+
       for (const folder of folderItems.prefixes) {
         const subFolderRef = ref(storage, folder.fullPath);
         const subFolderItems = await listAll(subFolderRef);
-  
+
         if (subFolderItems.items.some(item => item.name === selectedMediaId)) {
           const folderName = folder.name;
-  
+
           const querySnapshot = await getDocs(query(cartCollectionRef, where("folder_name", "==", folderName)));
-  
+
           if (!querySnapshot.empty) {
             const docRef = querySnapshot.docs[0].ref;
             await updateDoc(docRef, {
@@ -337,22 +345,22 @@ const Searchvideo = () => {
             });
           } else {
             await addDoc(cartCollectionRef, {
-              folder_name: folderName, 
+              folder_name: folderName,
               count: 1,
               date: currentDate
             });
           }
-  
+
           matchFound = true;
           break;
         }
       }
-  
+
       if (!matchFound) {
         for (const item of folderItems.items) {
           if (item.name === selectedMediaId) {
             const querySnapshot = await getDocs(query(cartCollectionRef, where("media_name", "==", selectedMediaId)));
-  
+
             if (!querySnapshot.empty) {
               const docRef = querySnapshot.docs[0].ref;
               await updateDoc(docRef, {
@@ -366,13 +374,13 @@ const Searchvideo = () => {
                 date: currentDate
               });
             }
-  
+
             matchFound = true;
             break;
           }
         }
       }
-  
+
       if (!matchFound) {
         console.log('No matching item found to add to cart');
       }
@@ -380,10 +388,35 @@ const Searchvideo = () => {
       console.error('Error adding item to cart: ', error);
     }
   };
-  
 
+  const fetchPurchasedItems = async () => {
+    const userId = user[5];
+    const PurchasedItemArray = [];
+    const PurchasedItemsArray = [];
+    const collectionRef = collection(db, "purchased");
+    const q = query(collectionRef, where("user_id", "==", userId));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.media_name) {
+        PurchasedItemArray.push(data.media_name);
+      }
+      if (data.folder_name) {
+        PurchasedItemsArray.push(data.folder_name);
+      }
+    });
+    // console.log("This is Purchase Item",PurchasedItemArray);
+    // console.log("This is Purchase Items",PurchasedItemsArray);
+    // if(fetchedSingleMedia){
+    //   console.log("This is fetchedSingleMedia",fetchedSingleMedia);
+    // }
+    // if(fetchedMultipleMedia){
+    //   console.log("This is fetchedMultipleMedia",fetchedMultipleMedia);
 
-
+    // }
+    setpurchaseIdentified(PurchasedItemArray);
+    setUsermultiple(PurchasedItemsArray);
+  }
 
   useEffect(() => {
     if (contentIdResults.length > 0) {
@@ -395,6 +428,7 @@ const Searchvideo = () => {
     }
   }, [contentIdResults, contentFolderIdResults]);
 
+
   useEffect(() => {
     if (selectedMediaId) {
       handleContent();
@@ -402,6 +436,14 @@ const Searchvideo = () => {
       most_searched_word();
     }
   }, [selectedMediaId]);
+
+
+  useEffect(() => {
+    fetchPurchasedItems();
+  }, [])
+
+
+  
 
   return (
     <div className='searchxyzyourvideos_main_wrapper_ksdab'>
@@ -574,10 +616,25 @@ const Searchvideo = () => {
                     setComments([]);
                   }}
                 ></i>
-                <div className="searchxyzbuy_media_ksdab">
-                  <button className="searchbuy_media_ksdab_button" onClick={goToNewPage}>Buy Now</button>
-                  <img onClick={addToCart} src={cart} alt="" className="searchbuy_media_ksdab_image" />
-                </div>
+
+                
+
+                {purchaseIdentified.some((item) => fetchedSingleMedia.some((media) => media.name === item)) ||
+                  usermultiple.some((item) => fetchedMultipleMedia.some((media) => media.folder === item)) ? (
+                  
+                  <div className='xyz-purchase-searchvideo'>
+                    <img className='xyz-tick-statement-searchvideo' src={Tick_mark} alt="" />
+                    <p className="xyz-purchase-statement-searchvideo">You already purchased it</p>
+                  </div>
+                ) : (
+                  <div className="searchxyzbuy_media_ksdab">
+                    <button className="searchbuy_media_ksdab_button" onClick={goToNewPage}>Buy Now</button>
+                    <img onClick={addToCart} src={cart} alt="" className="searchbuy_media_ksdab_image" />
+                  </div>
+                )}
+
+
+
               </div>
             </div>
           </div>
@@ -613,3 +670,5 @@ const Searchvideo = () => {
 };
 
 export default Searchvideo;
+
+//110

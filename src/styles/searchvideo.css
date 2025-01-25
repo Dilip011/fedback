@@ -113,8 +113,6 @@
   pointer-events: none; 
 }
 
-
-
 .searchxyzcustom-media {
   width: 100%;
   height: 100%;
@@ -138,10 +136,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 1;
-  /* height: 55px;
-  width: 50px; */
-}
+  z-index: 1;/* height: 55px;width: 50px; */}
 
 .searchxyzvertical-line {
   width: 2px;
@@ -210,6 +205,17 @@
 }
 
 
+.searchxyzksdab_fixed{
+  max-width: 100%;
+  background-color: #e2f3ff;
+}
+
+.searchxyzksdab_content_comment{
+  margin-left: 81px;
+  font-family: var(--montserrat);
+  position: relative;
+  bottom: 11px;
+}
 
 .searchxyzksdab_image_comment{
   border-radius: 50%;
@@ -219,27 +225,22 @@
   margin-top: 22px;
 }
 
+.purchase-status {
+  margin-left: 81px;
+  font-family: var(--montserrat);
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+  position: relative;
+  bottom: 8px;
+}
+
 .searchxyzksdab_name_comment{
   margin-left: 62px;
   font-weight: bold;
   position: relative;
   top: -30.5px;
   font-family: var(--montserrat)
-}
-
-
-
-.searchxyzksdab_fixed{
-  max-width: 100%;
-  background-color: #e2f3ff;
-}
-
-
-.searchxyzksdab_content_comment{
-  margin-left: 81px;
-  font-family: var(--montserrat);
-  position: relative;
-  bottom: 11px;
 }
 
 .searchxyzbuy_media_ksdab{
@@ -289,11 +290,7 @@
   pointer-events: none;
 }
 
-.searchxyzksdab-media-container:hover::after {
-  background-color: rgba(58, 58, 58, 0.4);
-  
-}
-
+.searchxyzksdab-media-container:hover::after {background-color: rgba(58, 58, 58, 0.4);}
 
 .searchxyzbuy_media_ksdab_image{
   content: '';
@@ -305,4 +302,8 @@
   top: 18px;
 }
 
+.xyz-purchase-searchvideo{display: flex;align-items: center;position: relative;margin: 0px 0px 0px 115px;top: 76%;}
 
+.xyz-tick-statement-searchvideo{height: 47px;width: 54px;}
+
+.xyz-purchase-statement-searchvideo{margin: 0;font-size: 15px;font-weight: bold;}

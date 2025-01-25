@@ -3,13 +3,15 @@ import "../styles/interpage.css";
 import profile_img from "../images/Profile.jpg"
 import { NavLink } from 'react-router-dom';
 import { useUserContext } from './Usercontext';
-import { db } from './firebaseconfig';
+import { db,storage } from './firebaseconfig';
 import { getDoc, doc } from 'firebase/firestore';
 import { useEffect } from 'react';
+import { getDownloadURL,ref } from 'firebase/storage';
 
 const Interpage = () => {
   const { user } = useUserContext();
   const [checktagline, setchecktagline] = useState(false);
+  const [profileImage,setprofileImage] = useState(null);
 
   useEffect(() => {
 
@@ -35,6 +37,9 @@ const Interpage = () => {
           console.log("Document does not exist.");
           return false;
         }
+        const fetchImage = ref(storage,`profile/${user[5]}`)
+        const fetchurl = await getDownloadURL(fetchImage);
+        setprofileImage(fetchurl);
       } catch (error) {
         console.error("Error checking document:", error);
         return false;
@@ -94,7 +99,7 @@ const Interpage = () => {
         </div>
 
         <div className="cards_div_down_xyzab">
-          <NavLink to="/profile"><img src={profile_img} alt="" /></NavLink>
+          <NavLink to="/profile"><img src={profileImage || profile_img} alt="" /></NavLink>
           <p>{user[0]}</p>
 
         </div>
