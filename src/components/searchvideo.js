@@ -32,8 +32,6 @@ const Searchvideo = () => {
   const [usermultiple, setUsermultiple] = useState([]);
   const [individualContentArray, setIndividualContentArray] = useState([]);
 
-  console.log("This is user", user);
-
 
   const fetchIndividualImages = async () => {
     try {
@@ -67,20 +65,20 @@ const Searchvideo = () => {
   };
 
   const fetchSubFolder = async () => {
+    setFetchedMultipleMedia([]); // Clear previous state
     try {
       const rootFolder = 'images';
       const storageRootRef = ref(storage, rootFolder);
       const folderItems = await listAll(storageRootRef);
+
       const filteredFolderItems = folderItems.prefixes.filter(item => {
         const itemNameParts = item.name.split('|');
         const secondPart = itemNameParts[1].split('<')[0];
         return secondPart !== user[5];
       });
 
-
       for (const folderPath of contentFolderIdResults) {
         const folderName = folderPath.replace('images/', '');
-
         const matchingFolder = filteredFolderItems.find(folder => folder.name === folderName);
 
         if (matchingFolder) {
@@ -96,16 +94,24 @@ const Searchvideo = () => {
 
           if (firstImage) {
             const downloadUrl = await getDownloadURL(firstImage);
-            setFetchedMultipleMedia(prevMedia => [
-              ...prevMedia,
-              { name: firstImage.name, downloadUrl, folder: folderName }
-            ]);
+            // setFetchedMultipleMedia(prevMedia => [
+            //   ...prevMedia,
+            //   { name: firstImage.name, downloadUrl, folder: folderName }
+            // ]);
+            setFetchedMultipleMedia(prevMedia => {
+              const isDuplicate = prevMedia.some(
+                media => media.name === firstImage.name && media.folder === folderName
+              );
+              if (isDuplicate) {
+                return prevMedia; // Avoid duplicates
+              }
+              return [...prevMedia, { name: firstImage.name, downloadUrl, folder: folderName }];
+            });
 
-            break;
+            break; // Stop after finding the first image
           } else {
             console.log('No suitable file found in subfolder:', folderName);
           }
-
         } else {
           console.log('No matching folder found for:', folderName);
         }
@@ -114,6 +120,7 @@ const Searchvideo = () => {
       console.error('Error fetching subfolder items:', error);
     }
   };
+
 
   const handleContent = async () => {
     try {
@@ -405,15 +412,7 @@ const Searchvideo = () => {
         PurchasedItemsArray.push(data.folder_name);
       }
     });
-    // console.log("This is Purchase Item",PurchasedItemArray);
-    // console.log("This is Purchase Items",PurchasedItemsArray);
-    // if(fetchedSingleMedia){
-    //   console.log("This is fetchedSingleMedia",fetchedSingleMedia);
-    // }
-    // if(fetchedMultipleMedia){
-    //   console.log("This is fetchedMultipleMedia",fetchedMultipleMedia);
 
-    // }
     setpurchaseIdentified(PurchasedItemArray);
     setUsermultiple(PurchasedItemsArray);
   }
@@ -443,13 +442,18 @@ const Searchvideo = () => {
   }, [])
 
 
-  
+
 
   return (
     <div className='searchxyzyourvideos_main_wrapper_ksdab'>
       <div className="searchxyzyourvideos_main_container_ksdab">
         {fetchedSingleMedia && fetchedSingleMedia.map((media) => (
-          <div key={media.name} className="searchxyzksdab-media-container">
+          <div
+            key={media.name}
+            className={`searchxyzksdab-media-container ${purchaseIdentified.some((item) => media.name === item)
+              ? "backdrop-inactive"
+              : "backdrop-active"
+              }`}>
             {media.name.endsWith('.mp4') ? (
               <video
                 id={`media-${media.name}`}
@@ -501,7 +505,13 @@ const Searchvideo = () => {
 
 
         {fetchedMultipleMedia && fetchedMultipleMedia.map((media, index) => (
-          <div key={index} className="searchxyzksdab-media-container">
+          <div
+            key={index}
+            className={`searchxyzksdab-media-container ${usermultiple.some((item) => media.folder === item)
+              ? "backdrop-inactive"
+              : "backdrop-active"
+              }`}
+          >
             <div>
               {media.type === 'video' ? (
                 <video
@@ -548,9 +558,9 @@ const Searchvideo = () => {
                 </div>
               )}
             </div>
-
           </div>
         ))}
+
 
       </div>
 
@@ -558,6 +568,7 @@ const Searchvideo = () => {
         <>
           <div className="searchxyzmedialinker-container scrollable">
             <div className="searchxyzcustom-media-container">
+              {/* <div className="searchxyzmedia-content"> */}
               <div className="searchxyzmedia-content">
                 {selectedMediaId.endsWith('.mp4') ? (
                   <video
@@ -617,13 +628,16 @@ const Searchvideo = () => {
                   }}
                 ></i>
 
-                
-
-                {purchaseIdentified.some((item) => fetchedSingleMedia.some((media) => media.name === item)) ||
-                  usermultiple.some((item) => fetchedMultipleMedia.some((media) => media.folder === item)) ? (
-                  
-                  <div className='xyz-purchase-searchvideo'>
-                    <img className='xyz-tick-statement-searchvideo' src={Tick_mark} alt="" />
+                {/* {(purchaseIdentified.length > 0 &&
+                  purchaseIdentified.some((item) =>
+                    fetchedSingleMedia.some((media) => media.name === item)
+                  )) ||
+                  (usermultiple.length > 0 &&
+                    usermultiple.some((item) =>
+                      fetchedMultipleMedia.some((media) => media.folder === item)
+                    )) ? (
+                  <div className="xyz-purchase-searchvideo">
+                    <img className="xyz-tick-statement-searchvideo" src={Tick_mark} alt="" />
                     <p className="xyz-purchase-statement-searchvideo">You already purchased it</p>
                   </div>
                 ) : (
@@ -631,9 +645,28 @@ const Searchvideo = () => {
                     <button className="searchbuy_media_ksdab_button" onClick={goToNewPage}>Buy Now</button>
                     <img onClick={addToCart} src={cart} alt="" className="searchbuy_media_ksdab_image" />
                   </div>
+                )} */}
+
+                {(purchaseIdentified.some((item) =>
+                    fetchedSingleMedia.some((media) => media.name === item)
+                  )) ? (
+                  <div className="xyz-purchase-searchvideo">
+                    <img className="xyz-tick-statement-searchvideo" src={Tick_mark} alt="" />
+                    <p className="xyz-purchase-statement-searchvideo">You already purchased it</p>
+                  </div>
+                ) : (usermultiple.some((item) =>
+                    fetchedMultipleMedia.some((media) => media.folder === item)
+                  )) ? (
+                  <div className="xyz-purchase-searchvideo">
+                    <img className="xyz-tick-statement-searchvideo" src={Tick_mark} alt="" />
+                    <p className="xyz-purchase-statement-searchvideo">This folder already purchased</p>
+                  </div>
+                ) : (
+                  <div className="searchxyzbuy_media_ksdab">
+                    <button className="searchbuy_media_ksdab_button" onClick={goToNewPage}>Buy Now</button>
+                    <img onClick={addToCart} src={cart} alt="" className="searchbuy_media_ksdab_image" />
+                  </div>
                 )}
-
-
 
               </div>
             </div>
@@ -671,4 +704,3 @@ const Searchvideo = () => {
 
 export default Searchvideo;
 
-//110

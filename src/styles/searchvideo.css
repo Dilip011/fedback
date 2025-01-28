@@ -110,8 +110,8 @@
   backdrop-filter: blur(16px) brightness(0.8) contrast(1.2); 
   z-index: 1;
   transition: backdrop-filter 0.3s ease;
-  pointer-events: none; 
-}
+  pointer-events: none; }
+
 
 .searchxyzcustom-media {
   width: 100%;
@@ -265,7 +265,7 @@
 
 .searchxyzbuy_media_ksdab_button:hover{ background-color:#BFFBFF; cursor: pointer;}
 
-.searchxyzksdab-media-container::before {
+.searchxyzksdab-media-container.backdrop-active::before {
   content: '';
   position: absolute;
   top: 0;
@@ -275,7 +275,11 @@
   backdrop-filter: blur(7.5px) brightness(0.8) contrast(1.2); 
   z-index: 1;
   transition: backdrop-filter 0.3s ease;
-  pointer-events: none; 
+  pointer-events: none;
+}
+
+.searchxyzksdab-media-container.backdrop-inactive::before {
+  backdrop-filter: none;
 }
 
 .searchxyzksdab-media-container::after{
