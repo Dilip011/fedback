@@ -112,6 +112,13 @@
   transition: backdrop-filter 0.3s ease;
   pointer-events: none; }
 
+.searchxyzmedia-content.inactive::before {
+    backdrop-filter: blur(16px) brightness(0.8) contrast(1.2);
+  }
+  
+.searchxyzmedia-content.active::before {
+    backdrop-filter: none;
+  }
 
 .searchxyzcustom-media {
   width: 100%;

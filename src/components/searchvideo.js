@@ -30,7 +30,8 @@ const Searchvideo = () => {
   const { id } = useUsersearch();
   const [purchaseIdentified, setpurchaseIdentified] = useState([]);
   const [usermultiple, setUsermultiple] = useState([]);
-  const [individualContentArray, setIndividualContentArray] = useState([]);
+  const [folderArray, setfolderArray] = useState(null);
+  const [backdropfilter, setbackdropfilter] = useState(0);
 
 
   const fetchIndividualImages = async () => {
@@ -417,6 +418,22 @@ const Searchvideo = () => {
     setUsermultiple(PurchasedItemsArray);
   }
 
+  const CheckbackdropFilter = () => {
+    if (selectedMediaId && folderArray === null) {
+      const isMatched = purchaseIdentified.some((item) => selectedMediaId === item);
+      if (isMatched) {
+        setbackdropfilter(1);
+      }
+    }else if (selectedMediaId && folderArray !== null) {
+      const isMatched = usermultiple.some((item) => folderArray === item);
+      if (isMatched) {
+        setbackdropfilter(1);
+      }
+    }
+
+
+  };
+
   useEffect(() => {
     if (contentIdResults.length > 0) {
       fetchIndividualImages();
@@ -433,6 +450,7 @@ const Searchvideo = () => {
       handleContent();
       handlecommentforindividualmedia();
       most_searched_word();
+      CheckbackdropFilter();
     }
   }, [selectedMediaId]);
 
@@ -501,17 +519,13 @@ const Searchvideo = () => {
           </div>
         ))}
 
-
-
-
         {fetchedMultipleMedia && fetchedMultipleMedia.map((media, index) => (
           <div
             key={index}
             className={`searchxyzksdab-media-container ${usermultiple.some((item) => media.folder === item)
               ? "backdrop-inactive"
               : "backdrop-active"
-              }`}
-          >
+              }`}>
             <div>
               {media.type === 'video' ? (
                 <video
@@ -525,6 +539,7 @@ const Searchvideo = () => {
                   onDrop={(e) => e.preventDefault()}
                   onClick={() => {
                     setSelectedMediaId(media.name);
+                    setfolderArray(media.folder);
                   }}
                 >
                   <source src={media.downloadUrl} type="video/mp4" />
@@ -537,6 +552,7 @@ const Searchvideo = () => {
                   alt="Error Displaying image"
                   onClick={() => {
                     setSelectedMediaId(media.name);
+                    setfolderArray(media.folder);
                   }}
                   onDragStart={(e) => e.preventDefault()}
                   onDragOver={(e) => e.preventDefault()}
@@ -568,8 +584,8 @@ const Searchvideo = () => {
         <>
           <div className="searchxyzmedialinker-container scrollable">
             <div className="searchxyzcustom-media-container">
-              {/* <div className="searchxyzmedia-content"> */}
-              <div className="searchxyzmedia-content">
+              {/* <div className={`searchxyzmedia-content ${}`}> */}
+              <div className={`searchxyzmedia-content ${backdropfilter === 0 ? "inactive" : "active"}`}>
                 {selectedMediaId.endsWith('.mp4') ? (
                   <video
                     id={`media-${selectedMediaId}`}
@@ -582,7 +598,7 @@ const Searchvideo = () => {
                     onDragLeave={(e) => e.preventDefault()}
                     onDrop={(e) => e.preventDefault()}>
                     <source
-                      src={(fetchedSingleMedia && fetchedSingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl) || userfunc[selectedGroupIndex]?.downloadUrl}
+                      src={(fetchedSingleMedia && fetchedSingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl)}
                       type="video/mp4"
                     />
                   </video>
@@ -590,7 +606,7 @@ const Searchvideo = () => {
                   <img
                     id={`media-${selectedMediaId}`}
                     className="searchcustom-media_images"
-                    src={(fetchedSingleMedia && fetchedSingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl) || userfunc[selectedGroupIndex]?.downloadUrl}
+                    src={(fetchedSingleMedia && fetchedSingleMedia.find((media) => media.name === selectedMediaId)?.downloadUrl)}
                     alt={userfunc}
                     onDragStart={(e) => e.preventDefault()}
                     onDragOver={(e) => e.preventDefault()}
@@ -623,43 +639,19 @@ const Searchvideo = () => {
                   style={{ color: 'black', fontSize: '24px', cursor: 'pointer' }}
                   onClick={() => {
                     setSelectedMediaId(null);
+                    if (folderArray !== null) { setfolderArray(null); }
+                    setbackdropfilter(0);
                     setuserfunc([]);
                     setComments([]);
                   }}
                 ></i>
 
-                {/* {(purchaseIdentified.length > 0 &&
-                  purchaseIdentified.some((item) =>
-                    fetchedSingleMedia.some((media) => media.name === item)
-                  )) ||
-                  (usermultiple.length > 0 &&
-                    usermultiple.some((item) =>
-                      fetchedMultipleMedia.some((media) => media.folder === item)
-                    )) ? (
+                {purchaseIdentified.some((item) =>
+                  fetchedSingleMedia.some((media) => media.name === item)
+                ) ? (
                   <div className="xyz-purchase-searchvideo">
                     <img className="xyz-tick-statement-searchvideo" src={Tick_mark} alt="" />
                     <p className="xyz-purchase-statement-searchvideo">You already purchased it</p>
-                  </div>
-                ) : (
-                  <div className="searchxyzbuy_media_ksdab">
-                    <button className="searchbuy_media_ksdab_button" onClick={goToNewPage}>Buy Now</button>
-                    <img onClick={addToCart} src={cart} alt="" className="searchbuy_media_ksdab_image" />
-                  </div>
-                )} */}
-
-                {(purchaseIdentified.some((item) =>
-                    fetchedSingleMedia.some((media) => media.name === item)
-                  )) ? (
-                  <div className="xyz-purchase-searchvideo">
-                    <img className="xyz-tick-statement-searchvideo" src={Tick_mark} alt="" />
-                    <p className="xyz-purchase-statement-searchvideo">You already purchased it</p>
-                  </div>
-                ) : (usermultiple.some((item) =>
-                    fetchedMultipleMedia.some((media) => media.folder === item)
-                  )) ? (
-                  <div className="xyz-purchase-searchvideo">
-                    <img className="xyz-tick-statement-searchvideo" src={Tick_mark} alt="" />
-                    <p className="xyz-purchase-statement-searchvideo">This folder already purchased</p>
                   </div>
                 ) : (
                   <div className="searchxyzbuy_media_ksdab">
@@ -698,6 +690,118 @@ const Searchvideo = () => {
           )}
         </>
       )}
+
+      {selectedMediaId && (folderArray !== null) && (
+        <>
+          <div className="searchxyzmedialinker-container scrollable">
+            <div className="searchxyzcustom-media-container">
+              {/* <div className={`searchxyzmedia-content ${}`}> */}
+              <div className={`searchxyzmedia-content ${backdropfilter === 0 ? "inactive" : "active"}`}>
+                {selectedMediaId.endsWith('.mp4') ? (
+                  <video
+                    id={`media-${selectedMediaId}`}
+                    className="searchxyzcustom-media"
+                    controls={false}
+                    ref={mediaRef}
+                    onDragStart={(e) => e.preventDefault()}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDragEnter={(e) => e.preventDefault()}
+                    onDragLeave={(e) => e.preventDefault()}
+                    onDrop={(e) => e.preventDefault()}>
+                    <source
+                      src={userfunc[selectedGroupIndex]?.downloadUrl}
+                      type="video/mp4"
+                    />
+                  </video>
+                ) : (
+                  <img
+                    id={`media-${selectedMediaId}`}
+                    className="searchcustom-media_images"
+                    src={userfunc[selectedGroupIndex]?.downloadUrl}
+                    alt={userfunc}
+                    onDragStart={(e) => e.preventDefault()}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDragEnter={(e) => e.preventDefault()}
+                    onDragLeave={(e) => e.preventDefault()}
+                    onDrop={(e) => e.preventDefault()}
+                  />
+                )}
+                {selectedMediaId.endsWith(".mp4") && (
+                  <div
+                    id={`controls-${selectedMediaId}`}
+                    className="searchxyzmedialinker-controls"
+                    onClick={handleTogglePlayPause}
+                  >
+                    <i className={`fa-solid ${isPlaying ? 'fa-pause' : 'fa-play'}`} style={{ color: '#ffffff', visibility: isPauseIconVisible ? 'visible' : 'hidden' }}></i>
+                  </div>
+                )}
+              </div>
+
+              <div className="searchxyzvertical-line"></div>
+
+              <div className="searchxyzblank_area_div">
+                <div className="searchxyzksdab_fixed">
+                  <img className='searchxyzksdab_image_comment' src={image} alt="" />
+                  <div className="searchxyzksdab_name_comment">{user[0]}</div>
+                  <div className="searchxyzksdab_content_comment">{comments}</div>
+                </div>
+                <i
+                  className="fa-solid fa-times"
+                  style={{ color: 'black', fontSize: '24px', cursor: 'pointer' }}
+                  onClick={() => {
+                    setSelectedMediaId(null);
+                    if (folderArray !== null) { setfolderArray(null); }
+                    setbackdropfilter(0);
+                    setuserfunc([]);
+                    setComments([]);
+                  }}
+                ></i>
+
+                {usermultiple.some((item) =>
+                  fetchedMultipleMedia.some((media) => media.folder === item)
+                ) ? (
+                  <div className="xyz-purchase-searchvideo">
+                    <img className="xyz-tick-statement-searchvideo" src={Tick_mark} alt="" />
+                    <p className="xyz-purchase-statement-searchvideo">You already purchased it</p>
+                  </div>
+                ) : (
+                  <div className="searchxyzbuy_media_ksdab">
+                    <button className="searchbuy_media_ksdab_button" onClick={goToNewPage}>Buy Now</button>
+                    <img onClick={addToCart} src={cart} alt="" className="searchbuy_media_ksdab_image" />
+                  </div>
+                )}
+
+              </div>
+            </div>
+          </div>
+
+          {userfunc && userfunc.length > 0 && (
+            <div className="searchxyzchevrons">
+              <i
+                className="fa-solid fa-chevron-left chevron_searchxyz_left"
+                style={{
+                  color: 'black',
+                  visibility: selectedGroupIndex === 0 ? 'hidden' : 'visible',
+                  height: '24px',
+                  width: '24px'
+                }}
+                onClick={handlePreviousImage}
+              ></i>
+              <i
+                className="fa-solid fa-chevron-right chevron_searchxyz_right"
+                style={{
+                  color: 'black',
+                  visibility: selectedGroupIndex === userfunc.length - 1 ? 'hidden' : 'visible',
+                  height: '24px',
+                  width: '24px'
+                }}
+                onClick={handleNextImage}
+              ></i>
+            </div>
+          )}
+        </>
+      )}
+
     </div>
   );
 };
