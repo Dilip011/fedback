@@ -113,6 +113,14 @@
   pointer-events: none; 
 }
 
+.searchmedia-content.inactive::before {
+  backdrop-filter: blur(16px) brightness(0.8) contrast(1.2);
+}
+
+.searchmedia-content.active::before {
+  backdrop-filter: none;
+}
+
 
 
 .searchcustom-media {
@@ -439,7 +447,7 @@
 
 .searchbuy_media_ksdab_button:hover{ background-color:#BFFBFF; cursor: pointer;}
 
-.searchksdab-media-container::before {
+.searchksdab-media-container.backdrop-active::before {
   content: '';
   position: absolute;
   top: 0;
@@ -450,6 +458,10 @@
   z-index: 1;
   transition: backdrop-filter 0.3s ease;
   pointer-events: none; 
+}
+
+.searchksdab-media-container.backdrop-inactive::before {
+  backdrop-filter: none;
 }
 
 .searchksdab-media-container::after{
@@ -477,5 +489,11 @@
   position: relative;
   top: 18px;
 }
+
+.xyz-purchase-searchuserprofile{display: flex;align-items: center;position: relative;margin: 0px 0px 0px 115px;top: 76%;}
+
+.xyz-tick-statement-searchuserprofile{height: 47px;width: 54px;}
+
+.xyz-purchase-statement-searchuserprofile{margin: 0;font-size: 15px;font-weight: bold;}
 
 

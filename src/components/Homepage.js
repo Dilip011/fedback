@@ -297,36 +297,36 @@ const Homepage = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const updateContent = async () => {
-  //     const content = await fetchIndividualContent();
-  //     setIndividualContentArray(content);
-  //   };
+  useEffect(() => {
+    const updateContent = async () => {
+      const content = await fetchIndividualContent();
+      setIndividualContentArray(content);
+    };
 
-  //   updateContent();
-  // }, [mediaNameArray]);
+    updateContent();
+  }, [mediaNameArray]);
 
-  // useEffect(() => {
-  //   fetchSubfolderContent();
-  // }, [folderNameArray]);
+  useEffect(() => {
+    fetchSubfolderContent();
+  }, [folderNameArray]);
 
-  //   useEffect(() => {
-  //     const players = Array.from(document.querySelectorAll('.plyr'));
-  //     players.forEach(player => new Plyr(player));
-  //   }, []);
+    useEffect(() => {
+      const players = Array.from(document.querySelectorAll('.plyr'));
+      players.forEach(player => new Plyr(player));
+    }, []);
 
-  //   useEffect(() => {
-  //     fetchPurchasedItems();
-  //   }, [individualContentArray, subfolderContentArray]);
+    useEffect(() => {
+      fetchPurchasedItems();
+    }, [individualContentArray, subfolderContentArray]);
 
-  //   if (userid.length > 0) {
-  //     checkword();
-  //   }
-  //   useEffect(() => {
-  //     if (location.state && location.state.message === "success") {
-  //         setIsVisible(true);
-  //     }
-  // }, [location.state]);
+    if (userid.length > 0) {
+      checkword();
+    }
+    useEffect(() => {
+      if (location.state && location.state.message === "success") {
+          setIsVisible(true);
+      }
+  }, [location.state]);
 
 
   return (

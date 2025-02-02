@@ -430,8 +430,6 @@ const Searchvideo = () => {
         setbackdropfilter(1);
       }
     }
-
-
   };
 
   useEffect(() => {
